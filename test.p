@@ -1,16 +1,19 @@
 %-----STATE VARIABLE DEFINITIONS
 tff(count, type, $int).
-
+tff(next_count, type, $int).
 tff(increment, type, $int).
-
+tff(next_increment, type, $int).
 tff(countUp, type, $o).
-
+tff(next_countUp, type, $o).
 tff(sigma, type, $real).
+tff(next_sigma, type, $real).
 
 %-----INPUT PORT DEFINITIONS
 tff(i_port_type, type, i_port : $tType).
 tff(direction_in, type, direction_in : i_port).
+tff(rcvd_direction_in, type, rcvd_direction_in : $o).
 tff(increment_in, type, increment_in : i_port).
+tff(rcvd_increment_in, type, rcvd_increment_in : $int).
 tff(only_i_ports, axiom,
 	! [IP : i_port] :
 		( IP = direction_in | IP = increment_in)).

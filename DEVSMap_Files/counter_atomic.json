@@ -18,7 +18,8 @@
                 "count": "count + increment"
             },
             "countUp == false": {
-                "count": "count - increment"
+                "count": "count - increment",
+                "Hello": "HAZEL"
             },
             "otherwise": {}
         },
