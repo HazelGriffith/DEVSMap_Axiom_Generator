@@ -1,3 +1,4 @@
+
 %-----STATE VARIABLE DEFINITIONS
 tff(count, type, $int).
 tff(next_count, type, $int).
@@ -18,11 +19,13 @@ tff(only_i_ports, axiom,
 	! [IP : i_port] :
 		( IP = direction_in | IP = increment_in)).
 
+
 %-----OUTPUT PORT DEFINITIONS
 tff(o_port_type, type, o_port : $tType).
 tff(count_out, type, count_out : o_port).
 tff(only_o_ports, axiom,
 	! [OP : o_port] :
 		( OP = count_out)).
+
 
 %-----INTERNAL TRANSITIONS
