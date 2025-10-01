@@ -6,9 +6,9 @@ import re
 class Axiom_Generator:
     integers = ["int", "unsigned int", "integer", "INT", "unsigned natural", "natural"]
     reals = ["double", "float", "unsigned double", "unsigned float"]
-    conditionals = ["==", "!=", ">", "<", ">=", "<=", "&&", "||"]
-    conditionalsWOEquals = [">", "<", ">=", "<=", "-", "+", "*", "/"]
-    syntaxMap = {"true":"$true", "false":"$false", "==":"=", "<":"$less", "<=":"$lesseq", ">":"$greater", ">=":"$greatereq", "--":"$uminus", "+":"$sum", "-":"$difference", "*":"product", "/":"$quotient", "&&":"&", "||":"|"}
+    infixConds = ["=", "!=", "&", "|"]
+    nonInfixConds = ["<", "<=", ">", ">=","--","+","*","/"]
+    syntaxMap = {"true":"$true", "false":"$false", "==":"=", "<":"$less", "<=":"$lesseq", ">":"$greater", ">=":"$greatereq", "--":"$uminus", "+":"$sum", "-":"$difference", "*":"product", "/":"$quotient", "&&":"&", "||":"|", "!=":"!="}
 
 
     def __init__(self, model_file_path: str, init_state_file_path: str):
@@ -126,8 +126,51 @@ class Axiom_Generator:
 
         #Flatten the nested dictionary of conditions and state variable assignments
         #For the internal transition function
-        flat_delta_int = {}
-        stack = [(delta_int, '')]
+        flat_delta_int = self.flatten_dict(delta_int)
+        print(flat_delta_int)
+        flat_delta_int.pop("otherwise")
+        flat_delta_int.pop("Otherwise")
+
+        for pos, key in enumerate(flat_delta_int):
+            line = "tff(delta_int_"+str(pos)+",axiom,\n"
+            conds = key.split(";")
+            assert(len(conds) > 0)
+            for pos, condition in enumerate(conds):
+                if pos+1 == 1:
+                    line+="("
+                ops = condition.split(" ")
+                assert(len(ops) > 0)
+                if (len(ops) == 1):
+                    op1 = ops[0]
+                    op1 = self.find_replace_not(op1)
+                    line+=f"({op1})"
+                elif (len(ops) == 3):
+                    op1 = self.find_replace_not(ops[0])
+                    op1 = self.find_replace_bool(op1)
+                    op3 = self.find_replace_not(ops[2])
+                    op3 = self.find_replace_bool(op3)
+                    op2 = self.syntaxMap[ops[1]]
+                    if (op2 in self.infixConds):
+                        line+= f"({op1} {op2} {op3})"
+                    elif (op2 in self.nonInfixConds):
+                        line+= f"{op2}({op1},{op3})"
+                    else:
+                        assert False, f"{op2} is an unrecognized conditional operator: {op1}{op2}{op3}"
+                else:
+                    assert False, "cannot have 2 or more than three ops in a condition"
+                if pos+1 == len(conds):
+                    line+=") -> \n"
+                else:
+                    line+= " & "
+            self.tff_string+=line
+    '''
+    Flatten the nested dictionary of conditions and state variable assignments
+    Args: d = dictionary
+    returns: dictionary
+    '''
+    def flatten_dict(self, d:dict) -> dict:
+        flat_d = {}
+        stack = [(d, '')]
 
         while stack:
             c, p = stack.pop()
@@ -145,15 +188,35 @@ class Axiom_Generator:
                     strings.append(k+ " = "+v)
             if (len(strings) > 0):
                 if (p == ''):
-                    flat_delta_int[strings[0]] = 'True'
+                    flat_d[strings[0]] = 'True'
                 else:
-                    flat_delta_int[p] = strings
-        print(flat_delta_int)
-        for pos, key in enumerate(flat_delta_int):
-            line = "tff(delta_int_"+str(pos)+",axiom,\n"
-            conds = key.split(";")
-            assert(len(conds) > 0)
-            
+                    flat_d[p] = strings
+        return flat_d
+    
+    '''
+    When given a string it will check if the not function "!" is at the start
+    and replace it with the TPTP syntax "~" not function
+    Args: s = string
+    returns: string
+    '''
+    def find_replace_not(self, s:str) -> str:
+        if s.startswith("!"):
+            s.replace("!","~")
+        return s
+
+    '''
+    When given a string that contains a boolean of true 
+    or false it will return the TPTP syntax version
+    Args: s = string
+    returns: string
+    '''
+    def find_replace_bool(self, s:str) -> str:
+        if (s == "true" or s == "True"):
+            return "$true"
+        elif (s == "false" or s == "False"):
+            return "$false"
+        else:
+            return s
 '''
 def parseDict_recurs(deltaDict, line):
     for pos, key in enumerate(deltaDict):

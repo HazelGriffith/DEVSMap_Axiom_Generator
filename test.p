@@ -29,3 +29,9 @@ tff(only_o_ports, axiom,
 
 
 %-----INTERNAL TRANSITIONS
+tff(delta_int_0,axiom,
+((otherwise)) -> 
+tff(delta_int_1,axiom,
+((countUp = $false)) -> 
+tff(delta_int_2,axiom,
+((countUp = $true)) -> 
