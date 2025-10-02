@@ -30,8 +30,22 @@ tff(only_o_ports, axiom,
 
 %-----INTERNAL TRANSITIONS
 tff(delta_int_0,axiom,
-((otherwise)) -> 
+	(((countUp = $true)) =>
+		((next_count = $sum(count,increment)) & (next_increment = $product(sigma,4))))).
 tff(delta_int_1,axiom,
-((countUp = $false)) -> 
+	(((countUp = $false)) =>
+		((next_count = $difference(count,increment))))).
 tff(delta_int_2,axiom,
-((countUp = $true)) -> 
+	(((!(countUp = true))) & ((!(countUp = false))) =>
+		((next_count = count) & (next_increment = increment) & (next_countUp = countUp) & (next_sigma = sigma)))).
+
+&-----EXTERNAL TRANSITIONS
+tff(delta_ext_0,axiom,
+	((((rcvd(direction_in)) != 0)) =>
+		((next_countUp = (value(rcvd(direction_in)))))).
+tff(delta_ext_1,axiom,
+	((((rcvd(increment_in)) != 0)) =>
+		((next_increment = (value(rcvd(increment_in)))))).
+tff(delta_ext_2,axiom,
+	((((rcvd(direction_in)) != 0))) & (((rcvd(increment_in)) != 0))) =>
+		((next_countUp = (value(rcvd(direction_in))) & (next_increment = (value(rcvd(increment_in)))))).

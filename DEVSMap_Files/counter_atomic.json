@@ -15,7 +15,8 @@
         },
         "delta_int": {
             "countUp == true": {
-                "count": "count + increment"
+                "count": "count + increment",
+                "increment": "sigma * 4"
             },
             "countUp == false": {
                 "count": "count - increment"
