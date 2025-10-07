@@ -10,7 +10,6 @@ class Axiom_Generator:
     prefixConds = ["<", "<=", ">", ">=","--","-","+","*","/"]
     syntaxMap = {"true":"$true", "false":"$false", "==":"=", "<":"$less", "<=":"$lesseq", ">":"$greater", ">=":"$greatereq", "--":"$uminus", "+":"$sum", "-":"$difference", "*":"$product", "/":"$quotient", "&&":"&", "||":"|", "!=":"!="}
 
-
     def __init__(self, model_file_path: str, init_state_file_path: str):
         #Getting atomic model file
         with open(model_file_path) as jfile:
@@ -80,7 +79,8 @@ class Axiom_Generator:
         for pos, key in enumerate(in_ports):
             self.in_port_names.append(key)
             self.tff_string+=("tff("+key+", type, "+key+" : i_port).\n")
-            line = "tff(rcvd_"+key+", type, rcvd_"+key+" : "
+            self.tff_string+=f"tff(num_rcvd_{key}, type, num_rcvd_{key} : $int).\n"
+            line = "tff(val_rcvd_"+key+", type, val_rcvd_"+key+" : "
             if (in_ports[key] in self.integers):
                 line += "$int)."
             elif (in_ports[key] == "bool"):
@@ -180,24 +180,24 @@ class Axiom_Generator:
         axiom = f"tff(delta_int_{axiom_num},axiom,\n\t("
         new_cond_list = self.translate_operations(cond_list)
         for pos, cond in enumerate(new_cond_list):
-            axiom += f"({cond})"
+            axiom += f"{cond}"
             if (pos+1) == len(new_cond_list):
-                axiom += f" =>\n\t\t("
+                axiom += f") =>\n\t\t("
             else:
                 axiom += f" & "
         if len(assignments_dict) > 0:
             for pos, key in enumerate(assignments_dict.keys()):
                 assignment_value = self.translate_operations([assignments_dict[key]])
-                axiom += f"(next_{key} = {assignment_value[0]})"
+                axiom += f"next_{key} = {assignment_value[0]}"
                 if (pos+1) == len(assignments_dict):
-                    axiom += "))).\n"
+                    axiom += ")).\n"
                 else:
                     axiom += " & "
         else:
             for pos, var in enumerate(self.state_var_names):
-                axiom += f"(next_{var} = {var})"
+                axiom += f"next_{var} = {var}"
                 if (pos+1) == len(self.state_var_names):
-                    axiom += "))).\n"
+                    axiom += ")).\n"
                 else:
                     axiom += " & "
         return axiom
@@ -212,24 +212,24 @@ class Axiom_Generator:
         axiom = f"tff(delta_ext_{axiom_num},axiom,\n\t("
         new_cond_list = self.translate_operations(cond_list)
         for pos, cond in enumerate(new_cond_list):
-            axiom += f"({cond})"
+            axiom += f"{cond}"
             if (pos+1) == len(new_cond_list):
-                axiom += f" =>\n\t\t("
+                axiom += f") =>\n\t\t("
             else:
                 axiom += f" & "
         if len(assignments_dict) > 0:
             for pos, key in enumerate(assignments_dict.keys()):
                 assignment_value = self.translate_operations([assignments_dict[key]])
-                axiom += f"(next_{key} = {assignment_value[0]})"
+                axiom += f"next_{key} = {assignment_value[0]}"
                 if (pos+1) == len(assignments_dict):
-                    axiom += "))).\n"
+                    axiom += ")).\n"
                 else:
                     axiom += " & "
         else:
             for pos, var in enumerate(self.state_var_names):
-                axiom += f"(next_{var} = {var})"
+                axiom += f"next_{var} = {var}"
                 if (pos+1) == len(self.state_var_names):
-                    axiom += "))).\n"
+                    axiom += ")).\n"
                 else:
                     axiom += " & "
         return axiom
@@ -250,13 +250,13 @@ class Axiom_Generator:
                     op1_parts = op1.split(".")
                     if (op1_parts[0] in self.in_port_names):
                         if op1_parts[1] == "bag(-1)":
-                            ops_list[i] = f"(value(rcvd({op1_parts[0]}))"
+                            ops_list[i] = f"value(rcvd({op1_parts[0]}))"
                         else:
                             assert False, f"{op1_parts[1]} is an unaccounted for function"
                     else:
                         assert False, f"{op1_parts[0]} is an unaccounted for attribute"
                 else:
-                    ops_list[i] = f"({op1})"
+                    ops_list[i] = f"{op1}"
             elif (len(ops) == 3):
                 op1 = self.find_replace_not(ops[0])
                 op1 = self.find_replace_bool(op1)
@@ -266,7 +266,7 @@ class Axiom_Generator:
                 op3 = self.find_replace_bag_funcs(op3)
                 op2 = self.syntaxMap[ops[1]]
                 if (ops[1] in self.infixConds):
-                    ops_list[i] = f"({op1} {op2} {op3})"
+                    ops_list[i] = f"{op1} {op2} {op3}"
                 elif (ops[1] in self.prefixConds):
                     ops_list[i] = f"{op2}({op1},{op3})"
                 else:
@@ -306,8 +306,9 @@ class Axiom_Generator:
     '''
     def find_replace_not(self, s:str) -> str:
         if s.startswith("!"):
-            s.replace("!","~")
-        return s
+            return s.replace("!","~")
+        else:
+            return s
 
     '''
     When given a string that contains a boolean of true 
@@ -333,12 +334,18 @@ class Axiom_Generator:
         if s.endswith("bagSize()"):
             for port in self.in_port_names:
                 if port in s:
-                    return f"(rcvd({port}))"
+                    if s.startswith("!") or s.startswith("~"):
+                        return f"!(num_rcvd({port}))"
+                    else:
+                        return f"num_rcvd({port})"
             assert False, f"bagSize must be associated with an in_port not {s}"
         elif s.endswith("bag(-1)"):
             for port in self.in_port_names:
                 if port in s:
-                    return f"(val(rcvd({port})))"
+                    if s.startswith("!") or s.startswith("~"):
+                        return f"!(val_rcvd({port}))"
+                    else:
+                        return f"val_rcvd({port})"
             assert False, f"bag(-1) must be associated with an in_port not {s}"
         else:
             return s
