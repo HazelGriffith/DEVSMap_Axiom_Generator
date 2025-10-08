@@ -1,6 +1,8 @@
 import json
 import os
-import re
+from py_expression_eval import Parser
+from axiom import Axiom, Binary_Formula, Unary_Formula, Formula, Constant
+
 
 
 class Axiom_Generator:
@@ -24,6 +26,7 @@ class Axiom_Generator:
         self.state_var_names = []
         self.in_port_names = []
         self.out_port_names = []
+        self.axioms = []
 
     '''
     Creates a new .p file with the given name containing the tff axioms generated
@@ -32,7 +35,8 @@ class Axiom_Generator:
     def save(self, filename:str):
         try:
             with open(filename+".p", 'x') as pfile:
-                pfile.write(self.tff_string)
+                for ax in self.axioms:
+                    pfile.write(ax)
 
         except Exception as e:
             os.remove(filename+".p")
@@ -135,21 +139,21 @@ class Axiom_Generator:
                     new_cond_list = cond_list.copy()
                     new_cond_list.append(key)
                     axiom, num = self.parse_devsmap_dict(num, new_cond_list, transition_function[key], translation)
-                    if not axiom:
-                        return "", num
+                    if axiom is None:
+                        return None, num
                     else:
-                        self.tff_string += axiom
+                        self.axioms.append(axiom)
             other_conds = self.negate_conds(other_conds)
             if 'otherwise' in transition_function.keys():
                 axiom, num = self.parse_devsmap_dict(num, other_conds, transition_function['otherwise'], translation)
             else:
                 axiom, num = self.parse_devsmap_dict(num, other_conds, {}, translation)
 
-            if not axiom:
-                return "", num
+            if axiom is None:
+                return None, num
             else:
-                self.tff_string += axiom
-            return "", num
+                self.axioms.append(axiom)
+            return None, num
         else:
             assert False, "The transition functions keys and values can only ever be strings or nested dictionaries"
 
@@ -177,17 +181,16 @@ class Axiom_Generator:
     '''
     def gen_delta_int_tff(self, axiom_num:int, cond_list, assignments_dict):
         
-        axiom = f"tff(delta_int_{axiom_num},axiom,\n\t("
-        new_cond_list = self.translate_operations(cond_list)
-        for pos, cond in enumerate(new_cond_list):
-            axiom += f"{cond}"
-            if (pos+1) == len(new_cond_list):
-                axiom += f") =>\n\t\t("
-            else:
-                axiom += f" & "
+        new_cond_list = self.parse_clauses(cond_list)
+        if (len(new_cond_list) > 1):
+            lhs = self.build_CNF(Binary_Formula("",new_cond_list.pop(0),new_cond_list.pop(0),"&&"), new_cond_list)
+        else:
+            lhs = new_cond_list[0]
+
         if len(assignments_dict) > 0:
+
             for pos, key in enumerate(assignments_dict.keys()):
-                assignment_value = self.translate_operations([assignments_dict[key]])
+                assignment_value = self.parse_clauses([assignments_dict[key]])
                 axiom += f"next_{key} = {assignment_value[0]}"
                 if (pos+1) == len(assignments_dict):
                     axiom += ")).\n"
@@ -200,7 +203,8 @@ class Axiom_Generator:
                     axiom += ")).\n"
                 else:
                     axiom += " & "
-        return axiom
+        f1 = Binary_Formula("", lhs, rhs, "=>")
+        return Axiom('tff',f"axiom_{axiom_num}","axiom",f1)
     
     '''
     Accepts the axiom number, list of condition statements, and the variable assignments to create a tff axiom
@@ -210,7 +214,7 @@ class Axiom_Generator:
     '''
     def gen_delta_ext_tff(self, axiom_num:int, cond_list, assignments_dict):
         axiom = f"tff(delta_ext_{axiom_num},axiom,\n\t("
-        new_cond_list = self.translate_operations(cond_list)
+        new_cond_list = self.parse_clauses(cond_list)
         for pos, cond in enumerate(new_cond_list):
             axiom += f"{cond}"
             if (pos+1) == len(new_cond_list):
@@ -219,7 +223,7 @@ class Axiom_Generator:
                 axiom += f" & "
         if len(assignments_dict) > 0:
             for pos, key in enumerate(assignments_dict.keys()):
-                assignment_value = self.translate_operations([assignments_dict[key]])
+                assignment_value = self.parse_clauses([assignments_dict[key]])
                 axiom += f"next_{key} = {assignment_value[0]}"
                 if (pos+1) == len(assignments_dict):
                     axiom += ")).\n"
@@ -236,45 +240,57 @@ class Axiom_Generator:
     
     '''
     translates every math operation into TPTP syntax
-    args: ops_list = list<string>
-    returns: ops_list = list<string>
+    args: clauses = list<string>
+    returns: new_clauses = list<Constant | Formula>
     '''
-    def translate_operations(self, ops_list):
-        for i in range(len(ops_list)):
-            ops = ops_list[i].split(" ")
+    def parse_clauses(self, clauses):
+        new_clauses = []
+        parser = Parser()
+        for i in range(len(clauses)):
+            parser.parse(clauses[i])
+            ops = clauses[i].split(" ")
             assert len(ops) > 0, "The operation was empty"
             if (len(ops) == 1):
-                op1 = ops[0]
-                op1 = self.find_replace_not(op1)
-                if (op1.endswith(")")):
-                    op1_parts = op1.split(".")
-                    if (op1_parts[0] in self.in_port_names):
-                        if op1_parts[1] == "bag(-1)":
-                            ops_list[i] = f"value(rcvd({op1_parts[0]}))"
-                        else:
-                            assert False, f"{op1_parts[1]} is an unaccounted for function"
-                    else:
-                        assert False, f"{op1_parts[0]} is an unaccounted for attribute"
-                else:
-                    ops_list[i] = f"{op1}"
+                new_clauses.append(self.parse_not_formulas(ops[0]))
             elif (len(ops) == 3):
-                op1 = self.find_replace_not(ops[0])
-                op1 = self.find_replace_bool(op1)
-                op1 = self.find_replace_bag_funcs(op1)
-                op3 = self.find_replace_not(ops[2])
-                op3 = self.find_replace_bool(op3)
-                op3 = self.find_replace_bag_funcs(op3)
-                op2 = self.syntaxMap[ops[1]]
-                if (ops[1] in self.infixConds):
-                    ops_list[i] = f"{op1} {op2} {op3}"
-                elif (ops[1] in self.prefixConds):
-                    ops_list[i] = f"{op2}({op1},{op3})"
-                else:
-                    assert False, f"{op2} is an unrecognized operator: {op1}{op2}{op3}"
+                lhs = self.parse_not_formulas(ops[0])
+                rhs = self.parse_not_formulas(ops[2])
+                new_clauses[i] = Binary_Formula("", lhs, rhs, ops[1])
             else:
                 assert False, "cannot have 2 or more than three ops in a operation"
-        return ops_list
+        return new_clauses
 
+    def parse_clause(self, ops):
+
+
+    '''
+    Recursively builds the antecedent in Clausal Normal Form
+    Args: lhs = Binary_Formula, remaining_clauses = list[Constant|Formula]
+    Returns: Binary_Formula
+    '''
+    def build_CNF(self, lhs:Binary_Formula, remaining_clauses) -> Binary_Formula:
+        rhs = remaining_clauses.pop(0)
+        if (len(remaining_clauses) == 0):
+            return Binary_Formula("", lhs, rhs, "&&")
+        else:
+            return self.build_CNF(Binary_Formula("",lhs,rhs,"&&"), remaining_clauses)
+
+
+    '''
+    Function that checks if the string contains a constant expression or a Unary Not Formula
+    Args: s = string
+    Returns: Constant | Unary_Formula
+    '''
+    def parse_not_formulas(self, s:str) -> Constant | Unary_Formula:
+        if s.startswith("!"):
+            s = s.replace("!","")
+            if (s.startswith("(") and s.endswith(")")):
+                s = s.replace("(","")
+                s = s.replace(")","")
+            result = Unary_Formula("",Constant(s),"!")
+        else:
+            result = Constant(s)
+        return result
 
     '''
     Parses the JSON dictionary for the internal transition function
