@@ -4,6 +4,7 @@
             "count": "int",
             "increment": "unsigned int",
             "countUp": "bool",
+            "countDown": "bool",
             "sigma": "double"
         },
         "x": {
@@ -14,7 +15,7 @@
             "count_out": "int"
         },
         "delta_int": {
-            "(countUp == true)": {
+            "(direction_in.bagSize() == true) | (countDown == false)": {
                 "count": "(count + increment)",
                 "increment": "(sigma * 4)"
             },

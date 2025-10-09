@@ -1,7 +1,8 @@
 import json
 import os
-from py_expression_eval import Parser
+import re
 from axiom import Axiom, Binary_Formula, Unary_Formula, Formula, Constant
+from Equation import Expression
 
 
 
@@ -52,14 +53,16 @@ class Axiom_Generator:
     
         self.tff_string+=("\n%-----STATE VARIABLE DEFINITIONS\n")
         for pos, key in enumerate(state):
-            self.state_var_names.append(key)
             line = "tff("+key+", type, "
             if (state[key] in self.integers):
                 line+= "$int)."
+
             elif (state[key] == "bool"):
                 line+= "$o)."
+
             elif (state[key] in self.reals):
                 line+= "$real)."
+
             self.tff_string+=(line+"\n")
             line = "tff(next_"+key+", type, "
             if (state[key] in self.integers):
@@ -245,23 +248,49 @@ class Axiom_Generator:
     '''
     def parse_clauses(self, clauses):
         new_clauses = []
-        parser = Parser()
         for i in range(len(clauses)):
-            parser.parse(clauses[i])
-            ops = clauses[i].split(" ")
-            assert len(ops) > 0, "The operation was empty"
-            if (len(ops) == 1):
-                new_clauses.append(self.parse_not_formulas(ops[0]))
-            elif (len(ops) == 3):
-                lhs = self.parse_not_formulas(ops[0])
-                rhs = self.parse_not_formulas(ops[2])
-                new_clauses[i] = Binary_Formula("", lhs, rhs, ops[1])
-            else:
-                assert False, "cannot have 2 or more than three ops in a operation"
+            clause = clauses[i]
+            clause = clause.replace("||","|")
+            clause = clause.replace("&&","&")
+            clause = clause.replace("()","")
+            clause = clause.replace("(-1)","")
+            clause = clause.replace(".","_")
+            new_clauses.append(self.parse_clause(str(Expression(clause))))
+            self.parse_clause(clauses[i])
         return new_clauses
 
-    def parse_clause(self, ops):
+    '''
+    Use SymPy to parse the string expression's abstract syntax tree and convert it to Formula/Constant objects
+    Args: clause = string
+    returns: Formula | Constant
+    '''
+    def parse_clause(self, clause):
+        
+        clause = clause.replace("\\left(","(")
+        clause = clause.replace("\\right)",")")
+        
+        if clause.count("(") > 0:
+            clause = clause[1:-1]
+            outside_bs = ""
+            stack = 0
+            outside_start = 0
+            outside_end = 0
+            for i in range(len(clause)):
+                if (clause[i] == "("):
+                    stack+=1
+                elif (clause[i] == ")"):
+                    stack-=1
+                elif (stack == 0):
+                    outside_end = i+1
+                    outside_bs += clause[i]
+            outside_start = outside_end - len(outside_bs)
+            assert(outside_bs == clause[outside_start:outside_end])
+        else:
+            
 
+
+        operator = re.split(r"\\left\((.*?)\\right\)", clause)
+        return clause
 
     '''
     Recursively builds the antecedent in Clausal Normal Form
