@@ -191,14 +191,15 @@ class Axiom_Generator:
             lhs = new_cond_list[0]
 
         if len(assignments_dict) > 0:
-
+            assignments = []
             for pos, key in enumerate(assignments_dict.keys()):
-                assignment_value = self.parse_clauses([assignments_dict[key]])
-                axiom += f"next_{key} = {assignment_value[0]}"
-                if (pos+1) == len(assignments_dict):
-                    axiom += ")).\n"
-                else:
-                    axiom += " & "
+                assignment_values = self.parse_clauses([assignments_dict[key]])
+                assignment_value = assignment_values[0]
+                assignments.append(Binary_Formula("", Constant(f"next_{key}"), assignment_value, "=="))
+            if (len(assignments) > 1):
+                rhs = self.build_CNF(Binary_Formula("",assignments.pop(0),assignments.pop(0),"&&"), assignments)
+            else:
+                rhs = assignments[0]
         else:
             for pos, var in enumerate(self.state_var_names):
                 axiom += f"next_{var} = {var}"
@@ -256,7 +257,6 @@ class Axiom_Generator:
             clause = clause.replace("(-1)","")
             clause = clause.replace(".","_")
             new_clauses.append(self.parse_clause(str(Expression(clause))))
-            self.parse_clause(clauses[i])
         return new_clauses
 
     '''
@@ -268,29 +268,53 @@ class Axiom_Generator:
         
         clause = clause.replace("\\left(","(")
         clause = clause.replace("\\right)",")")
+        clause = clause.replace(" = ", " == ")
+        clause = clause.replace("\\lor", "||")
+        clause = clause.replace("\\land", "&&")
+        clause = clause.replace("\\neg ", "!")
+        clause = clause.replace("\\neq", "!=")
+        clause = clause.replace("\\leq", "<=")
+        clause = clause.replace("\\geq", ">=")
+        clause = clause.replace("\\times", "*")
         
-        if clause.count("(") > 0:
-            clause = clause[1:-1]
-            outside_bs = ""
-            stack = 0
-            outside_start = 0
-            outside_end = 0
-            for i in range(len(clause)):
-                if (clause[i] == "("):
-                    stack+=1
-                elif (clause[i] == ")"):
-                    stack-=1
-                elif (stack == 0):
-                    outside_end = i+1
-                    outside_bs += clause[i]
-            outside_start = outside_end - len(outside_bs)
-            assert(outside_bs == clause[outside_start:outside_end])
+        if clause.startswith("!"):
+            return Unary_Formula("",self.parse_clause("("+clause[1:]+")"), "!")
         else:
-            
-
-
-        operator = re.split(r"\\left\((.*?)\\right\)", clause)
-        return clause
+            clause = clause[1:-1]
+            lb = clause.find("(")
+            if lb == -1:
+                ops = clause.split(" ")
+                if (len(ops) == 1):
+                    return Constant(ops[0])
+                elif (len(ops) == 3):
+                    return Binary_Formula("",ops[0], ops[2], ops[1])
+                else:
+                    assert False, f"{ops} should only have 1 or 3 elements split by whitespaces"
+            elif lb >= 0:
+                stack = 0
+                outside_start = 0
+                outside_end = 0
+                whitespace = 0
+                outside = ""
+                for i in range(len(clause)):
+                    if (clause[i] == "("):
+                        stack += 1
+                    elif (clause[i] == ")"):
+                        stack -= 1
+                    elif (stack == 0):
+                        if (clause[i] == " "):
+                            whitespace += 1
+                            if (whitespace == 2):
+                                outside_end = i
+                            elif (whitespace == 1):
+                                outside_start = i
+                        else:
+                            outside += clause[i]
+                lhs = clause[:outside_start].strip()
+                rhs = clause[outside_end:].strip()
+                return Binary_Formula("",self.parse_clause(lhs),self.parse_clause(rhs), outside.strip())
+            else:
+                assert False, f"{lb} cannot be lower than -1"
 
     '''
     Recursively builds the antecedent in Clausal Normal Form

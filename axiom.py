@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-infixConds = ["==", "!=", "&&", "||", "=", "&", "|", "=>"]
+infixConds = ["==", "!=", "&&", "||", "=", "&", "|", "=>", "\\lor"]
 prefixConds = ["<", "<=", ">", ">=","--","-","+","*","/", "$less", "$lesseq", "$greater", "$greatereq", "$uminus", "$sum", "$difference", "$product", "$quotient"]
 syntaxMap = {"true":"$true", "false":"$false", "==":"=", "<":"$less", "<=":"$lesseq", ">":"$greater", ">=":"$greatereq", "--":"$uminus", "+":"$sum", "-":"$difference", "*":"$product", "/":"$quotient", "&&":"&", "||":"|", "!=":"!=", "!":"~", "=>":"=>"}
 
