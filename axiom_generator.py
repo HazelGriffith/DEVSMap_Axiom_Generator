@@ -54,6 +54,7 @@ class Axiom_Generator:
         self.tff_string+=("\n%-----STATE VARIABLE DEFINITIONS\n")
         for pos, key in enumerate(state):
             line = "tff("+key+", type, "
+            self.state_var_names.append(key)
             if (state[key] in self.integers):
                 line+= "$int)."
 
@@ -169,8 +170,7 @@ class Axiom_Generator:
         
         for i in range(len(cond_list)):
             if (cond_list[i].startswith("!")):
-                cond_list[i].replace("!(","")
-                cond_list[i].replace(")","")
+                cond_list[i].replace("!","")
             else:
                 cond_list[i] = f"!({cond_list[i]})"
         return cond_list
@@ -190,23 +190,21 @@ class Axiom_Generator:
         else:
             lhs = new_cond_list[0]
 
+        assignments = []
         if len(assignments_dict) > 0:
-            assignments = []
             for pos, key in enumerate(assignments_dict.keys()):
                 assignment_values = self.parse_clauses([assignments_dict[key]])
                 assignment_value = assignment_values[0]
                 assignments.append(Binary_Formula("", Constant(f"next_{key}"), assignment_value, "=="))
-            if (len(assignments) > 1):
-                rhs = self.build_CNF(Binary_Formula("",assignments.pop(0),assignments.pop(0),"&&"), assignments)
-            else:
-                rhs = assignments[0]
         else:
             for pos, var in enumerate(self.state_var_names):
-                axiom += f"next_{var} = {var}"
-                if (pos+1) == len(self.state_var_names):
-                    axiom += ")).\n"
-                else:
-                    axiom += " & "
+                assignments.append(Binary_Formula("",Constant(f"next_{var}"),Constant(f"{var}"), "=="))
+        if (len(assignments) > 1):
+            rhs = self.build_CNF(Binary_Formula("",assignments.pop(0),assignments.pop(0),"&&"), assignments)
+        elif (len(assignments) == 1):
+            rhs = assignments[0]
+        else:
+            assert False, "There cannot be zero assignments"
         f1 = Binary_Formula("", lhs, rhs, "=>")
         return Axiom('tff',f"axiom_{axiom_num}","axiom",f1)
     
@@ -322,11 +320,14 @@ class Axiom_Generator:
     Returns: Binary_Formula
     '''
     def build_CNF(self, lhs:Binary_Formula, remaining_clauses) -> Binary_Formula:
-        rhs = remaining_clauses.pop(0)
-        if (len(remaining_clauses) == 0):
-            return Binary_Formula("", lhs, rhs, "&&")
+        if (len(remaining_clauses) > 0):
+            rhs = remaining_clauses.pop(0)
+            if (len(remaining_clauses) == 0):
+                return Binary_Formula("", lhs, rhs, "&&")
+            else:
+                return self.build_CNF(Binary_Formula("",lhs,rhs,"&&"), remaining_clauses)
         else:
-            return self.build_CNF(Binary_Formula("",lhs,rhs,"&&"), remaining_clauses)
+            return lhs
 
 
     '''
