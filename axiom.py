@@ -14,11 +14,11 @@ class Constant:
             self.value = "$true"
         elif (self.value.casefold() == "false"):
             self.value = "$false"
-        elif self.value.endswith(".bagSize()"):
-            self.value = self.value.replace(".bagSize()","")
+        elif self.value.endswith("_bagSize()"):
+            self.value = self.value.replace("_bagSize()","")
             self.value = f"num_rcvd({self.value})"
-        elif self.value.endswith(".bag(-1)"):
-            self.value = self.value.replace(".bag(-1)","")
+        elif self.value.endswith("_bag(-1)"):
+            self.value = self.value.replace("_bag(-1)","")
             self.value = f"val_rcvd({self.value})"
 
     def __str__(self) -> str:
@@ -49,9 +49,9 @@ class Binary_Formula(Formula):
     def __str__(self) -> str:
         self.translate()
         if self.operator in infixConds:
-            return f"{self.lhs} {self.operator} {self.rhs}"
+            return f"{self.quantifier}{self.lhs} {self.operator} {self.rhs}"
         elif self.operator in prefixConds:
-            return f"{self.operator}({self.lhs},{self.rhs})"
+            return f"{self.quantifier}{self.operator}({self.lhs},{self.rhs})"
         else: 
             assert False, f"The operator {self.operator} is unsupported"
         
@@ -71,7 +71,7 @@ class Unary_Formula(Formula):
 
     def __str__(self) -> str:
         self.translate()
-        return f"{self.operator}({self.operand})"
+        return f"{self.quantifier}{self.operator}({self.operand})"
 
 class Axiom:
 
@@ -83,7 +83,7 @@ class Axiom:
 
     def __str__(self) -> str:
         if (self.language == "tff"):
-            line = f"tff({self.name},{self.role},{self.formula})."
+            line = f"tff({self.name},{self.role},{self.formula}).\n"
         else:
             assert False, "The selected language is unsupported"
         return line

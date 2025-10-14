@@ -12,6 +12,7 @@ class Axiom_Generator:
     infixConds = ["==", "!=", "&&", "||"]
     prefixConds = ["<", "<=", ">", ">=","--","-","+","*","/"]
     syntaxMap = {"true":"$true", "false":"$false", "==":"=", "<":"$less", "<=":"$lesseq", ">":"$greater", ">=":"$greatereq", "--":"$uminus", "+":"$sum", "-":"$difference", "*":"$product", "/":"$quotient", "&&":"&", "||":"|", "!=":"!="}
+    section_names = ["state_var_axioms", "i_port_axioms", "o_port_axioms", "delta_int_axioms", "delta_ext_axioms", "delta_con_axioms", "lambda_axioms", "ta_axioms"]
 
     def __init__(self, model_file_path: str, init_state_file_path: str):
         #Getting atomic model file
@@ -27,7 +28,9 @@ class Axiom_Generator:
         self.state_var_names = []
         self.in_port_names = []
         self.out_port_names = []
-        self.axioms = []
+        self.axioms = {}
+        for section in self.section_names:
+            self.axioms.update({section:[]})
 
     '''
     Creates a new .p file with the given name containing the tff axioms generated
@@ -36,8 +39,21 @@ class Axiom_Generator:
     def save(self, filename:str):
         try:
             with open(filename+".p", 'x') as pfile:
-                for ax in self.axioms:
-                    pfile.write(ax)
+                for section in self.section_names:
+                    if section == "state_var_axioms":
+                        pfile.write("%-----STATE VARIABLE DEFINITIONS\n")
+                    elif section == "i_port_axioms":
+                        pfile.write("%-----INPUT PORT DEFINITIONS\n")
+                    elif section == "o_port_axioms":
+                        pfile.write("%-----OUTPUT PORT DEFINITIONS\n")
+                    elif section == "delta_int_axioms":
+                        pfile.write("%-----INTERNAL TRANSITION FUNCTION AXIOMS\n")
+                    elif section == "delta_ext_axioms":
+                        pfile.write("%-----INTERNAL TRANSITION FUNCTION AXIOMS\n")
+                    
+                    axioms = self.axioms[section]
+                    for axiom in axioms:
+                        pfile.write(axiom.__str__())
 
         except Exception as e:
             os.remove(filename+".p")
@@ -50,29 +66,35 @@ class Axiom_Generator:
     '''
     def parse_state_vars(self):
         state = self.model_json["s"]
-    
-        self.tff_string+=("\n%-----STATE VARIABLE DEFINITIONS\n")
+        state_var_axioms = []
+
         for pos, key in enumerate(state):
-            line = "tff("+key+", type, "
+            var_type = ""
             self.state_var_names.append(key)
             if (state[key] in self.integers):
-                line+= "$int)."
+                var_type = "$int"
 
             elif (state[key] == "bool"):
-                line+= "$o)."
+                var_type = "$o"
 
             elif (state[key] in self.reals):
-                line+= "$real)."
+                var_type = "$real"
+            else:
+                assert False, f"{state[key]} variable type is unsupported"
 
-            self.tff_string+=(line+"\n")
-            line = "tff(next_"+key+", type, "
+            state_var_axioms.append(Axiom("tff", key, "type", Constant(var_type)))
+
             if (state[key] in self.integers):
-                line+= "$int)."
+                var_type += "$int)."
             elif (state[key] == "bool"):
-                line+= "$o)."
+                var_type += "$o)."
             elif (state[key] in self.reals):
-                line+= "$real)."
-            self.tff_string+=(line+"\n")
+                var_type += "$real)."
+
+            state_var_axioms.append(Axiom("tff",f"next_{key}", "type", Constant(var_type)))
+
+        self.axioms.update({"state_var_axioms":state_var_axioms})
+
 
     '''
     Parses the JSON dictionary for the input port information and saves 
@@ -80,28 +102,48 @@ class Axiom_Generator:
     '''
     def parse_i_ports(self):
         in_ports = self.model_json["x"]
+        i_port_axioms = []
 
-        self.tff_string+=("\n%-----INPUT PORT DEFINITIONS\n")
-        self.tff_string+=("tff(i_port_type, type, i_port : $tType).\n")
-        define_set = "tff(only_i_ports, axiom,\n\t! [IP : i_port] :\n\t\t( "
+        i_port_axioms.append(Axiom("tff","i_port_type","type", Constant("i_port : $tType")))
+        
         for pos, key in enumerate(in_ports):
             self.in_port_names.append(key)
-            self.tff_string+=("tff("+key+", type, "+key+" : i_port).\n")
-            self.tff_string+=f"tff(num_rcvd_{key}, type, num_rcvd_{key} : $int).\n"
-            line = "tff(val_rcvd_"+key+", type, val_rcvd_"+key+" : "
+            i_port_axioms.append(Axiom("tff",key,"type", Constant(f"{key} : i_port")))
+            i_port_axioms.append(Axiom("tff",f"num_rcvd_{key}", "type", Constant(f"num_rcvd_{key} : $int")))
+
+            p_type = ""
             if (in_ports[key] in self.integers):
-                line += "$int)."
+                p_type = "$int"
             elif (in_ports[key] == "bool"):
-                line += "$o)."
+                p_type = "$o"
             elif (in_ports[key] in self.reals):
-                line += "$real)."
-            self.tff_string+=(line+"\n")
-            define_set += "IP = "+key
-            if (pos+1 != len(in_ports)):
-                define_set += " | "
+                p_type = "$real"
             else:
-                define_set += ")).\n\n"
-        self.tff_string+=(define_set)
+                assert False, f"{p_type} is an unsupported variable type"
+
+            i_port_axioms.append(Axiom("tff",f"val_rcvd_{key}", "type", f"val_rcvd_{key} : {p_type}"))
+
+        if (len(self.in_port_names) > 0):
+            if (len(self.in_port_names) == 1):
+                only_i_ports_f = Binary_Formula("! [IP : i_port]", Constant("IP"), Constant(self.in_port_names[0]), "==")
+            elif (len(self.in_port_names) == 2):
+                lhs = Binary_Formula("", Constant("IP"), Constant(self.in_port_names[0]), "==")
+                rhs = Binary_Formula("", Constant("IP"), Constant(self.in_port_names[1]), "==")
+                only_i_ports_f = Binary_Formula("! [IP : i_port]", lhs, rhs, "||")
+            elif (len(self.in_port_names) > 2):
+                lhs = Binary_Formula("", Constant("IP"), Constant(self.in_port_names[0]), "==")
+                rhs = Binary_Formula("", Constant("IP"), Constant(self.in_port_names[1]), "==")
+                only_i_ports_f = Binary_Formula("", lhs, rhs, "||")
+                for i in range(2,len(self.in_port_names)):
+                    rhs = Binary_Formula("", Constant("IP"), Constant(self.in_port_names[i]), "==")
+                    if i == len(self.in_port_names):
+                        only_i_ports_f = Binary_Formula("! [IP : i_port]", only_i_ports_f, rhs, "||")
+                    else:
+                        only_i_ports_f = Binary_Formula("", only_i_ports_f, rhs, "||")
+
+            i_port_axioms.append(Axiom("tff","only_i_ports","axiom", only_i_ports_f))
+        
+        self.axioms.update({"i_port_axioms":i_port_axioms})
     
     '''
     Parses the JSON dictionary for the output port information and saves 
@@ -109,19 +151,35 @@ class Axiom_Generator:
     '''
     def parse_o_ports(self):
         out_ports = self.model_json["y"]
+        o_port_axioms = []
 
-        self.tff_string+=("\n%-----OUTPUT PORT DEFINITIONS\n")
-        self.tff_string+=("tff(o_port_type, type, o_port : $tType).\n")
-        define_set = "tff(only_o_ports, axiom,\n\t! [OP : o_port] :\n\t\t( "
+        o_port_axioms.append(Axiom("tff", "o_port_type", "type", Constant("o_port : $tType")))
+
         for pos, key in enumerate(out_ports):
             self.out_port_names.append(key)
-            self.tff_string+=("tff("+key+", type, "+key+" : o_port).\n")
-            define_set += "OP = "+key
-            if (pos+1 != len(out_ports)):
-                define_set += " | "
-            else:
-                define_set += ")).\n\n"
-        self.tff_string+=(define_set)
+            o_port_axioms.append(Axiom("tff",key,"type", Constant(f"{key} : o_port")))
+
+        if (len(self.out_port_names) > 0):
+            if (len(self.out_port_names) == 1):
+                only_o_ports_f = Binary_Formula("! [OP : o_port]", Constant("OP"), Constant(self.out_port_names[0]), "==")
+            elif (len(self.out_port_names) == 2):
+                lhs = Binary_Formula("", Constant("OP"), Constant(self.out_port_names[0]), "==")
+                rhs = Binary_Formula("", Constant("OP"), Constant(self.out_port_names[1]), "==")
+                only_o_ports_f = Binary_Formula("! [OP : o_port]", lhs, rhs, "||")
+            elif (len(self.out_port_names) > 2):
+                lhs = Binary_Formula("", Constant("OP"), Constant(self.out_port_names[0]), "==")
+                rhs = Binary_Formula("", Constant("OP"), Constant(self.out_port_names[1]), "==")
+                only_o_ports_f = Binary_Formula("", lhs, rhs, "||")
+                for i in range(2,len(self.out_port_names)):
+                    rhs = Binary_Formula("", Constant("OP"), Constant(self.out_port_names[i]), "==")
+                    if i == len(self.out_port_names):
+                        only_o_ports_f = Binary_Formula("! [OP : o_port]", only_o_ports_f, rhs, "||")
+                    else:
+                        only_o_ports_f = Binary_Formula("", only_o_ports_f, rhs, "||")
+
+            o_port_axioms.append(Axiom("tff","only_o_ports","axiom", only_o_ports_f))
+
+        self.axioms.update({"o_port_axioms":o_port_axioms})
 
     '''
     Recursively parses and generates axioms from the trans function dictionaries
@@ -129,10 +187,10 @@ class Axiom_Generator:
     returns: axiom_num = int, axiom = string
     '''
 
-    def parse_devsmap_dict(self, axiom_num:int, cond_list, transition_function, translation):
+    def parse_devsmap_dict(self, axiom_num:int, cond_list, transition_function, axiom_type:str):
         #Assumes no dictionary will have different key-value types within itself
         if (len(transition_function) == 0) or isinstance(list(transition_function.values())[0], str):
-            axiom = translation(axiom_num, cond_list, transition_function)
+            axiom = self.gen_delta_axiom(axiom_num, cond_list, transition_function, axiom_type)
             return axiom, axiom_num+1
         elif isinstance(list(transition_function.values())[0], dict):
             other_conds = []
@@ -142,21 +200,25 @@ class Axiom_Generator:
                     other_conds.append(key)
                     new_cond_list = cond_list.copy()
                     new_cond_list.append(key)
-                    axiom, num = self.parse_devsmap_dict(num, new_cond_list, transition_function[key], translation)
+                    axiom, num = self.parse_devsmap_dict(num, new_cond_list, transition_function[key], axiom_type)
                     if axiom is None:
                         return None, num
                     else:
-                        self.axioms.append(axiom)
+                        axiom_list = self.axioms[f"{axiom_type}_axioms"]
+                        axiom_list.append(axiom)
+                        self.axioms.update({f"{axiom_type}_axioms":axiom_list})
             other_conds = self.negate_conds(other_conds)
             if 'otherwise' in transition_function.keys():
-                axiom, num = self.parse_devsmap_dict(num, other_conds, transition_function['otherwise'], translation)
+                axiom, num = self.parse_devsmap_dict(num, other_conds, transition_function['otherwise'], axiom_type)
             else:
-                axiom, num = self.parse_devsmap_dict(num, other_conds, {}, translation)
+                axiom, num = self.parse_devsmap_dict(num, other_conds, {}, axiom_type)
 
             if axiom is None:
                 return None, num
             else:
-                self.axioms.append(axiom)
+                axiom_list = self.axioms[f"{axiom_type}_axioms"]
+                axiom_list.append(axiom)
+                self.axioms.update({f"{axiom_type}_axioms":axiom_list})
             return None, num
         else:
             assert False, "The transition functions keys and values can only ever be strings or nested dictionaries"
@@ -182,7 +244,7 @@ class Axiom_Generator:
     args: axiom_num = int, cond_list = list<string>, assignment_dict = dict<string: string>
     returns: axiom = string
     '''
-    def gen_delta_int_tff(self, axiom_num:int, cond_list, assignments_dict):
+    def gen_delta_axiom(self, axiom_num:int, cond_list, assignments_dict, axiom_type:str):
         
         new_cond_list = self.parse_clauses(cond_list)
         if (len(new_cond_list) > 1):
@@ -206,39 +268,7 @@ class Axiom_Generator:
         else:
             assert False, "There cannot be zero assignments"
         f1 = Binary_Formula("", lhs, rhs, "=>")
-        return Axiom('tff',f"axiom_{axiom_num}","axiom",f1)
-    
-    '''
-    Accepts the axiom number, list of condition statements, and the variable assignments to create a tff axiom
-    describing one axiom of the external transition function
-    args: axiom_num = int, cond_list = list<string>, assignment_dict = dict<string: string>
-    returns: axiom = string
-    '''
-    def gen_delta_ext_tff(self, axiom_num:int, cond_list, assignments_dict):
-        axiom = f"tff(delta_ext_{axiom_num},axiom,\n\t("
-        new_cond_list = self.parse_clauses(cond_list)
-        for pos, cond in enumerate(new_cond_list):
-            axiom += f"{cond}"
-            if (pos+1) == len(new_cond_list):
-                axiom += f") =>\n\t\t("
-            else:
-                axiom += f" & "
-        if len(assignments_dict) > 0:
-            for pos, key in enumerate(assignments_dict.keys()):
-                assignment_value = self.parse_clauses([assignments_dict[key]])
-                axiom += f"next_{key} = {assignment_value[0]}"
-                if (pos+1) == len(assignments_dict):
-                    axiom += ")).\n"
-                else:
-                    axiom += " & "
-        else:
-            for pos, var in enumerate(self.state_var_names):
-                axiom += f"next_{var} = {var}"
-                if (pos+1) == len(self.state_var_names):
-                    axiom += ")).\n"
-                else:
-                    axiom += " & "
-        return axiom
+        return Axiom('tff',f"{axiom_type}_axiom_{axiom_num}","axiom",f1)
     
     '''
     translates every math operation into TPTP syntax
@@ -269,14 +299,14 @@ class Axiom_Generator:
         clause = clause.replace(" = ", " == ")
         clause = clause.replace("\\lor", "||")
         clause = clause.replace("\\land", "&&")
-        clause = clause.replace("\\neg ", "!")
-        clause = clause.replace("\\neq", "!=")
+        clause = clause.replace(" \\neg ", " != ")
+        clause = clause.replace("\\neg", "!")
         clause = clause.replace("\\leq", "<=")
         clause = clause.replace("\\geq", ">=")
         clause = clause.replace("\\times", "*")
         
         if clause.startswith("!"):
-            return Unary_Formula("",self.parse_clause("("+clause[1:]+")"), "!")
+            return Unary_Formula("",self.parse_clause(clause[1:]), "!")
         else:
             clause = clause[1:-1]
             lb = clause.find("(")
@@ -310,7 +340,7 @@ class Axiom_Generator:
                             outside += clause[i]
                 lhs = clause[:outside_start].strip()
                 rhs = clause[outside_end:].strip()
-                return Binary_Formula("",self.parse_clause(lhs),self.parse_clause(rhs), outside.strip())
+                return Binary_Formula("",self.parse_clause(lhs),self.parse_clause(rhs), clause[outside_start:outside_end+1])
             else:
                 assert False, f"{lb} cannot be lower than -1"
 
@@ -355,7 +385,7 @@ class Axiom_Generator:
 
         self.tff_string+=("\n%-----INTERNAL TRANSITIONS\n")
 
-        self.parse_devsmap_dict(0,[],delta_int,self.gen_delta_int_tff)
+        self.parse_devsmap_dict(0,[],delta_int,"delta_int")
     
     '''
     Parses the JSON dictionary for the external transition function
@@ -366,89 +396,7 @@ class Axiom_Generator:
 
         self.tff_string+=("\n&-----EXTERNAL TRANSITIONS\n")
 
-        self.parse_devsmap_dict(0,[],delta_ext,self.gen_delta_ext_tff)
-
-    '''
-    When given a string it will check if the not function "!" is at the start
-    and replace it with the TPTP syntax "~" not function
-    Args: s = string
-    returns: string
-    '''
-    def find_replace_not(self, s:str) -> str:
-        if s.startswith("!"):
-            return s.replace("!","~")
-        else:
-            return s
-
-    '''
-    When given a string that contains a boolean of true 
-    or false it will return the TPTP syntax version
-    Args: s = string
-    returns: string
-    '''
-    def find_replace_bool(self, s:str) -> str:
-        if (s == "true" or s == "True"):
-            return "$true"
-        elif (s == "false" or s == "False"):
-            return "$false"
-        else:
-            return s
-        
-    '''
-    When given a string that contains a bag function
-    the function will return its TPTP equivalent
-    Args: s = string
-    returns: string
-    '''
-    def find_replace_bag_funcs(self, s:str) -> str:
-        if s.endswith("bagSize()"):
-            for port in self.in_port_names:
-                if port in s:
-                    if s.startswith("!") or s.startswith("~"):
-                        return f"!(num_rcvd({port}))"
-                    else:
-                        return f"num_rcvd({port})"
-            assert False, f"bagSize must be associated with an in_port not {s}"
-        elif s.endswith("bag(-1)"):
-            for port in self.in_port_names:
-                if port in s:
-                    if s.startswith("!") or s.startswith("~"):
-                        return f"!(val_rcvd({port}))"
-                    else:
-                        return f"val_rcvd({port})"
-            assert False, f"bag(-1) must be associated with an in_port not {s}"
-        else:
-            return s
-        
-    '''
-    Flatten the nested dictionary of conditions and state variable assignments
-    Args: d = dictionary
-    returns: dictionary
-    '''
-    def flatten_dict(self, d:dict) -> dict:
-        flat_d = {}
-        stack = [(d, '')]
-
-        while stack:
-            c, p = stack.pop()
-            
-            strings = []
-            for k, v in c.items():
-                
-                if isinstance(v, dict):
-                    if len(v) > 0:
-                        new_key = f"{p};{k}" if p else k
-                        stack.append((v, new_key)) 
-                    else:
-                        strings.append(k)
-                else:
-                    strings.append(k+ " = "+v)
-            if (len(strings) > 0):
-                if (p == ''):
-                    flat_d[strings[0].casefold()] = ['True']
-                else:
-                    flat_d[p.casefold()] = strings
-        return flat_d
+        self.parse_devsmap_dict(0,[],delta_ext,"delta_ext")
 
 if __name__ == "__main__":
 
