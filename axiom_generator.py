@@ -12,7 +12,7 @@ class Axiom_Generator:
     infixConds = ["==", "!=", "&&", "||"]
     prefixConds = ["<", "<=", ">", ">=","--","-","+","*","/"]
     syntaxMap = {"true":"$true", "false":"$false", "==":"=", "<":"$less", "<=":"$lesseq", ">":"$greater", ">=":"$greatereq", "--":"$uminus", "+":"$sum", "-":"$difference", "*":"$product", "/":"$quotient", "&&":"&", "||":"|", "!=":"!="}
-    section_names = ["state_var_axioms", "i_port_axioms", "o_port_axioms", "delta_int_axioms", "delta_ext_axioms", "delta_con_axioms", "lambda_axioms", "ta_axioms", "devs_tff_axioms"]
+    section_names = ["state_var_axioms", "i_port_axioms", "o_port_axioms", "delta_int_axioms", "delta_ext_axioms", "delta_con_axioms", "lambda_axioms", "ta_axioms"]
 
     def __init__(self, model_file_path: str, init_state_file_path: str):
         #Getting atomic model file
@@ -31,7 +31,6 @@ class Axiom_Generator:
         self.axioms = {}
         for section in self.section_names:
             self.axioms.update({section:[]})
-        self.add_devs_tff_axioms()
 
     '''
     Creates a new .p file with the given name containing the tff axioms generated
@@ -57,12 +56,12 @@ class Axiom_Generator:
                         pfile.write("\n%-----LAMBDA AXIOMS\n\n")
                     elif section == "ta_axioms":
                         pfile.write("\n%-----TIME ADVANCE AXIOMS\n\n")
-                    elif section == "devs_tff_axioms":
-                        pfile.write("\n%-----DEVS TFF AXIOMS\n\n")
                     
                     axioms = self.axioms[section]
                     for axiom in axioms:
                         pfile.write(axiom.__str__()+"\n")
+
+                pfile.write(self.add_devs_tff_axioms())
 
         except Exception as e:
             os.remove(filename+".p")
@@ -70,8 +69,38 @@ class Axiom_Generator:
 
 
     def add_devs_tff_axioms(self):
-        devs_axioms = []
-        #devs_axioms.append(Axiom("tff",""))
+        line = ""
+        line += "\n%-----DEVS TFF AXIOMS\n\n"
+        axiom1 = ("tff(internal_transition_occurred,axiom,\n\t" +
+                    "! [IP : i_port]\n\t\t" +
+                        "((($greatereq(time_passed,time_advance)) & \n\t\t" +
+                        "(num_rcvd(IP) = 0)) => (\n\t\t"+
+                        "(internal_transition = $true) &\n\t\t" +
+                        "(external_transition = $false) &\n\t\t" +
+                        "(confluence_transition = $false) &\n\t\t" +
+                        "(output = $true)))).\n\n")
+        
+        axiom2 = ("tff(external_transition_occurred,axiom,\n\t" +
+                    "? [IP : i_port]\n\t\t" +
+                        "((($less(time_passed,time_advance)) & \n\t\t" +
+                        "(num_rcvd(IP) != 0)) => (\n\t\t"+
+                        "(internal_transition = $false) &\n\t\t" +
+                        "(external_transition = $true) &\n\t\t" +
+                        "(confluence_transition = $false) &\n\t\t" +
+                        "(output = $false)))).\n\n")
+                
+        axiom3 = ("tff(confluence_transition_occurred,axiom,\n\t" +
+                    "? [IP : i_port]\n\t\t" +
+                        "((($greatereq(time_passed,time_advance)) & \n\t\t" +
+                        "(num_rcvd(IP) != 0)) => (\n\t\t"+
+                        "(internal_transition = $false) &\n\t\t" +
+                        "(external_transition = $false) &\n\t\t" +
+                        "(confluence_transition = $true) &\n\t\t" +
+                        "(output = $true)))).\n\n")
+        line += axiom1
+        line += axiom2
+        line += axiom3
+        return line
 
 
 
@@ -225,18 +254,20 @@ class Axiom_Generator:
                         axiom_list = self.axioms[f"{axiom_type}_axioms"]
                         axiom_list.append(axiom)
                         self.axioms.update({f"{axiom_type}_axioms":axiom_list})
-            other_conds = self.negate_conds(other_conds)
-            if 'otherwise' in transition_function.keys():
-                axiom, num = self.parse_devsmap_dict(num, other_conds, transition_function['otherwise'], axiom_type)
-            else:
-                axiom, num = self.parse_devsmap_dict(num, other_conds, {}, axiom_type)
+            if axiom_type != "lambda":
+                other_conds = self.negate_conds(other_conds)
+                other_conds.extend(cond_list.copy())
+                if 'otherwise' in transition_function.keys():
+                    axiom, num = self.parse_devsmap_dict(num, other_conds, transition_function['otherwise'], axiom_type)
+                else:
+                    axiom, num = self.parse_devsmap_dict(num, other_conds, {}, axiom_type)
 
-            if axiom is None:
-                return None, num
-            else:
-                axiom_list = self.axioms[f"{axiom_type}_axioms"]
-                axiom_list.append(axiom)
-                self.axioms.update({f"{axiom_type}_axioms":axiom_list})
+                if axiom is None:
+                    return None, num
+                else:
+                    axiom_list = self.axioms[f"{axiom_type}_axioms"]
+                    axiom_list.append(axiom)
+                    self.axioms.update({f"{axiom_type}_axioms":axiom_list})
             return None, num
         else:
             assert False, "The transition functions keys and values can only ever be strings or nested dictionaries"
@@ -410,7 +441,7 @@ class Axiom_Generator:
     def parse_delta_int(self):
         delta_int = self.model_json["delta_int"]
 
-        self.parse_devsmap_dict(0,[],delta_int,"delta_int")
+        self.parse_devsmap_dict(0,["interal_transition == true"],delta_int,"delta_int")
     
     '''
     Parses the JSON dictionary for the external transition function
@@ -419,17 +450,22 @@ class Axiom_Generator:
     def parse_delta_ext(self):
         delta_ext = self.model_json["delta_ext"]
 
-        self.parse_devsmap_dict(0,[],delta_ext,"delta_ext")
+        self.parse_devsmap_dict(0,["external_transition == true"],delta_ext,"delta_ext")
 
     def parse_delta_con(self):
         delta_con = self.model_json["delta_con"]
 
-        self.parse_devsmap_dict(0,[],delta_con,"delta_con")
+        self.parse_devsmap_dict(0,["confluence_transition = true"],delta_con,"delta_con")
 
     def parse_lambda(self):
         lambda_func = self.model_json["lambda"]
-
-        self.parse_devsmap_dict(0,[],lambda_func,"lambda")
+        if (len(lambda_func) == 1) and ("otherwise" in list(lambda_func.keys())[0].casefold()):
+            assignments = lambda_func["otherwise"]
+            lambda_func.pop("otherwise")
+            lambda_func.update({"output == true" : assignments})
+            self.parse_devsmap_dict(0,[],lambda_func,"lambda")
+        else:
+            self.parse_devsmap_dict(0,["output == true"],lambda_func,"lambda")
 
     def parse_ta(self):
         ta_func = self.model_json['ta']
