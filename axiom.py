@@ -14,13 +14,22 @@ class Constant:
             self.value = "$true"
         elif (self.value.casefold() == "false"):
             self.value = "$false"
-        elif self.value.endswith("_bagSize()"):
-            self.value = self.value.replace("_bagSize()","")
+        elif self.value.endswith("_bagSize"):
+            self.value = self.value.replace("_bagSize","")
             self.value = f"num_rcvd({self.value})"
-        elif self.value.endswith("_bag(-1)"):
-            self.value = self.value.replace("_bag(-1)","")
-            self.value = f"val_rcvd({self.value})"
-
+        elif self.value.endswith("_bag"):
+            self.value = self.value.replace("_bag","")
+            self.value = f"val_rcvd_{self.value}"
+        elif self.value.endswith(".addMessage"):
+            self.value = self.value.replace(".addMessage","")
+            if self.value.startswith("next_"):
+                self.value = self.value.replace("next_","")
+            self.value = f"val_output_{self.value}"
+        elif self.value.endswith("time_advance"):
+            if self.value.startswith("next_"):
+                self.value = self.value.replace("next_","")
+            self.value = "time_advance"
+            
     def __str__(self) -> str:
         self.translate()
         return f"{self.value}"
@@ -35,9 +44,22 @@ class Binary_Formula(Formula):
 
     def __init__(self, quantifier:str, lhs:Constant | Formula, rhs:Constant | Formula, operator:str):
         self.quantifier = quantifier
-        self.lhs = lhs
-        self.rhs = rhs
+
+        if isinstance(lhs, Constant) or isinstance(lhs, Formula):
+            self.lhs = lhs
+        else:
+            assert False, "lhs must be a Constant or Formula"
+
+        if isinstance(rhs, Constant) or isinstance(rhs, Formula):
+            self.rhs = rhs
+        else:
+            assert False, "rhs must be a Constant or Formula"
+
         self.operator = operator
+        self.inUnary = False
+
+    def isInUnary(self):
+        self.inUnary = True
 
     def translate(self):
         try:
@@ -48,19 +70,41 @@ class Binary_Formula(Formula):
 
     def __str__(self) -> str:
         self.translate()
+        line = ""
+        
+        
+        if self.quantifier != "":
+            line += f"\n\t{self.quantifier}"
+
+        if isinstance(self.lhs, Constant) and self.inUnary == False:
+            line += "\n\t\t"
+
         if self.operator in infixConds:
-            return f"{self.quantifier}{self.lhs} {self.operator} {self.rhs}"
+            line += f"({self.lhs} {self.operator} {self.rhs})"
         elif self.operator in prefixConds:
-            return f"{self.quantifier}{self.operator}({self.lhs},{self.rhs})"
+            line += f"{self.operator}({self.lhs},{self.rhs})"
         else: 
             assert False, f"The operator {self.operator} is unsupported"
+        return line
         
 class Unary_Formula(Formula):
 
     def __init__(self, quantifier:str, operand:Constant | Formula, operator:str):
         self.quantifier = quantifier
-        self.operand = operand
+        
+        if isinstance(operand, Constant) or isinstance(operand, Formula):
+            self.operand = operand
+        else:
+            assert False, "operand must be a Constant or Formula"
+
+        if isinstance(operand, Formula):
+            self.operand.isInUnary()
+
         self.operator = operator
+        self.inUnary = False
+
+    def isInUnary(self):
+        self.inUnary = True
 
     def translate(self):
         try:
@@ -71,7 +115,14 @@ class Unary_Formula(Formula):
 
     def __str__(self) -> str:
         self.translate()
-        return f"{self.quantifier}{self.operator}({self.operand})"
+        line = ""
+        if self.quantifier != "":
+            line += f"\n\t{self.quantifier}"
+
+        if self.inUnary == False:
+            line += "\n\t\t"
+        line += f"{self.operator}{self.operand}"
+        return line
 
 class Axiom:
 

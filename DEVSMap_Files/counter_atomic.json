@@ -4,7 +4,6 @@
             "count": "int",
             "increment": "unsigned int",
             "countUp": "bool",
-            "countDown": "bool",
             "sigma": "double"
         },
         "x": {
@@ -72,11 +71,13 @@
         },
         "lambda": {
             "otherwise": {
-                "count_out": "count"
+                "count_out.addMessage": "count"
             }
         },
         "ta": {
-            "otherwise": "sigma"
+            "otherwise": {
+                "time_advance": "sigma"
+            }
         }
     },
     "include_sets": [

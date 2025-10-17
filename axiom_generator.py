@@ -12,7 +12,7 @@ class Axiom_Generator:
     infixConds = ["==", "!=", "&&", "||"]
     prefixConds = ["<", "<=", ">", ">=","--","-","+","*","/"]
     syntaxMap = {"true":"$true", "false":"$false", "==":"=", "<":"$less", "<=":"$lesseq", ">":"$greater", ">=":"$greatereq", "--":"$uminus", "+":"$sum", "-":"$difference", "*":"$product", "/":"$quotient", "&&":"&", "||":"|", "!=":"!="}
-    section_names = ["state_var_axioms", "i_port_axioms", "o_port_axioms", "delta_int_axioms", "delta_ext_axioms", "delta_con_axioms", "lambda_axioms", "ta_axioms"]
+    section_names = ["state_var_axioms", "i_port_axioms", "o_port_axioms", "delta_int_axioms", "delta_ext_axioms", "delta_con_axioms", "lambda_axioms", "ta_axioms", "devs_tff_axioms"]
 
     def __init__(self, model_file_path: str, init_state_file_path: str):
         #Getting atomic model file
@@ -31,6 +31,7 @@ class Axiom_Generator:
         self.axioms = {}
         for section in self.section_names:
             self.axioms.update({section:[]})
+        self.add_devs_tff_axioms()
 
     '''
     Creates a new .p file with the given name containing the tff axioms generated
@@ -41,23 +42,37 @@ class Axiom_Generator:
             with open(filename+".p", 'x') as pfile:
                 for section in self.section_names:
                     if section == "state_var_axioms":
-                        pfile.write("%-----STATE VARIABLE DEFINITIONS\n")
+                        pfile.write("\n%-----STATE VARIABLE DEFINITIONS\n\n")
                     elif section == "i_port_axioms":
-                        pfile.write("%-----INPUT PORT DEFINITIONS\n")
+                        pfile.write("\n%-----INPUT PORT DEFINITIONS\n\n")
                     elif section == "o_port_axioms":
-                        pfile.write("%-----OUTPUT PORT DEFINITIONS\n")
+                        pfile.write("\n%-----OUTPUT PORT DEFINITIONS\n\n")
                     elif section == "delta_int_axioms":
-                        pfile.write("%-----INTERNAL TRANSITION FUNCTION AXIOMS\n")
+                        pfile.write("\n%-----INTERNAL TRANSITION FUNCTION AXIOMS\n\n")
                     elif section == "delta_ext_axioms":
-                        pfile.write("%-----INTERNAL TRANSITION FUNCTION AXIOMS\n")
+                        pfile.write("\n%-----EXTERNAL TRANSITION FUNCTION AXIOMS\n\n")
+                    elif section == "delta_con_axioms":
+                        pfile.write("\n%-----CONFLUENCE TRANSITION FUNCTION AXIOMS\n\n")
+                    elif section == "lambda_axioms":
+                        pfile.write("\n%-----LAMBDA AXIOMS\n\n")
+                    elif section == "ta_axioms":
+                        pfile.write("\n%-----TIME ADVANCE AXIOMS\n\n")
+                    elif section == "devs_tff_axioms":
+                        pfile.write("\n%-----DEVS TFF AXIOMS\n\n")
                     
                     axioms = self.axioms[section]
                     for axiom in axioms:
-                        pfile.write(axiom.__str__())
+                        pfile.write(axiom.__str__()+"\n")
 
         except Exception as e:
             os.remove(filename+".p")
             self.save(filename)
+
+
+    def add_devs_tff_axioms(self):
+        devs_axioms = []
+        #devs_axioms.append(Axiom("tff",""))
+
 
 
     '''
@@ -73,24 +88,14 @@ class Axiom_Generator:
             self.state_var_names.append(key)
             if (state[key] in self.integers):
                 var_type = "$int"
-
             elif (state[key] == "bool"):
                 var_type = "$o"
-
             elif (state[key] in self.reals):
                 var_type = "$real"
             else:
                 assert False, f"{state[key]} variable type is unsupported"
 
             state_var_axioms.append(Axiom("tff", key, "type", Constant(var_type)))
-
-            if (state[key] in self.integers):
-                var_type += "$int)."
-            elif (state[key] == "bool"):
-                var_type += "$o)."
-            elif (state[key] in self.reals):
-                var_type += "$real)."
-
             state_var_axioms.append(Axiom("tff",f"next_{key}", "type", Constant(var_type)))
 
         self.axioms.update({"state_var_axioms":state_var_axioms})
@@ -105,11 +110,11 @@ class Axiom_Generator:
         i_port_axioms = []
 
         i_port_axioms.append(Axiom("tff","i_port_type","type", Constant("i_port : $tType")))
+        i_port_axioms.append(Axiom("tff","num_rcvd_type", "type", Constant(f"num_rcvd : i_port > $int")))
         
         for pos, key in enumerate(in_ports):
             self.in_port_names.append(key)
             i_port_axioms.append(Axiom("tff",key,"type", Constant(f"{key} : i_port")))
-            i_port_axioms.append(Axiom("tff",f"num_rcvd_{key}", "type", Constant(f"num_rcvd_{key} : $int")))
 
             p_type = ""
             if (in_ports[key] in self.integers):
@@ -121,7 +126,7 @@ class Axiom_Generator:
             else:
                 assert False, f"{p_type} is an unsupported variable type"
 
-            i_port_axioms.append(Axiom("tff",f"val_rcvd_{key}", "type", f"val_rcvd_{key} : {p_type}"))
+            i_port_axioms.append(Axiom("tff",f"val_rcvd_{key}_type", "type", Constant(f"val_rcvd_{key} : {p_type}")))
 
         if (len(self.in_port_names) > 0):
             if (len(self.in_port_names) == 1):
@@ -154,10 +159,23 @@ class Axiom_Generator:
         o_port_axioms = []
 
         o_port_axioms.append(Axiom("tff", "o_port_type", "type", Constant("o_port : $tType")))
+        o_port_axioms.append(Axiom("tff",f"num_output_type", "type", Constant(f"num_output : o_port > $int")))
 
         for pos, key in enumerate(out_ports):
             self.out_port_names.append(key)
             o_port_axioms.append(Axiom("tff",key,"type", Constant(f"{key} : o_port")))
+
+            p_type = ""
+            if (out_ports[key] in self.integers):
+                p_type = "$int"
+            elif (out_ports[key] == "bool"):
+                p_type = "$o"
+            elif (out_ports[key] in self.reals):
+                p_type = "$real"
+            else:
+                assert False, f"{p_type} is an unsupported variable type"
+
+            o_port_axioms.append(Axiom("tff",f"val_output_{key}_type", "type", Constant(f"val_output_{key} : {p_type}")))
 
         if (len(self.out_port_names) > 0):
             if (len(self.out_port_names) == 1):
@@ -245,12 +263,17 @@ class Axiom_Generator:
     returns: axiom = string
     '''
     def gen_delta_axiom(self, axiom_num:int, cond_list, assignments_dict, axiom_type:str):
-        
-        new_cond_list = self.parse_clauses(cond_list)
-        if (len(new_cond_list) > 1):
-            lhs = self.build_CNF(Binary_Formula("",new_cond_list.pop(0),new_cond_list.pop(0),"&&"), new_cond_list)
+        implication = True
+        if len(cond_list) > 0:
+            new_cond_list = self.parse_clauses(cond_list)
+            if (len(new_cond_list) > 1):
+                lhs = self.build_CNF(Binary_Formula("",new_cond_list.pop(0),new_cond_list.pop(0),"&&"), new_cond_list)
+            else:
+                lhs = new_cond_list[0]
+        elif len(cond_list) == 0:
+            implication = False
         else:
-            lhs = new_cond_list[0]
+            assert False, "the cond_list length cannot be less than 0"
 
         assignments = []
         if len(assignments_dict) > 0:
@@ -267,7 +290,10 @@ class Axiom_Generator:
             rhs = assignments[0]
         else:
             assert False, "There cannot be zero assignments"
-        f1 = Binary_Formula("", lhs, rhs, "=>")
+        if implication:
+            f1 = Binary_Formula("", lhs, rhs, "=>")
+        else:
+            f1 = rhs
         return Axiom('tff',f"{axiom_type}_axiom_{axiom_num}","axiom",f1)
     
     '''
@@ -308,14 +334,15 @@ class Axiom_Generator:
         if clause.startswith("!"):
             return Unary_Formula("",self.parse_clause(clause[1:]), "!")
         else:
-            clause = clause[1:-1]
+            if clause.startswith("("):
+                clause = clause[1:-1]
             lb = clause.find("(")
             if lb == -1:
                 ops = clause.split(" ")
                 if (len(ops) == 1):
                     return Constant(ops[0])
                 elif (len(ops) == 3):
-                    return Binary_Formula("",ops[0], ops[2], ops[1])
+                    return Binary_Formula("",Constant(ops[0]), Constant(ops[2]), ops[1])
                 else:
                     assert False, f"{ops} should only have 1 or 3 elements split by whitespaces"
             elif lb >= 0:
@@ -338,8 +365,8 @@ class Axiom_Generator:
                                 outside_start = i
                         else:
                             outside += clause[i]
-                lhs = clause[:outside_start].strip()
-                rhs = clause[outside_end:].strip()
+                lhs = "("+clause[:outside_start].strip()+")"
+                rhs = "("+clause[outside_end:].strip()+")"
                 return Binary_Formula("",self.parse_clause(lhs),self.parse_clause(rhs), clause[outside_start:outside_end+1])
             else:
                 assert False, f"{lb} cannot be lower than -1"
@@ -383,8 +410,6 @@ class Axiom_Generator:
     def parse_delta_int(self):
         delta_int = self.model_json["delta_int"]
 
-        self.tff_string+=("\n%-----INTERNAL TRANSITIONS\n")
-
         self.parse_devsmap_dict(0,[],delta_int,"delta_int")
     
     '''
@@ -394,9 +419,22 @@ class Axiom_Generator:
     def parse_delta_ext(self):
         delta_ext = self.model_json["delta_ext"]
 
-        self.tff_string+=("\n&-----EXTERNAL TRANSITIONS\n")
-
         self.parse_devsmap_dict(0,[],delta_ext,"delta_ext")
+
+    def parse_delta_con(self):
+        delta_con = self.model_json["delta_con"]
+
+        self.parse_devsmap_dict(0,[],delta_con,"delta_con")
+
+    def parse_lambda(self):
+        lambda_func = self.model_json["lambda"]
+
+        self.parse_devsmap_dict(0,[],lambda_func,"lambda")
+
+    def parse_ta(self):
+        ta_func = self.model_json['ta']
+
+        self.parse_devsmap_dict(0,[],ta_func,"ta")
 
 if __name__ == "__main__":
 
@@ -406,4 +444,7 @@ if __name__ == "__main__":
     axiom_gen.parse_o_ports()
     axiom_gen.parse_delta_int()
     axiom_gen.parse_delta_ext()
+    axiom_gen.parse_delta_con()
+    axiom_gen.parse_lambda()
+    axiom_gen.parse_ta()
     axiom_gen.save("test")
