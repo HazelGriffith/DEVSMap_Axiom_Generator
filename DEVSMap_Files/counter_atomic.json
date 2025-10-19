@@ -1,22 +1,22 @@
 {
     "counter": {
         "s": {
-            "count": "int",
-            "increment": "unsigned int",
+            "count": "double",
+            "increment": "double",
             "countUp": "bool",
             "sigma": "double"
         },
         "x": {
             "direction_in": "bool",
-            "increment_in": "int"
+            "increment_in": "double"
         },
         "y": {
-            "count_out": "int"
+            "count_out": "double"
         },
         "delta_int": {
             "countUp == true": {
                 "count": "count + increment",
-                "increment": "sigma * 4"
+                "increment": "sigma * 4.0"
             },
             "countUp == false": {
                 "count": "count - increment"

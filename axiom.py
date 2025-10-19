@@ -29,7 +29,11 @@ class Constant:
             if self.value.startswith("next_"):
                 self.value = self.value.replace("next_","")
             self.value = "time_advance"
-            
+        elif self.value.startswith("constValue"):
+            self.value = self.value.replace("constValue","")
+            self.value = self.value.replace("_",".")
+
+
     def __str__(self) -> str:
         self.translate()
         return f"{self.value}"
@@ -74,7 +78,7 @@ class Binary_Formula(Formula):
         
         
         if self.quantifier != "":
-            line += f"\n\t{self.quantifier}"
+            line += f"\n\t{self.quantifier} : "
 
         if isinstance(self.lhs, Constant) and self.inUnary == False:
             line += "\n\t\t"
@@ -117,7 +121,7 @@ class Unary_Formula(Formula):
         self.translate()
         line = ""
         if self.quantifier != "":
-            line += f"\n\t{self.quantifier}"
+            line += f"\n\t{self.quantifier} : "
 
         if self.inUnary == False:
             line += "\n\t\t"
@@ -134,7 +138,7 @@ class Axiom:
 
     def __str__(self) -> str:
         if (self.language == "tff"):
-            line = f"tff({self.name},{self.role},{self.formula}).\n"
+            line = f"tff({self.name},{self.role},({self.formula})).\n"
         else:
             assert False, "The selected language is unsupported"
         return line

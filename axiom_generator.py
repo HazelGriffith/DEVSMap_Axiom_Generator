@@ -39,6 +39,9 @@ class Axiom_Generator:
     def save(self, filename:str):
         try:
             with open(filename+".p", 'x') as pfile:
+
+                pfile.write(self.add_devs_tff_types())
+
                 for section in self.section_names:
                     if section == "state_var_axioms":
                         pfile.write("\n%-----STATE VARIABLE DEFINITIONS\n\n")
@@ -67,12 +70,28 @@ class Axiom_Generator:
             os.remove(filename+".p")
             self.save(filename)
 
+    def add_devs_tff_types(self):
+        line = ""
+        line += "\n%-----DEVS TFF TYPES\n\n"
+        type1 = ("tff(internal_transition_type,type,internal_transition : $o).\n\n")
+        line += type1
+        type2 = ("tff(external_transition_type,type,external_transition : $o).\n\n")
+        line += type2
+        type3 = ("tff(confluence_transition_type,type,confluence_transition : $o).\n\n")
+        line += type3
+        type4 = ("tff(output_type,type,output : $o).\n\n")
+        line += type4
+        type5 = ("tff(time_advance_type,type,time_advance : $real).\n\n")
+        line += type5
+        type6 = ("tff(time_passed_type,type,time_passed : $real).\n\n")
+        line += type6
+        return line
 
     def add_devs_tff_axioms(self):
         line = ""
         line += "\n%-----DEVS TFF AXIOMS\n\n"
         axiom1 = ("tff(internal_transition_occurred,axiom,\n\t" +
-                    "! [IP : i_port]\n\t\t" +
+                    "! [IP : i_port] :\n\t\t" +
                         "((($greatereq(time_passed,time_advance)) & \n\t\t" +
                         "(num_rcvd(IP) = 0)) => (\n\t\t"+
                         "(internal_transition = $true) &\n\t\t" +
@@ -81,7 +100,7 @@ class Axiom_Generator:
                         "(output = $true)))).\n\n")
         
         axiom2 = ("tff(external_transition_occurred,axiom,\n\t" +
-                    "? [IP : i_port]\n\t\t" +
+                    "? [IP : i_port] :\n\t\t" +
                         "((($less(time_passed,time_advance)) & \n\t\t" +
                         "(num_rcvd(IP) != 0)) => (\n\t\t"+
                         "(internal_transition = $false) &\n\t\t" +
@@ -90,13 +109,14 @@ class Axiom_Generator:
                         "(output = $false)))).\n\n")
                 
         axiom3 = ("tff(confluence_transition_occurred,axiom,\n\t" +
-                    "? [IP : i_port]\n\t\t" +
+                    "? [IP : i_port] :\n\t\t" +
                         "((($greatereq(time_passed,time_advance)) & \n\t\t" +
                         "(num_rcvd(IP) != 0)) => (\n\t\t"+
                         "(internal_transition = $false) &\n\t\t" +
                         "(external_transition = $false) &\n\t\t" +
                         "(confluence_transition = $true) &\n\t\t" +
                         "(output = $true)))).\n\n")
+        
         line += axiom1
         line += axiom2
         line += axiom3
@@ -124,8 +144,8 @@ class Axiom_Generator:
             else:
                 assert False, f"{state[key]} variable type is unsupported"
 
-            state_var_axioms.append(Axiom("tff", key, "type", Constant(var_type)))
-            state_var_axioms.append(Axiom("tff",f"next_{key}", "type", Constant(var_type)))
+            state_var_axioms.append(Axiom("tff", f"{key}_type", "type", Constant(f"{key} : {var_type}")))
+            state_var_axioms.append(Axiom("tff",f"next_{key}_type", "type", Constant(f"next_{key} : {var_type}")))
 
         self.axioms.update({"state_var_axioms":state_var_axioms})
 
@@ -143,7 +163,7 @@ class Axiom_Generator:
         
         for pos, key in enumerate(in_ports):
             self.in_port_names.append(key)
-            i_port_axioms.append(Axiom("tff",key,"type", Constant(f"{key} : i_port")))
+            i_port_axioms.append(Axiom("tff",f"{key}_type","type", Constant(f"{key} : i_port")))
 
             p_type = ""
             if (in_ports[key] in self.integers):
@@ -192,7 +212,7 @@ class Axiom_Generator:
 
         for pos, key in enumerate(out_ports):
             self.out_port_names.append(key)
-            o_port_axioms.append(Axiom("tff",key,"type", Constant(f"{key} : o_port")))
+            o_port_axioms.append(Axiom("tff",f"{key}_type","type", Constant(f"{key} : o_port")))
 
             p_type = ""
             if (out_ports[key] in self.integers):
@@ -340,6 +360,9 @@ class Axiom_Generator:
             clause = clause.replace("&&","&")
             clause = clause.replace("()","")
             clause = clause.replace("(-1)","")
+            numbers = re.findall(r"\(?(-?\d+\.\d+|-?\d+)\)?", clause)
+            for number in numbers:
+                clause = clause.replace(number,f"constValue{number}")
             clause = clause.replace(".","_")
             new_clauses.append(self.parse_clause(str(Expression(clause))))
         return new_clauses
@@ -441,7 +464,7 @@ class Axiom_Generator:
     def parse_delta_int(self):
         delta_int = self.model_json["delta_int"]
 
-        self.parse_devsmap_dict(0,["interal_transition == true"],delta_int,"delta_int")
+        self.parse_devsmap_dict(0,["internal_transition == true"],delta_int,"delta_int")
     
     '''
     Parses the JSON dictionary for the external transition function
@@ -483,4 +506,4 @@ if __name__ == "__main__":
     axiom_gen.parse_delta_con()
     axiom_gen.parse_lambda()
     axiom_gen.parse_ta()
-    axiom_gen.save("test")
+    axiom_gen.save("counter_model")
