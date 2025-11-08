@@ -4,8 +4,6 @@ import re
 from axiom import Axiom, Binary_Formula, Unary_Formula, Formula, Constant
 from Equation import Expression
 
-
-
 class Axiom_Generator:
     integers = ["int", "unsigned int", "integer", "INT", "unsigned natural", "natural"]
     reals = ["double", "float", "unsigned double", "unsigned float"]
@@ -14,10 +12,10 @@ class Axiom_Generator:
     syntaxMap = {"true":"$true", "false":"$false", "==":"=", "<":"$less", "<=":"$lesseq", ">":"$greater", ">=":"$greatereq", "--":"$uminus", "+":"$sum", "-":"$difference", "*":"$product", "/":"$quotient", "&&":"&", "||":"|", "!=":"!="}
     section_names = ["state_var_axioms", "i_port_axioms", "o_port_axioms", "delta_int_axioms", "delta_ext_axioms", "delta_con_axioms", "lambda_axioms", "ta_axioms"]
 
-    def __init__(self, model_file_path: str, init_state_file_path: str):
+    def __init__(self, model_file_path: str, model_name: str, init_state_file_path: str):
         #Getting atomic model file
         with open(model_file_path) as jfile:
-            self.model_json = json.load(jfile)["counter"]
+            self.model_json = json.load(jfile)[model_name]
 
         #Getting initial state file
         with open(init_state_file_path) as jfile:
@@ -73,24 +71,26 @@ class Axiom_Generator:
     def add_devs_tff_types(self):
         line = ""
         line += "\n%-----DEVS TFF TYPES\n\n"
-        type1 = ("tff(internal_transition_type,type,internal_transition : $o).\n\n")
-        line += type1
-        type2 = ("tff(external_transition_type,type,external_transition : $o).\n\n")
-        line += type2
-        type3 = ("tff(confluence_transition_type,type,confluence_transition : $o).\n\n")
-        line += type3
-        type4 = ("tff(output_type,type,output : $o).\n\n")
-        line += type4
-        type5 = ("tff(time_advance_type,type,time_advance : $real).\n\n")
-        line += type5
-        type6 = ("tff(time_passed_type,type,time_passed : $real).\n\n")
-        line += type6
+        iTBool = ("tff(internal_transition_type,type,internal_transition : $o).\n\n")
+        line += iTBool
+        eTBool = ("tff(external_transition_type,type,external_transition : $o).\n\n")
+        line += eTBool
+        cTBool = ("tff(confluence_transition_type,type,confluence_transition : $o).\n\n")
+        line += cTBool
+        oBool = ("tff(output_type,type,output : $o).\n\n")
+        line += oBool
+        taExp = ("tff(time_advance_type,type,time_advance : $real).\n\n")
+        line += taExp
+        taActual = ("tff(time_passed_type,type,time_passed : $real).\n\n")
+        line += taActual
+        infinity = ("tff(infinity_type,type,infinity : $real).\n\n")
+        line += infinity
         return line
 
     def add_devs_tff_axioms(self):
         line = ""
         line += "\n%-----DEVS TFF AXIOMS\n\n"
-        axiom1 = ("tff(internal_transition_occurred,axiom,\n\t" +
+        iTAxiom = ("tff(internal_transition_occurred,axiom,\n\t" +
                     "! [IP : i_port] :\n\t\t" +
                         "((($greatereq(time_passed,time_advance)) & \n\t\t" +
                         "(num_rcvd(IP) = 0)) => (\n\t\t"+
@@ -99,7 +99,7 @@ class Axiom_Generator:
                         "(confluence_transition = $false) &\n\t\t" +
                         "(output = $true)))).\n\n")
         
-        axiom2 = ("tff(external_transition_occurred,axiom,\n\t" +
+        eTAxiom = ("tff(external_transition_occurred,axiom,\n\t" +
                     "? [IP : i_port] :\n\t\t" +
                         "((($less(time_passed,time_advance)) & \n\t\t" +
                         "(num_rcvd(IP) != 0)) => (\n\t\t"+
@@ -108,7 +108,7 @@ class Axiom_Generator:
                         "(confluence_transition = $false) &\n\t\t" +
                         "(output = $false)))).\n\n")
                 
-        axiom3 = ("tff(confluence_transition_occurred,axiom,\n\t" +
+        cTAxiom = ("tff(confluence_transition_occurred,axiom,\n\t" +
                     "? [IP : i_port] :\n\t\t" +
                         "((($greatereq(time_passed,time_advance)) & \n\t\t" +
                         "(num_rcvd(IP) != 0)) => (\n\t\t"+
@@ -117,9 +117,14 @@ class Axiom_Generator:
                         "(confluence_transition = $true) &\n\t\t" +
                         "(output = $true)))).\n\n")
         
-        line += axiom1
-        line += axiom2
-        line += axiom3
+        infAxiom = ("tff(infinity_is_greater,axiom,\n\t" +
+                    "! [X : $real] :\n\t\t" +
+                        "($greater(infinity,x) = $true)).\n\n")
+        
+        line += iTAxiom
+        line += eTAxiom
+        line += cTAxiom
+        line += infAxiom
         return line
 
 
@@ -190,7 +195,7 @@ class Axiom_Generator:
                 only_i_ports_f = Binary_Formula("", lhs, rhs, "||")
                 for i in range(2,len(self.in_port_names)):
                     rhs = Binary_Formula("", Constant("IP"), Constant(self.in_port_names[i]), "==")
-                    if i == len(self.in_port_names):
+                    if i == len(self.in_port_names)-1:
                         only_i_ports_f = Binary_Formula("! [IP : i_port]", only_i_ports_f, rhs, "||")
                     else:
                         only_i_ports_f = Binary_Formula("", only_i_ports_f, rhs, "||")
@@ -239,7 +244,7 @@ class Axiom_Generator:
                 only_o_ports_f = Binary_Formula("", lhs, rhs, "||")
                 for i in range(2,len(self.out_port_names)):
                     rhs = Binary_Formula("", Constant("OP"), Constant(self.out_port_names[i]), "==")
-                    if i == len(self.out_port_names):
+                    if i == len(self.out_port_names)-1:
                         only_o_ports_f = Binary_Formula("! [OP : o_port]", only_o_ports_f, rhs, "||")
                     else:
                         only_o_ports_f = Binary_Formula("", only_o_ports_f, rhs, "||")
@@ -497,7 +502,7 @@ class Axiom_Generator:
 
 if __name__ == "__main__":
 
-    axiom_gen = Axiom_Generator('DEVSMap_Files/counter_atomic.json', 'DEVSMap_Files/counter_tester_init_state.json')
+    axiom_gen = Axiom_Generator('DEVSMap_Files/supervisor/command_reposition.json', 'command_reposition', 'DEVSMap_Files/counter/counter_tester_init_state.json')
     axiom_gen.parse_state_vars()
     axiom_gen.parse_i_ports()
     axiom_gen.parse_o_ports()
@@ -506,4 +511,4 @@ if __name__ == "__main__":
     axiom_gen.parse_delta_con()
     axiom_gen.parse_lambda()
     axiom_gen.parse_ta()
-    axiom_gen.save("counter_model")
+    axiom_gen.save("command_reposition_model")

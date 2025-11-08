@@ -32,6 +32,8 @@ class Constant:
         elif self.value.startswith("constValue"):
             self.value = self.value.replace("constValue","")
             self.value = self.value.replace("_",".")
+        elif self.value.startswith("inf"):
+            self.value = "infinity"
 
 
     def __str__(self) -> str:
