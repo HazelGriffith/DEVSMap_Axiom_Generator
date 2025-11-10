@@ -52,24 +52,16 @@
                 "sigma": "inf"
             },
             "pilot_handover.bagSize() != 0": {
-                "pilot_takeover.bagSize() == 0": {
-                    "state": "11.0",
-                    "sigma": "inf"
-                }
+                "state": "11.0",
+                "sigma": "inf"
             },
             "start_mission.bagSize() != 0": {
                 "state": "2.0",
                 "sigma": "inf"
             },
             "otherwise": {
-                "state == 1.0": {
-                    "start_mission.bagSize() != 0": {
-                        "state": "2.0",
-                        "sigma": "inf"
-                    }
-                },
                 "state == 2.0": {
-                    "request_repositon.bagSize() != 0": {
+                    "request_reposition.bagSize() != 0": {
                         "state": "3.0",
                         "sigma": "0.0"
                     }
@@ -102,7 +94,7 @@
                         "sigma": "0.0"
                     }
                 },
-                "state == 8": {
+                "state == 8.0": {
                     "request_reposition.bagSize() != 0": {
                         "state": "10.0",
                         "sigma": "0.0"

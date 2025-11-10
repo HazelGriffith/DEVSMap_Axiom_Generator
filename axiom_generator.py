@@ -62,6 +62,12 @@ class Axiom_Generator:
                     for axiom in axioms:
                         pfile.write(axiom.__str__()+"\n")
 
+                    if section == "i_port_axioms":
+                        pfile.write(self.add_distinct_port_axiom("i"))
+                        pfile.write(self.add_func_result_always_pos("num_rcvd", "i_port", "IP", True))
+                    elif section == "o_port_axioms":
+                        pfile.write(self.add_distinct_port_axiom("o"))
+
                 pfile.write(self.add_devs_tff_axioms())
 
         except Exception as e:
@@ -69,66 +75,102 @@ class Axiom_Generator:
             self.save(filename)
 
     def add_devs_tff_types(self):
-        line = ""
-        line += "\n%-----DEVS TFF TYPES\n\n"
+        line = "\n%-----DEVS TFF TYPES\n\n"
+
         iTBool = ("tff(internal_transition_type,type,internal_transition : $o).\n\n")
-        line += iTBool
         eTBool = ("tff(external_transition_type,type,external_transition : $o).\n\n")
-        line += eTBool
         cTBool = ("tff(confluence_transition_type,type,confluence_transition : $o).\n\n")
-        line += cTBool
         oBool = ("tff(output_type,type,output : $o).\n\n")
-        line += oBool
         taExp = ("tff(time_advance_type,type,time_advance : $real).\n\n")
-        line += taExp
         taActual = ("tff(time_passed_type,type,time_passed : $real).\n\n")
-        line += taActual
         infinity = ("tff(infinity_type,type,infinity : $real).\n\n")
+        input_rcvd = ("tff(input_rcvd_type,type,input_rcvd: $o).\n\n")
+
+        line += iTBool
+        line += eTBool
+        line += cTBool
+        line += oBool
+        line += taExp
+        line += taActual
         line += infinity
+        line += input_rcvd
         return line
 
     def add_devs_tff_axioms(self):
         line = ""
         line += "\n%-----DEVS TFF AXIOMS\n\n"
+
+        input_rcvd_axiom = ("tff(input_was_rcvd,axiom,\n\t" +
+                                "? [IP : i_port] :\n\t\t" +
+                                    "num_rcvd(IP) != 0 => input_rcvd = $true).\n\n")
+        
+        input_not_rcvd_axiom = ("tff(input_not_rcvd,axiom,\n\t" +
+                                "! [IP : i_port] :\n\t\t" +
+                                    "num_rcvd(IP) = 0 => input_rcvd = $false).\n\n")
+
         iTAxiom = ("tff(internal_transition_occurred,axiom,\n\t" +
-                    "! [IP : i_port] :\n\t\t" +
                         "((($greatereq(time_passed,time_advance)) & \n\t\t" +
-                        "(num_rcvd(IP) = 0)) => (\n\t\t"+
+                        "(~input_rcvd)) => (\n\t\t"+
                         "(internal_transition = $true) &\n\t\t" +
                         "(external_transition = $false) &\n\t\t" +
                         "(confluence_transition = $false) &\n\t\t" +
                         "(output = $true)))).\n\n")
         
         eTAxiom = ("tff(external_transition_occurred,axiom,\n\t" +
-                    "? [IP : i_port] :\n\t\t" +
                         "((($less(time_passed,time_advance)) & \n\t\t" +
-                        "(num_rcvd(IP) != 0)) => (\n\t\t"+
+                        "(input_rcvd)) => (\n\t\t"+
                         "(internal_transition = $false) &\n\t\t" +
                         "(external_transition = $true) &\n\t\t" +
                         "(confluence_transition = $false) &\n\t\t" +
                         "(output = $false)))).\n\n")
                 
         cTAxiom = ("tff(confluence_transition_occurred,axiom,\n\t" +
-                    "? [IP : i_port] :\n\t\t" +
                         "((($greatereq(time_passed,time_advance)) & \n\t\t" +
-                        "(num_rcvd(IP) != 0)) => (\n\t\t"+
+                        "(input_rcvd)) => (\n\t\t"+
                         "(internal_transition = $false) &\n\t\t" +
                         "(external_transition = $false) &\n\t\t" +
                         "(confluence_transition = $true) &\n\t\t" +
                         "(output = $true)))).\n\n")
         
         infAxiom = ("tff(infinity_is_greater,axiom,\n\t" +
-                    "! [X : $real] :\n\t\t" +
-                        "($greater(infinity,x) = $true)).\n\n")
+                        "infinity = $sum(time_passed,1.0)).\n\n")
         
+        line += input_rcvd_axiom
+        line += input_not_rcvd_axiom
         line += iTAxiom
         line += eTAxiom
         line += cTAxiom
         line += infAxiom
         return line
 
+    def add_distinct_port_axiom(self,portType : str) -> str:
+        distinct_ports_axiom = (f"tff({portType}_ports_are_distinct,axiom,\n\t" + 
+                                  "$distinct(")
+        if portType.casefold() == "i":
+            port_names = self.in_port_names
+        elif portType.casefold() == "o":
+            port_names = self.out_port_names
+        else:
+            assert False, "not a valid port type"
+        for pos, port in enumerate(port_names):
+            distinct_ports_axiom += port
+            if (pos == len(port_names)-1):
+                distinct_ports_axiom += ")).\n\n"
+            else:
+                distinct_ports_axiom += ","
+        return distinct_ports_axiom
 
-
+    def add_func_result_always_pos(self, funcName : str, funcType : str, variable : str, intOrReal : bool) -> str:
+        if (intOrReal):
+            zero = "0"
+        else:
+            zero = "0.0"
+        
+        always_pos_func_axiom = (f"tff(always_pos_{funcName},axiom,\n\t" +
+                                    f"! [{variable} : {funcType}] :\n\t\t" +
+                                        f"$greatereq({funcName}({variable}),{zero})).\n\n")
+        return always_pos_func_axiom
+    
     '''
     Parses the JSON dictionary of the state variables and saves 
     the tff statements in the string
@@ -273,9 +315,7 @@ class Axiom_Generator:
                     new_cond_list = cond_list.copy()
                     new_cond_list.append(key)
                     axiom, num = self.parse_devsmap_dict(num, new_cond_list, transition_function[key], axiom_type)
-                    if axiom is None:
-                        return None, num
-                    else:
+                    if axiom is not None:
                         axiom_list = self.axioms[f"{axiom_type}_axioms"]
                         axiom_list.append(axiom)
                         self.axioms.update({f"{axiom_type}_axioms":axiom_list})
@@ -287,9 +327,7 @@ class Axiom_Generator:
                 else:
                     axiom, num = self.parse_devsmap_dict(num, other_conds, {}, axiom_type)
 
-                if axiom is None:
-                    return None, num
-                else:
+                if axiom is not None:
                     axiom_list = self.axioms[f"{axiom_type}_axioms"]
                     axiom_list.append(axiom)
                     self.axioms.update({f"{axiom_type}_axioms":axiom_list})

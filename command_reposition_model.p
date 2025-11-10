@@ -15,6 +15,8 @@ tff(time_passed_type,type,time_passed : $real).
 
 tff(infinity_type,type,infinity : $real).
 
+tff(input_rcvd_type,type,input_rcvd: $o).
+
 
 %-----STATE VARIABLE DEFINITIONS
 
@@ -70,6 +72,13 @@ tff(only_i_ports,axiom,(
 		(IP = hover_criteria_met)) | 
 		(IP = start_mission)))).
 
+tff(i_ports_are_distinct,axiom,
+	$distinct(pilot_takeover,pilot_handover,request_reposition,aircraft_state,hover_criteria_met,start_mission)).
+
+tff(always_pos_num_rcvd,axiom,
+	! [IP : i_port] :
+		$greatereq(num_rcvd(IP),0)).
+
 
 %-----OUTPUT PORT DEFINITIONS
 
@@ -119,6 +128,9 @@ tff(only_o_ports,axiom,(
 		(OP = update_boss)) | 
 		(OP = update_gcs)) | 
 		(OP = set_mission_monitor_status)))).
+
+tff(o_ports_are_distinct,axiom,
+	$distinct(cancel_hover,fcc_command_velocity,stabilize,lp_criteria_met,request_aircraft_state,update_boss,update_gcs,set_mission_monitor_status)).
 
 
 %-----INTERNAL TRANSITION FUNCTION AXIOMS
@@ -173,17 +185,166 @@ tff(delta_ext_axiom_0,axiom,(((
 		(next_state = 12.0) & 
 		(next_sigma = infinity))))).
 
-tff(delta_ext_axiom_1,axiom,((((
+tff(delta_ext_axiom_1,axiom,(((
 		(external_transition = $true) & 
-		(num_rcvd(pilot_handover) != 0)) & 
-		(num_rcvd(pilot_takeover) = 0)) => (
+		(num_rcvd(pilot_handover) != 0)) => (
 		(next_state = 11.0) & 
 		(next_sigma = infinity))))).
 
-tff(delta_ext_axiom_2,axiom,((((
-		~(num_rcvd(pilot_takeover) = 0) & 
+tff(delta_ext_axiom_2,axiom,(((
+		(external_transition = $true) & 
+		(num_rcvd(start_mission) != 0)) => (
+		(next_state = 2.0) & 
+		(next_sigma = infinity))))).
+
+tff(delta_ext_axiom_3,axiom,(((((((
+		~(num_rcvd(pilot_takeover) != 0) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
 		(external_transition = $true)) & 
-		(num_rcvd(pilot_handover) != 0)) => ((
+		(state = 2.0)) & 
+		(num_rcvd(request_reposition) != 0)) => (
+		(next_state = 3.0) & 
+		(next_sigma = 0.0))))).
+
+tff(delta_ext_axiom_4,axiom,(((((((
+		~(num_rcvd(request_reposition) != 0) & 
+		~(num_rcvd(pilot_takeover) != 0)) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 2.0)) => ((
+		(next_state = state) & 
+		(next_sigma = sigma)) & 
+		(next_aircraft_velocity = aircraft_velocity))))).
+
+tff(delta_ext_axiom_5,axiom,(((((((
+		~(num_rcvd(pilot_takeover) != 0) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 4.0)) & 
+		(num_rcvd(aircraft_state) != 0)) => (
+		(next_state = 5.0) & 
+		(next_sigma = 0.0))))).
+
+tff(delta_ext_axiom_6,axiom,(((((((
+		~(num_rcvd(aircraft_state) != 0) & 
+		~(num_rcvd(pilot_takeover) != 0)) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 4.0)) => ((
+		(next_state = state) & 
+		(next_sigma = sigma)) & 
+		(next_aircraft_velocity = aircraft_velocity))))).
+
+tff(delta_ext_axiom_7,axiom,(((((((
+		~(num_rcvd(pilot_takeover) != 0) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 5.0)) & 
+		(num_rcvd(request_reposition) != 0)) => (
+		(next_state = 3.0) & 
+		(next_sigma = 0.0))))).
+
+tff(delta_ext_axiom_8,axiom,(((((((
+		~(num_rcvd(request_reposition) != 0) & 
+		~(num_rcvd(pilot_takeover) != 0)) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 5.0)) => ((
+		(next_state = state) & 
+		(next_sigma = sigma)) & 
+		(next_aircraft_velocity = aircraft_velocity))))).
+
+tff(delta_ext_axiom_9,axiom,(((((((
+		~(num_rcvd(pilot_takeover) != 0) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 6.0)) & 
+		(num_rcvd(request_reposition) != 0)) => (
+		(next_state = 3.0) & 
+		(next_sigma = 0.0))))).
+
+tff(delta_ext_axiom_10,axiom,(((((((
+		~(num_rcvd(request_reposition) != 0) & 
+		~(num_rcvd(pilot_takeover) != 0)) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 6.0)) => ((
+		(next_state = state) & 
+		(next_sigma = sigma)) & 
+		(next_aircraft_velocity = aircraft_velocity))))).
+
+tff(delta_ext_axiom_11,axiom,(((((((
+		~(num_rcvd(pilot_takeover) != 0) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 7.0)) & 
+		(num_rcvd(hover_criteria_met) != 0)) => (
+		(next_state = 8.0) & 
+		(next_sigma = 0.0))))).
+
+tff(delta_ext_axiom_12,axiom,(((((((
+		~(num_rcvd(pilot_takeover) != 0) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 7.0)) & 
+		(num_rcvd(request_reposition) != 0)) => (
+		(next_state = 10.0) & 
+		(next_sigma = 0.0))))).
+
+tff(delta_ext_axiom_13,axiom,((((((((
+		~(num_rcvd(hover_criteria_met) != 0) & 
+		~(num_rcvd(request_reposition) != 0)) & 
+		~(num_rcvd(pilot_takeover) != 0)) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 7.0)) => ((
+		(next_state = state) & 
+		(next_sigma = sigma)) & 
+		(next_aircraft_velocity = aircraft_velocity))))).
+
+tff(delta_ext_axiom_14,axiom,(((((((
+		~(num_rcvd(pilot_takeover) != 0) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 8.0)) & 
+		(num_rcvd(request_reposition) != 0)) => (
+		(next_state = 10.0) & 
+		(next_sigma = 0.0))))).
+
+tff(delta_ext_axiom_15,axiom,(((((((
+		~(num_rcvd(request_reposition) != 0) & 
+		~(num_rcvd(pilot_takeover) != 0)) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) & 
+		(state = 8.0)) => ((
+		(next_state = state) & 
+		(next_sigma = sigma)) & 
+		(next_aircraft_velocity = aircraft_velocity))))).
+
+tff(delta_ext_axiom_16,axiom,(((((((((((
+		~(state = 2.0) & 
+		~(state = 4.0)) & 
+		~(state = 5.0)) & 
+		~(state = 6.0)) & 
+		~(state = 7.0)) & 
+		~(state = 8.0)) & 
+		~(num_rcvd(pilot_takeover) != 0)) & 
+		~(num_rcvd(pilot_handover) != 0)) & 
+		~(num_rcvd(start_mission) != 0)) & 
+		(external_transition = $true)) => ((
 		(next_state = state) & 
 		(next_sigma = sigma)) & 
 		(next_aircraft_velocity = aircraft_velocity))))).
@@ -237,49 +398,60 @@ tff(ta_axiom_0,axiom,(
 
 %-----DEVS TFF AXIOMS
 
-tff(internal_transition_occurred,axiom,
+tff(input_was_rcvd,axiom,
+	? [IP : i_port] :
+		num_rcvd(IP) != 0 => input_rcvd = $true).
+
+tff(input_not_rcvd,axiom,
 	! [IP : i_port] :
-		((($greatereq(time_passed,time_advance)) & 
-		(num_rcvd(IP) = 0)) => (
+		num_rcvd(IP) = 0 => input_rcvd = $false).
+
+tff(internal_transition_occurred,axiom,
+	((($greatereq(time_passed,time_advance)) & 
+		(~input_rcvd)) => (
 		(internal_transition = $true) &
 		(external_transition = $false) &
 		(confluence_transition = $false) &
 		(output = $true)))).
 
 tff(external_transition_occurred,axiom,
-	? [IP : i_port] :
-		((($less(time_passed,time_advance)) & 
-		(num_rcvd(IP) != 0)) => (
+	((($less(time_passed,time_advance)) & 
+		(input_rcvd)) => (
 		(internal_transition = $false) &
 		(external_transition = $true) &
 		(confluence_transition = $false) &
 		(output = $false)))).
 
 tff(confluence_transition_occurred,axiom,
-	? [IP : i_port] :
-		((($greatereq(time_passed,time_advance)) & 
-		(num_rcvd(IP) != 0)) => (
+	((($greatereq(time_passed,time_advance)) & 
+		(input_rcvd)) => (
 		(internal_transition = $false) &
 		(external_transition = $false) &
 		(confluence_transition = $true) &
 		(output = $true)))).
 
 tff(infinity_is_greater,axiom,
-	infinity = 1000.0).
+	infinity = $sum(time_passed,1.0)).
 
 tff(state_value,axiom,state = 7.0).
 
 tff(sigma_value,axiom,sigma = infinity).
 
+tff(aircraft_velocity_value,axiom,aircraft_velocity = 5.0).
+
 tff(time_passed_value,axiom,time_passed = 543.0).
 
 tff(rcvd_request_reposition,axiom,num_rcvd(request_reposition) = 1).
 
-tff(rcvd_hover_criteria_met,axiom,num_rcvd(hover_criteria_met) = 0).
+tff(rcvd_hover_criteria_met,axiom,num_rcvd(hover_criteria_met) = 1).
 
 tff(nothing_rcvd_pilot_handover,axiom,num_rcvd(pilot_handover) = 0).
 
 tff(nothing_rcvd_pilot_takeover,axiom,num_rcvd(pilot_takeover) = 0).
 
-tff(next_state_value,conjecture,next_state = 8.0).
+tff(nothing_rcvd_start_mission,axiom,num_rcvd(start_mission) = 0).
+
+tff(nothing_rcvd_aircraft_state,axiom,num_rcvd(aircraft_state) = 0).
+
+tff(next_state_value,conjecture,next_state = 10.0 & next_state = 8.0).
 

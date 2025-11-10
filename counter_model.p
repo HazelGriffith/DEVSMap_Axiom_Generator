@@ -52,6 +52,12 @@ tff(only_i_ports,axiom,(
 		(IP = direction_in) | 
 		(IP = increment_in)))).
 
+tff(i_port_numrcvd,axiom,
+	! [IP : i_port] :
+		$greatereq(num_rcvd(IP),0)). 
+
+tff(distinct_i_ports,axiom,
+	($distinct(direction_in,increment_in))).
 
 %-----OUTPUT PORT DEFINITIONS
 
@@ -158,28 +164,35 @@ tff(ta_axiom_0,axiom,(
 
 %-----DEVS TFF AXIOMS
 
-tff(internal_transition_occurred,axiom,
+tff(input_rcvd_type,type, input_rcvd : $o).
+
+tff(input_received,axiom,
+	? [IP : i_port] :
+		num_rcvd(IP) != 0 => input_rcvd = $true).
+		
+tff(input_not_received,axiom,
 	! [IP : i_port] :
+		num_rcvd(IP) = 0 => input_rcvd = $false).
+
+tff(internal_transition_occurred,axiom,
 		((($greatereq(time_passed,time_advance)) & 
-		(num_rcvd(IP) = 0)) => (
+		(~input_rcvd)) => (
 		(internal_transition = $true) &
 		(external_transition = $false) &
 		(confluence_transition = $false) &
 		(output = $true)))).
 
 tff(external_transition_occurred,axiom,
-	? [IP : i_port] :
 		((($less(time_passed,time_advance)) & 
-		(num_rcvd(IP) != 0)) => (
+		(input_rcvd)) => (
 		(internal_transition = $false) &
 		(external_transition = $true) &
 		(confluence_transition = $false) &
 		(output = $false)))).
 
 tff(confluence_transition_occurred,axiom,
-	? [IP : i_port] :
 		((($greatereq(time_passed,time_advance)) & 
-		(num_rcvd(IP) != 0)) => (
+		(input_rcvd)) => (
 		(internal_transition = $false) &
 		(external_transition = $false) &
 		(confluence_transition = $true) &
@@ -193,10 +206,10 @@ tff(countUp_value,axiom,countUp = $true).
 
 tff(sigma_value,axiom,sigma = 5.0).
 
-tff(time_passed_value,axiom,time_passed = 5.0).
+tff(time_passed_value,axiom,time_passed = 2.0).
 
-tff(nothing_received,axiom,
-	! [IP : i_port] :
-		(num_rcvd(IP) = 0)).
+tff(rcvd_direction_in,axiom,num_rcvd(direction_in) = 0).
 
-tff(next_count_value,conjecture,next_count != 10.0).
+tff(rcvd_increment_in,axiom,num_rcvd(increment_in) = 1).
+
+tff(new_conj,conjecture,external_transition = $true).
