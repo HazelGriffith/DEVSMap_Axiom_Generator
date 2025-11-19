@@ -20,13 +20,13 @@ tff(input_rcvd_type,type,input_rcvd: $o).
 
 %-----STATE VARIABLE DEFINITIONS
 
-tff(count_type,type,(count : $real)).
+tff(count_type,type,(count : $int)).
 
-tff(next_count_type,type,(next_count : $real)).
+tff(next_count_type,type,(next_count : $int)).
 
-tff(increment_type,type,(increment : $real)).
+tff(increment_type,type,(increment : $int)).
 
-tff(next_increment_type,type,(next_increment : $real)).
+tff(next_increment_type,type,(next_increment : $int)).
 
 tff(countUp_type,type,(countUp : $o)).
 
@@ -49,7 +49,7 @@ tff(val_rcvd_direction_in_type,type,(val_rcvd_direction_in : $o)).
 
 tff(increment_in_type,type,(increment_in : i_port)).
 
-tff(val_rcvd_increment_in_type,type,(val_rcvd_increment_in : $real)).
+tff(val_rcvd_increment_in_type,type,(val_rcvd_increment_in : $int)).
 
 tff(only_i_ports,axiom,(
 	! [IP : i_port] : (
@@ -72,25 +72,20 @@ tff(num_output_type,type,(num_output : o_port > $int)).
 
 tff(count_out_type,type,(count_out : o_port)).
 
-tff(val_output_count_out_type,type,(val_output_count_out : $real)).
+tff(val_output_count_out_type,type,(val_output_count_out : $int)).
 
 tff(only_o_ports,axiom,(
 	! [OP : o_port] : 
 		(OP = count_out))).
-
-% tff(o_ports_are_distinct,axiom,
-% 	$distinct(count_out)).
 
 
 %-----INTERNAL TRANSITION FUNCTION AXIOMS
 
 tff(delta_int_axiom_0,axiom,(((
 		(internal_transition = $true) & 
-		(countUp = $true)) => (
+		(countUp = $true)) => 
 		(next_count = 
-		$sum(count,increment)) & 
-		(next_increment = 
-		$product(sigma,4.0)))))).
+		$sum(count,increment))))).
 
 tff(delta_int_axiom_1,axiom,(((
 		(internal_transition = $true) & 
@@ -308,3 +303,18 @@ tff(confluence_transition_occurred,axiom,
 tff(infinity_is_greater,axiom,
 	infinity = $sum(time_passed,1.0)).
 
+tff(count_value,axiom,count = 5).
+
+tff(increment_value,axiom,increment = 1).
+
+tff(countUp_value,axiom,countUp = $true).
+
+tff(sigma_value,axiom,sigma = 5.0).
+
+tff(time_passed_value,axiom,time_passed = 5.0).
+
+tff(nothing_received,axiom,
+	! [IP : i_port] :
+		(num_rcvd(IP) = 0)).
+
+tff(next_count_value,conjecture,next_count = 6).

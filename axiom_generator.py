@@ -63,10 +63,12 @@ class Axiom_Generator:
                         pfile.write(axiom.__str__()+"\n")
 
                     if section == "i_port_axioms":
-                        pfile.write(self.add_distinct_port_axiom("i"))
+                        if len(self.in_port_names) > 1:
+                            pfile.write(self.add_distinct_port_axiom("i"))
                         pfile.write(self.add_func_result_always_pos("num_rcvd", "i_port", "IP", True))
                     elif section == "o_port_axioms":
-                        pfile.write(self.add_distinct_port_axiom("o"))
+                        if len(self.out_port_names) > 1:
+                            pfile.write(self.add_distinct_port_axiom("o"))
 
                 pfile.write(self.add_devs_tff_axioms())
 
