@@ -13,6 +13,10 @@ tff(time_advance_type,type,time_advance : $real).
 
 tff(time_passed_type,type,time_passed : $real).
 
+tff(infinity_type,type,infinity : $real).
+
+tff(input_rcvd_type,type,input_rcvd: $o).
+
 
 %-----STATE VARIABLE DEFINITIONS
 
@@ -52,12 +56,13 @@ tff(only_i_ports,axiom,(
 		(IP = direction_in) | 
 		(IP = increment_in)))).
 
-tff(i_port_numrcvd,axiom,
-	! [IP : i_port] :
-		$greatereq(num_rcvd(IP),0)). 
+tff(i_ports_are_distinct,axiom,
+	$distinct(direction_in,increment_in)).
 
-tff(distinct_i_ports,axiom,
-	($distinct(direction_in,increment_in))).
+tff(always_pos_num_rcvd,axiom,
+	! [IP : i_port] :
+		$greatereq(num_rcvd(IP),0)).
+
 
 %-----OUTPUT PORT DEFINITIONS
 
@@ -72,6 +77,9 @@ tff(val_output_count_out_type,type,(val_output_count_out : $real)).
 tff(only_o_ports,axiom,(
 	! [OP : o_port] : 
 		(OP = count_out))).
+
+% tff(o_ports_are_distinct,axiom,
+% 	$distinct(count_out)).
 
 
 %-----INTERNAL TRANSITION FUNCTION AXIOMS
@@ -102,17 +110,37 @@ tff(delta_int_axiom_2,axiom,((((
 
 %-----EXTERNAL TRANSITION FUNCTION AXIOMS
 
-tff(delta_ext_axiom_0,axiom,(((
+tff(delta_ext_axiom_0,axiom,((((
 		(external_transition = $true) & 
-		(num_rcvd(direction_in) != 0)) => 
+		(num_rcvd(direction_in) != 0)) & 
+		(num_rcvd(increment_in) = 0)) => 
 		(next_countUp = val_rcvd_direction_in)))).
 
-tff(delta_ext_axiom_1,axiom,(((
-		(external_transition = $true) & 
-		(num_rcvd(increment_in) != 0)) => 
-		(next_increment = val_rcvd_increment_in)))).
+tff(delta_ext_axiom_1,axiom,((((
+		~(num_rcvd(increment_in) = 0) & 
+		(external_transition = $true)) & 
+		(num_rcvd(direction_in) != 0)) => (((
+		(next_count = count) & 
+		(next_increment = increment)) & 
+		(next_countUp = countUp)) & 
+		(next_sigma = sigma))))).
 
 tff(delta_ext_axiom_2,axiom,((((
+		(external_transition = $true) & 
+		(num_rcvd(increment_in) != 0)) & 
+		(num_rcvd(direction_in) = 0)) => 
+		(next_increment = val_rcvd_increment_in)))).
+
+tff(delta_ext_axiom_3,axiom,((((
+		~(num_rcvd(direction_in) = 0) & 
+		(external_transition = $true)) & 
+		(num_rcvd(increment_in) != 0)) => (((
+		(next_count = count) & 
+		(next_increment = increment)) & 
+		(next_countUp = countUp)) & 
+		(next_sigma = sigma))))).
+
+tff(delta_ext_axiom_4,axiom,((((
 		~(num_rcvd(direction_in) != 0) & 
 		~(num_rcvd(increment_in) != 0)) & 
 		(external_transition = $true)) => (
@@ -122,27 +150,108 @@ tff(delta_ext_axiom_2,axiom,((((
 
 %-----CONFLUENCE TRANSITION FUNCTION AXIOMS
 
-tff(delta_con_axiom_0,axiom,((((
+tff(delta_con_axiom_0,axiom,(((((
 		(confluence_transition = $true) & 
 		(num_rcvd(direction_in) != 0)) & 
+		(num_rcvd(increment_in) = 0)) & 
 		(val_rcvd_direction_in = $true)) => (
 		(next_count = 
 		$sum(count,increment)) & 
 		(next_countUp = val_rcvd_direction_in))))).
 
-tff(delta_con_axiom_1,axiom,((((
+tff(delta_con_axiom_1,axiom,(((((
 		(confluence_transition = $true) & 
 		(num_rcvd(direction_in) != 0)) & 
+		(num_rcvd(increment_in) = 0)) & 
 		(val_rcvd_direction_in = $false)) => (
 		(next_count = 
 		$difference(count,increment)) & 
 		(next_countUp = val_rcvd_direction_in))))).
 
-tff(delta_con_axiom_2,axiom,(((((
+tff(delta_con_axiom_2,axiom,((((((
 		~(val_rcvd_direction_in = $true) & 
 		~(val_rcvd_direction_in = $false)) & 
 		(confluence_transition = $true)) & 
+		(num_rcvd(direction_in) != 0)) & 
+		(num_rcvd(increment_in) = 0)) => (((
+		(next_count = count) & 
+		(next_increment = increment)) & 
+		(next_countUp = countUp)) & 
+		(next_sigma = sigma))))).
+
+tff(delta_con_axiom_3,axiom,((((
+		~(num_rcvd(increment_in) = 0) & 
+		(confluence_transition = $true)) & 
 		(num_rcvd(direction_in) != 0)) => (((
+		(next_count = count) & 
+		(next_increment = increment)) & 
+		(next_countUp = countUp)) & 
+		(next_sigma = sigma))))).
+
+tff(delta_con_axiom_4,axiom,(((((
+		(confluence_transition = $true) & 
+		(num_rcvd(increment_in) != 0)) & 
+		(num_rcvd(direction_in) = 0)) & 
+		(countUp = $true)) => (
+		(next_count = 
+		$sum(count,val_rcvd_increment_in)) & 
+		(next_increment = val_rcvd_increment_in))))).
+
+tff(delta_con_axiom_5,axiom,(((((
+		(confluence_transition = $true) & 
+		(num_rcvd(increment_in) != 0)) & 
+		(num_rcvd(direction_in) = 0)) & 
+		(countUp = $false)) => (
+		(next_count = 
+		$difference(count,val_rcvd_increment_in)) & 
+		(next_increment = val_rcvd_increment_in))))).
+
+tff(delta_con_axiom_6,axiom,((((((
+		~(countUp = $true) & 
+		~(countUp = $false)) & 
+		(confluence_transition = $true)) & 
+		(num_rcvd(increment_in) != 0)) & 
+		(num_rcvd(direction_in) = 0)) => (((
+		(next_count = count) & 
+		(next_increment = increment)) & 
+		(next_countUp = countUp)) & 
+		(next_sigma = sigma))))).
+
+tff(delta_con_axiom_7,axiom,((((
+		~(num_rcvd(direction_in) = 0) & 
+		(confluence_transition = $true)) & 
+		(num_rcvd(increment_in) != 0)) => (((
+		(next_count = count) & 
+		(next_increment = increment)) & 
+		(next_countUp = countUp)) & 
+		(next_sigma = sigma))))).
+
+tff(delta_con_axiom_8,axiom,(((((
+		~(num_rcvd(direction_in) != 0) & 
+		~(num_rcvd(increment_in) != 0)) & 
+		(confluence_transition = $true)) & 
+		(val_rcvd_direction_in = $true)) => ((
+		(next_count = 
+		$sum(count,val_rcvd_increment_in)) & 
+		(next_increment = val_rcvd_increment_in)) & 
+		(next_countUp = val_rcvd_direction_in))))).
+
+tff(delta_con_axiom_9,axiom,(((((
+		~(num_rcvd(direction_in) != 0) & 
+		~(num_rcvd(increment_in) != 0)) & 
+		(confluence_transition = $true)) & 
+		(val_rcvd_direction_in = $false)) => ((
+		(next_count = 
+		$difference(count,val_rcvd_increment_in)) & 
+		(next_increment = val_rcvd_increment_in)) & 
+		(next_countUp = val_rcvd_direction_in))))).
+
+tff(delta_con_axiom_10,axiom,((((((
+		~(val_rcvd_direction_in = $true) & 
+		~(val_rcvd_direction_in = $false)) & 
+		~(num_rcvd(direction_in) != 0)) & 
+		~(num_rcvd(increment_in) != 0)) & 
+		(confluence_transition = $true)) => (((
 		(next_count = count) & 
 		(next_increment = increment)) & 
 		(next_countUp = countUp)) & 
@@ -164,18 +273,16 @@ tff(ta_axiom_0,axiom,(
 
 %-----DEVS TFF AXIOMS
 
-tff(input_rcvd_type,type, input_rcvd : $o).
-
-tff(input_received,axiom,
+tff(input_was_rcvd,axiom,
 	? [IP : i_port] :
 		num_rcvd(IP) != 0 => input_rcvd = $true).
-		
-tff(input_not_received,axiom,
+
+tff(input_not_rcvd,axiom,
 	! [IP : i_port] :
 		num_rcvd(IP) = 0 => input_rcvd = $false).
 
 tff(internal_transition_occurred,axiom,
-		((($greatereq(time_passed,time_advance)) & 
+	((($greatereq(time_passed,time_advance)) & 
 		(~input_rcvd)) => (
 		(internal_transition = $true) &
 		(external_transition = $false) &
@@ -183,7 +290,7 @@ tff(internal_transition_occurred,axiom,
 		(output = $true)))).
 
 tff(external_transition_occurred,axiom,
-		((($less(time_passed,time_advance)) & 
+	((($less(time_passed,time_advance)) & 
 		(input_rcvd)) => (
 		(internal_transition = $false) &
 		(external_transition = $true) &
@@ -191,25 +298,13 @@ tff(external_transition_occurred,axiom,
 		(output = $false)))).
 
 tff(confluence_transition_occurred,axiom,
-		((($greatereq(time_passed,time_advance)) & 
+	((($greatereq(time_passed,time_advance)) & 
 		(input_rcvd)) => (
 		(internal_transition = $false) &
 		(external_transition = $false) &
 		(confluence_transition = $true) &
 		(output = $true)))).
 
-tff(count_value,axiom,count = 5.0).
+tff(infinity_is_greater,axiom,
+	infinity = $sum(time_passed,1.0)).
 
-tff(increment_value,axiom,increment = 1.0).
-
-tff(countUp_value,axiom,countUp = $true).
-
-tff(sigma_value,axiom,sigma = 5.0).
-
-tff(time_passed_value,axiom,time_passed = 2.0).
-
-tff(rcvd_direction_in,axiom,num_rcvd(direction_in) = 0).
-
-tff(rcvd_increment_in,axiom,num_rcvd(increment_in) = 1).
-
-tff(new_conj,conjecture,external_transition = $true).

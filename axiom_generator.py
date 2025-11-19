@@ -540,7 +540,7 @@ class Axiom_Generator:
 
 if __name__ == "__main__":
 
-    axiom_gen = Axiom_Generator('DEVSMap_Files/supervisor/command_reposition.json', 'command_reposition', 'DEVSMap_Files/counter/counter_tester_init_state.json')
+    axiom_gen = Axiom_Generator('DEVSMap_Files/counter/counter_atomic.json', 'counter', 'DEVSMap_Files/counter/counter_tester_init_state.json')
     axiom_gen.parse_state_vars()
     axiom_gen.parse_i_ports()
     axiom_gen.parse_o_ports()
@@ -549,4 +549,4 @@ if __name__ == "__main__":
     axiom_gen.parse_delta_con()
     axiom_gen.parse_lambda()
     axiom_gen.parse_ta()
-    axiom_gen.save("command_reposition_model")
+    axiom_gen.save("counter_model")
