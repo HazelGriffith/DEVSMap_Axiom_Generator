@@ -184,12 +184,10 @@ class Axiom_Generator:
         for pos, key in enumerate(state):
             var_type = ""
             self.state_var_names.append(key)
-            if (state[key] in self.integers):
-                var_type = "$int"
+            if (state[key] in self.integers) or (state[key] in self.reals):
+                var_type = "$real"
             elif (state[key] == "bool"):
                 var_type = "$o"
-            elif (state[key] in self.reals):
-                var_type = "$real"
             else:
                 assert False, f"{state[key]} variable type is unsupported"
 
@@ -215,12 +213,10 @@ class Axiom_Generator:
             i_port_axioms.append(Axiom("tff",f"{key}_type","type", Constant(f"{key} : i_port")))
 
             p_type = ""
-            if (in_ports[key] in self.integers):
-                p_type = "$int"
+            if (in_ports[key] in self.integers) or (in_ports[key] in self.reals):
+                p_type = "$real"
             elif (in_ports[key] == "bool"):
                 p_type = "$o"
-            elif (in_ports[key] in self.reals):
-                p_type = "$real"
             else:
                 assert False, f"{p_type} is an unsupported variable type"
 
@@ -264,12 +260,10 @@ class Axiom_Generator:
             o_port_axioms.append(Axiom("tff",f"{key}_type","type", Constant(f"{key} : o_port")))
 
             p_type = ""
-            if (out_ports[key] in self.integers):
-                p_type = "$int"
+            if (out_ports[key] in self.integers) or (out_ports[key] in self.reals):
+                p_type = "$real"
             elif (out_ports[key] == "bool"):
                 p_type = "$o"
-            elif (out_ports[key] in self.reals):
-                p_type = "$real"
             else:
                 assert False, f"{p_type} is an unsupported variable type"
 
@@ -299,24 +293,29 @@ class Axiom_Generator:
 
     '''
     Recursively parses and generates axioms from the trans function dictionaries
-    args: axiom_num = int, cond_list = list<string>, transition_function = dict<string: dict<>> or dict<string: string>, translation(int, list<string>, dict<string:string>) -> string
+    args: axiom_num = int, cond_list = list<string>, devsmap_dict = dict<string: dict<>> or dict<string: string>, axiom_type = string
     returns: axiom_num = int, axiom = string
     '''
 
-    def parse_devsmap_dict(self, axiom_num:int, cond_list, transition_function, axiom_type:str):
-        #Assumes no dictionary will have different key-value types within itself
-        if (len(transition_function) == 0) or isinstance(list(transition_function.values())[0], str):
-            axiom = self.gen_delta_axiom(axiom_num, cond_list, transition_function, axiom_type)
+    def parse_devsmap_dict(self, axiom_num:int, cond_list, devsmap_dict, axiom_type:str):
+        #Assumes no dictionary will have different key-value types within same tier
+        if (len(devsmap_dict) == 0) or isinstance(list(devsmap_dict.values())[0], str):
+            #If the dictionary is empty it will create a NULL axiom
+            #If the dictionary has values that are strings, then an axiom declaring these strings are true will be generated
+            axiom = self.gen_delta_axiom(axiom_num, cond_list, devsmap_dict, axiom_type)
+            #The axiom is returned along with an increased number
             return axiom, axiom_num+1
-        elif isinstance(list(transition_function.values())[0], dict):
-            other_conds = []
-            num = axiom_num
-            for pos, key in enumerate(transition_function):
-                if key.casefold() != "otherwise":
+        elif isinstance(list(devsmap_dict.values())[0], dict):
+            #else if the dictionary has values that are dictionaries
+            other_conds = [] #other_conds refers to conditions for the Otherwise axiom
+            num = axiom_num #variable copy to ensure correct value is used
+            for key in devsmap_dict:
+                #For every condition, recursively access the variable assignments
+                if key.casefold() != "otherwise": #If the condition is not the Otherwise condition
                     other_conds.append(key)
-                    new_cond_list = cond_list.copy()
-                    new_cond_list.append(key)
-                    axiom, num = self.parse_devsmap_dict(num, new_cond_list, transition_function[key], axiom_type)
+                    new_cond_list = cond_list.copy() #cond_list is the conditions from the next highest tier
+                    new_cond_list.append(key) #This key's condition is appended to the cond list before recursively checking the next key-value pair
+                    axiom, num = self.parse_devsmap_dict(num, new_cond_list, devsmap_dict[key], axiom_type) #NoneType axioms are returned to finish execution
                     if axiom is not None:
                         axiom_list = self.axioms[f"{axiom_type}_axioms"]
                         axiom_list.append(axiom)
@@ -324,8 +323,8 @@ class Axiom_Generator:
             if axiom_type != "lambda":
                 other_conds = self.negate_conds(other_conds)
                 other_conds.extend(cond_list.copy())
-                if 'otherwise' in transition_function.keys():
-                    axiom, num = self.parse_devsmap_dict(num, other_conds, transition_function['otherwise'], axiom_type)
+                if 'otherwise' in devsmap_dict.keys():
+                    axiom, num = self.parse_devsmap_dict(num, other_conds, devsmap_dict['otherwise'], axiom_type)
                 else:
                     axiom, num = self.parse_devsmap_dict(num, other_conds, {}, axiom_type)
 

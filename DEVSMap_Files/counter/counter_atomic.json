@@ -26,20 +26,35 @@
             "direction_in.bagSize() != 0": {
                 "increment_in.bagSize() == 0": {
                     "countUp": "direction_in.bag(-1)"
-                }
-            },
-            "increment_in.bagSize() != 0": {
-                "direction_in.bagSize() == 0": {
+                },
+                "increment_in.bagSize() != 0": {
+                    "countUp": "direction_in.bag(-1)",
                     "increment": "increment_in.bag(-1)"
                 }
             },
-            "otherwise": {
-                "countUp": "direction_in.bag(-1)",
-                "increment": "increment_in.bag(-1)"
-            }
+            "direction_in.bagSize() == 0": {
+                "increment_in.bagSize() == 0": {
+                },
+                "increment_in.bagSize() != 0": {
+                    "increment": "increment_in.bag(-1)"
+                }
+            },
+            "otherwise": {}
         },
         "delta_con": {
             "direction_in.bagSize() != 0": {
+                "increment_in.bagSize() != 0": {
+                    "direction_in.bag(-1) == true": {
+                        "count": "count + increment_in.bag(-1)",
+                        "increment": "increment_in.bag(-1)",
+                        "countUp": "direction_in.bag(-1)"
+                    },
+                    "direction_in.bag(-1) == false": {
+                        "count": "count - increment_in.bag(-1)",
+                        "increment": "increment_in.bag(-1)",
+                        "countUp": "direction_in.bag(-1)"
+                    }
+                },
                 "increment_in.bagSize() == 0": {
                     "direction_in.bag(-1) == true": {
                         "count": "count + increment",
@@ -51,30 +66,27 @@
                     }
                 }
             },
-            "increment_in.bagSize() != 0": {
-                "direction_in.bagSize() == 0": {
+            "direction_in.bagSize() == 0": {
+                "increment_in.bagSize() != 0": {
                     "countUp == true": {
-                        "count": "count + increment_in.bag(-1)",
-                        "increment": "increment_in.bag(-1)"
+                        "increment": "increment_in.bag(-1)",
+                        "count": "count + increment_in.bag(-1)"
                     },
                     "countUp == false": {
-                        "count": "count - increment_in.bag(-1)",
-                        "increment": "increment_in.bag(-1)"
+                        "increment": "increment_in.bag(-1)",
+                        "count": "count - increment_in.bag(-1)"
+                    }
+                },
+                "increment_in.bagSize() == 0": {
+                    "countUp == true": {
+                        "count": "count + increment"
+                    },
+                    "countUp == false": {
+                        "count": "count - increment"
                     }
                 }
             },
-            "otherwise": {
-                "direction_in.bag(-1) == true": {
-                    "count": "count + increment_in.bag(-1)",
-                    "increment": "increment_in.bag(-1)",
-                    "countUp": "direction_in.bag(-1)"
-                },
-                "direction_in.bag(-1) == false": {
-                    "count": "count - increment_in.bag(-1)",
-                    "increment": "increment_in.bag(-1)",
-                    "countUp": "direction_in.bag(-1)"
-                }
-            }
+            "otherwise": {}
         },
         "lambda": {
             "otherwise": {
