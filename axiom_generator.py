@@ -321,20 +321,17 @@ class Axiom_Generator:
                         axiom_list.append(axiom)
                         self.axioms.update({f"{axiom_type}_axioms":axiom_list})
             if axiom_type != "lambda":
-                other_conds = self.negate_conds(other_conds)
-                other_conds.extend(cond_list.copy())
                 if 'otherwise' in devsmap_dict.keys():
+                    other_conds = self.negate_conds(other_conds)
+                    other_conds.extend(cond_list.copy())
                     axiom, num = self.parse_devsmap_dict(num, other_conds, devsmap_dict['otherwise'], axiom_type)
-                else:
-                    axiom, num = self.parse_devsmap_dict(num, other_conds, {}, axiom_type)
-
-                if axiom is not None:
-                    axiom_list = self.axioms[f"{axiom_type}_axioms"]
-                    axiom_list.append(axiom)
-                    self.axioms.update({f"{axiom_type}_axioms":axiom_list})
+                    if axiom is not None:
+                        axiom_list = self.axioms[f"{axiom_type}_axioms"]
+                        axiom_list.append(axiom)
+                        self.axioms.update({f"{axiom_type}_axioms":axiom_list})
             return None, num
         else:
-            assert False, "The transition functions keys and values can only ever be strings or nested dictionaries"
+            assert False, "The devsmap dictionary keys and values can only ever be strings or nested dictionaries"
 
     '''
     Receives a list of tff strings that need to be negated

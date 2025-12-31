@@ -118,42 +118,13 @@ tff(delta_ext_axiom_1,axiom,((((
 		(next_countUp = val_rcvd_direction_in) & 
 		(next_increment = val_rcvd_increment_in))))).
 
-tff(delta_ext_axiom_2,axiom,(((((
-		~(num_rcvd(increment_in) = 0) & 
-		~(num_rcvd(increment_in) != 0)) & 
-		(external_transition = $true)) & 
-		(num_rcvd(direction_in) != 0)) => (((
-		(next_count = count) & 
-		(next_increment = increment)) & 
-		(next_countUp = countUp)) & 
-		(next_sigma = sigma))))).
-
-tff(delta_ext_axiom_3,axiom,((((
-		(external_transition = $true) & 
-		(num_rcvd(direction_in) = 0)) & 
-		(num_rcvd(increment_in) = 0)) => (((
-		(next_count = count) & 
-		(next_increment = increment)) & 
-		(next_countUp = countUp)) & 
-		(next_sigma = sigma))))).
-
-tff(delta_ext_axiom_4,axiom,((((
+tff(delta_ext_axiom_2,axiom,((((
 		(external_transition = $true) & 
 		(num_rcvd(direction_in) = 0)) & 
 		(num_rcvd(increment_in) != 0)) => 
 		(next_increment = val_rcvd_increment_in)))).
 
-tff(delta_ext_axiom_5,axiom,(((((
-		~(num_rcvd(increment_in) = 0) & 
-		~(num_rcvd(increment_in) != 0)) & 
-		(external_transition = $true)) & 
-		(num_rcvd(direction_in) = 0)) => (((
-		(next_count = count) & 
-		(next_increment = increment)) & 
-		(next_countUp = countUp)) & 
-		(next_sigma = sigma))))).
-
-tff(delta_ext_axiom_6,axiom,((((
+tff(delta_ext_axiom_3,axiom,((((
 		~(num_rcvd(direction_in) != 0) & 
 		~(num_rcvd(direction_in) = 0)) & 
 		(external_transition = $true)) => (((
@@ -185,18 +156,7 @@ tff(delta_con_axiom_1,axiom,(((((
 		(next_increment = val_rcvd_increment_in)) & 
 		(next_countUp = val_rcvd_direction_in))))).
 
-tff(delta_con_axiom_2,axiom,((((((
-		~(val_rcvd_direction_in = $true) & 
-		~(val_rcvd_direction_in = $false)) & 
-		(confluence_transition = $true)) & 
-		(num_rcvd(direction_in) != 0)) & 
-		(num_rcvd(increment_in) != 0)) => (((
-		(next_count = count) & 
-		(next_increment = increment)) & 
-		(next_countUp = countUp)) & 
-		(next_sigma = sigma))))).
-
-tff(delta_con_axiom_3,axiom,(((((
+tff(delta_con_axiom_2,axiom,(((((
 		(confluence_transition = $true) & 
 		(num_rcvd(direction_in) != 0)) & 
 		(num_rcvd(increment_in) = 0)) & 
@@ -205,7 +165,7 @@ tff(delta_con_axiom_3,axiom,(((((
 		$sum(count,increment)) & 
 		(next_countUp = val_rcvd_direction_in))))).
 
-tff(delta_con_axiom_4,axiom,(((((
+tff(delta_con_axiom_3,axiom,(((((
 		(confluence_transition = $true) & 
 		(num_rcvd(direction_in) != 0)) & 
 		(num_rcvd(increment_in) = 0)) & 
@@ -214,28 +174,7 @@ tff(delta_con_axiom_4,axiom,(((((
 		$difference(count,increment)) & 
 		(next_countUp = val_rcvd_direction_in))))).
 
-tff(delta_con_axiom_5,axiom,((((((
-		~(val_rcvd_direction_in = $true) & 
-		~(val_rcvd_direction_in = $false)) & 
-		(confluence_transition = $true)) & 
-		(num_rcvd(direction_in) != 0)) & 
-		(num_rcvd(increment_in) = 0)) => (((
-		(next_count = count) & 
-		(next_increment = increment)) & 
-		(next_countUp = countUp)) & 
-		(next_sigma = sigma))))).
-
-tff(delta_con_axiom_6,axiom,(((((
-		~(num_rcvd(increment_in) != 0) & 
-		~(num_rcvd(increment_in) = 0)) & 
-		(confluence_transition = $true)) & 
-		(num_rcvd(direction_in) != 0)) => (((
-		(next_count = count) & 
-		(next_increment = increment)) & 
-		(next_countUp = countUp)) & 
-		(next_sigma = sigma))))).
-
-tff(delta_con_axiom_7,axiom,(((((
+tff(delta_con_axiom_4,axiom,(((((
 		(confluence_transition = $true) & 
 		(num_rcvd(direction_in) = 0)) & 
 		(num_rcvd(increment_in) != 0)) & 
@@ -244,7 +183,7 @@ tff(delta_con_axiom_7,axiom,(((((
 		(next_count = 
 		$sum(count,val_rcvd_increment_in)))))).
 
-tff(delta_con_axiom_8,axiom,(((((
+tff(delta_con_axiom_5,axiom,(((((
 		(confluence_transition = $true) & 
 		(num_rcvd(direction_in) = 0)) & 
 		(num_rcvd(increment_in) != 0)) & 
@@ -253,18 +192,7 @@ tff(delta_con_axiom_8,axiom,(((((
 		(next_count = 
 		$difference(count,val_rcvd_increment_in)))))).
 
-tff(delta_con_axiom_9,axiom,((((((
-		~(countUp = $true) & 
-		~(countUp = $false)) & 
-		(confluence_transition = $true)) & 
-		(num_rcvd(direction_in) = 0)) & 
-		(num_rcvd(increment_in) != 0)) => (((
-		(next_count = count) & 
-		(next_increment = increment)) & 
-		(next_countUp = countUp)) & 
-		(next_sigma = sigma))))).
-
-tff(delta_con_axiom_10,axiom,(((((
+tff(delta_con_axiom_6,axiom,(((((
 		(confluence_transition = $true) & 
 		(num_rcvd(direction_in) = 0)) & 
 		(num_rcvd(increment_in) = 0)) & 
@@ -272,7 +200,7 @@ tff(delta_con_axiom_10,axiom,(((((
 		(next_count = 
 		$sum(count,increment))))).
 
-tff(delta_con_axiom_11,axiom,(((((
+tff(delta_con_axiom_7,axiom,(((((
 		(confluence_transition = $true) & 
 		(num_rcvd(direction_in) = 0)) & 
 		(num_rcvd(increment_in) = 0)) & 
@@ -280,28 +208,7 @@ tff(delta_con_axiom_11,axiom,(((((
 		(next_count = 
 		$difference(count,increment))))).
 
-tff(delta_con_axiom_12,axiom,((((((
-		~(countUp = $true) & 
-		~(countUp = $false)) & 
-		(confluence_transition = $true)) & 
-		(num_rcvd(direction_in) = 0)) & 
-		(num_rcvd(increment_in) = 0)) => (((
-		(next_count = count) & 
-		(next_increment = increment)) & 
-		(next_countUp = countUp)) & 
-		(next_sigma = sigma))))).
-
-tff(delta_con_axiom_13,axiom,(((((
-		~(num_rcvd(increment_in) != 0) & 
-		~(num_rcvd(increment_in) = 0)) & 
-		(confluence_transition = $true)) & 
-		(num_rcvd(direction_in) = 0)) => (((
-		(next_count = count) & 
-		(next_increment = increment)) & 
-		(next_countUp = countUp)) & 
-		(next_sigma = sigma))))).
-
-tff(delta_con_axiom_14,axiom,((((
+tff(delta_con_axiom_8,axiom,((((
 		~(num_rcvd(direction_in) != 0) & 
 		~(num_rcvd(direction_in) = 0)) & 
 		(confluence_transition = $true)) => (((

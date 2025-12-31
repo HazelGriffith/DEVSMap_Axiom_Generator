@@ -33,8 +33,6 @@
                 }
             },
             "direction_in.bagSize() == 0": {
-                "increment_in.bagSize() == 0": {
-                },
                 "increment_in.bagSize() != 0": {
                     "increment": "increment_in.bag(-1)"
                 }
