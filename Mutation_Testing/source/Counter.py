@@ -11,9 +11,9 @@ class Counter:
         else:
             self.count -= self.increment
 
-    def external_transition(self, x, e:float):
-        direction_in = x.at("direction_in")
-        increment_in = x.at("increment_in")
+    def external_transition(self, x:dict[str,list], e:float):
+        direction_in = x.get("direction_in")
+        increment_in = x.get("increment_in")
         if len(direction_in) > 0:
             self.countUp = direction_in[-1]
     
@@ -29,26 +29,40 @@ class Counter:
 
     def time_advance(self) -> float:
         return self.sigma
+    
+    def equal(self, counter) -> bool:
+        if ((self.count == counter.count) and
+            (self.increment == counter.increment) and
+            (self.countUp == counter.countUp) and
+            (self.sigma == counter.sigma)):
+            return True
+        else:
+            return False
 
-def transition(counter_model:Counter, time_passed:float, x) -> Counter:
+def transition(counter_model:Counter, time_advance, time_passed, x) -> Counter:
     input = False
-    for x_port in x:
-        if len(x_port) > 0:
+    for x_bag in x.values():
+        if len(x_bag) > 0:
             input = True
 
     output = None
-    time_adv1 = counter_model.sigma
+    time_adv2 = time_advance
 
-    if time_passed >= time_adv1:
+    if time_passed >= time_advance:
         if input:
             output = counter_model.output()
             counter_model.confluence_transition(x)
+            time_adv2 = counter_model.time_advance()
         else:
             output = counter_model.output()
             counter_model.internal_transition()
+            time_adv2 = counter_model.time_advance()
     else:
         if input:
             counter_model.external_transition(x, time_passed)
+            time_adv2 = counter_model.time_advance()
     
-    time_adv2 = counter_model.time_advance()
-    return output, time_adv2
+    return output, time_adv2, counter_model
+
+def copy_counter(counter1:Counter) -> Counter:
+    return Counter(counter1.count, counter1.increment, counter1.countUp, counter1.sigma)
