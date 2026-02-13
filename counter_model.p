@@ -9,7 +9,9 @@ tff(confluence_transition_type,type,confluence_transition : $o).
 
 tff(output_type,type,output : $o).
 
-tff(time_advance_type,type,time_advance : $real).
+tff(ta_in_type,type,ta_in : $real).
+
+tff(ta_out_type,type,ta_out : $real).
 
 tff(time_passed_type,type,time_passed : $real).
 
@@ -228,7 +230,7 @@ tff(lambda_axiom_0,axiom,((
 %-----TIME ADVANCE AXIOMS
 
 tff(ta_axiom_0,axiom,(
-		(time_advance = sigma))).
+		(ta_out = sigma))).
 
 
 %-----DEVS TFF AXIOMS
@@ -242,7 +244,7 @@ tff(input_not_rcvd,axiom,
 		num_rcvd(IP) = 0 => input_rcvd = $false).
 
 tff(internal_transition_occurred,axiom,
-	((($greatereq(time_passed,time_advance)) & 
+	((($greatereq(time_passed,ta_in)) & 
 		(~input_rcvd)) => (
 		(internal_transition = $true) &
 		(external_transition = $false) &
@@ -250,7 +252,7 @@ tff(internal_transition_occurred,axiom,
 		(output = $true)))).
 
 tff(external_transition_occurred,axiom,
-	((($less(time_passed,time_advance)) & 
+	((($less(time_passed,ta_in)) & 
 		(input_rcvd)) => (
 		(internal_transition = $false) &
 		(external_transition = $true) &
@@ -258,7 +260,7 @@ tff(external_transition_occurred,axiom,
 		(output = $false)))).
 
 tff(confluence_transition_occurred,axiom,
-	((($greatereq(time_passed,time_advance)) & 
+	((($greatereq(time_passed,ta_in)) & 
 		(input_rcvd)) => (
 		(internal_transition = $false) &
 		(external_transition = $false) &

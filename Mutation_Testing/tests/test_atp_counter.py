@@ -1,5 +1,5 @@
 import source.Counter as C
-import os, pytest
+import subprocess, shutil
 
 def load_tests(filename:str):
     tests = {}
@@ -75,17 +75,76 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("get_tests", test_values, ids=test_ids)
 
 def test_transition(get_tests):
+
     counter1 = get_tests["counter1"]
     ta1 = get_tests["ta1"]
     tp = get_tests["tp"]
     x = get_tests["x"]
+    d_in = x.get("direction_in")
+    inc_in = x.get("increment_in")
     
     actual_output, actual_ta, actual_counter = C.transition(C.copy_counter(counter1), ta1, tp, x)
-    exp_counter = get_tests["counter2"]
-    exp_ta = get_tests["ta2"]
-    exp_output = get_tests["output"]
+
+
+    axioms = []
+    axioms.append(f"tff(count_value,axiom,count = {float(counter1.count)}).\n")
+    axioms.append(f"tff(increment_value,axiom,increment = {float(counter1.increment)}).\n")
+    countUp = str(counter1.countUp)
+    if countUp == "False":
+        countUp = "$false"
+    else:
+        countUp = "$true"
+    axioms.append(f"tff(countUp_value,axiom,countUp = {countUp}).\n")
+    axioms.append(f"tff(sigma_value,axiom,sigma = {float(counter1.sigma)}).\n")
+    axioms.append(f"tff(ta_in_value,axiom,ta_in = {ta1}).\n")
+    axioms.append(f"tff(time_passed_value,axiom,time_passed = {tp}).\n")
+    axioms.append(f"tff(num_rcvd_direction_in,axiom,num_rcvd(direction_in) = {len(d_in)}).\n")
+    axioms.append(f"tff(num_rcvd_increment_in,axiom,num_rcvd(increment_in) = {len(inc_in)}).\n")
+    if len(d_in) > 0:
+        d_in_value = str(d_in[-1])
+        if d_in_value == "False":
+            d_in_value = "$false"
+        else:
+            d_in_value = "$true"
+        axioms.append(f"tff(val_rcvd_direction_in_value,axiom,val_rcvd_direction_in = {d_in_value}).\n")
+        
+    if len(inc_in) > 0:
+        axioms.append(f"tff(val_rcvd_increment_in_value,axiom,val_rcvd_increment_in = {float(inc_in[-1])}).\n")
+        
+    countUp = str(actual_counter.countUp)
+    if countUp == "False":
+        countUp = "$false"
+    else:
+        countUp = "$true"
+
+    if actual_output != None:
+        output_cond = f"(val_output_count_out = {float(actual_output)})&"
+    else:
+        output_cond = ""
+
+    axioms.append(f"tff(next_state_conjecture,conjecture,(next_count = {float(actual_counter.count)})&"+
+                                                    f"(next_increment = {float(actual_counter.increment)})&"+
+                                                    f"(next_countUp = {countUp})&"+
+                                                    f"(next_sigma = {actual_counter.sigma})&"+
+                                                    output_cond+
+                                                    f"(ta_out = {actual_ta})).\n")
+        
+    shutil.copy2("tests/counter_model.p","tests/counter_model_copy.p")
+
+
+    with open("tests/counter_model_copy.p", "a") as test_file:
+        test_file.write("\n")
+        for axiom in axioms:
+            test_file.write(axiom+"\n")
     
-    assert(actual_counter.equal(exp_counter))
-    assert(actual_output == exp_output)
-    assert(actual_ta == exp_ta)
+    try:
+        output = subprocess.run(["./vampire", "-t", "1d", "-om", "vampire", "tests/counter_model_copy.p"], capture_output=True, text=True, check=True)
+        output_lines = output.stdout.splitlines()
+        termination_reason = output_lines[1]
+        assert(termination_reason == "unsat")
+    except subprocess.CalledProcessError as e:
+        print(e.returncode)
+        print(e.stderr)
+        print(e.stdout)
+        assert(False)
     

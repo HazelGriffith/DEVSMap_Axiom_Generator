@@ -83,7 +83,8 @@ class Axiom_Generator:
         eTBool = ("tff(external_transition_type,type,external_transition : $o).\n\n")
         cTBool = ("tff(confluence_transition_type,type,confluence_transition : $o).\n\n")
         oBool = ("tff(output_type,type,output : $o).\n\n")
-        taExp = ("tff(time_advance_type,type,time_advance : $real).\n\n")
+        taIn = ("tff(ta_in_type,type,ta_in : $real).\n\n")
+        taOut = ("tff(ta_out_type,type,ta_out : $real).\n\n")
         taActual = ("tff(time_passed_type,type,time_passed : $real).\n\n")
         infinity = ("tff(infinity_type,type,infinity : $real).\n\n")
         input_rcvd = ("tff(input_rcvd_type,type,input_rcvd: $o).\n\n")
@@ -92,7 +93,8 @@ class Axiom_Generator:
         line += eTBool
         line += cTBool
         line += oBool
-        line += taExp
+        line += taIn
+        line += taOut
         line += taActual
         line += infinity
         line += input_rcvd
@@ -111,7 +113,7 @@ class Axiom_Generator:
                                     "num_rcvd(IP) = 0 => input_rcvd = $false).\n\n")
 
         iTAxiom = ("tff(internal_transition_occurred,axiom,\n\t" +
-                        "((($greatereq(time_passed,time_advance)) & \n\t\t" +
+                        "((($greatereq(time_passed,ta_in)) & \n\t\t" +
                         "(~input_rcvd)) => (\n\t\t"+
                         "(internal_transition = $true) &\n\t\t" +
                         "(external_transition = $false) &\n\t\t" +
@@ -119,7 +121,7 @@ class Axiom_Generator:
                         "(output = $true)))).\n\n")
         
         eTAxiom = ("tff(external_transition_occurred,axiom,\n\t" +
-                        "((($less(time_passed,time_advance)) & \n\t\t" +
+                        "((($less(time_passed,ta_in)) & \n\t\t" +
                         "(input_rcvd)) => (\n\t\t"+
                         "(internal_transition = $false) &\n\t\t" +
                         "(external_transition = $true) &\n\t\t" +
@@ -127,7 +129,7 @@ class Axiom_Generator:
                         "(output = $false)))).\n\n")
                 
         cTAxiom = ("tff(confluence_transition_occurred,axiom,\n\t" +
-                        "((($greatereq(time_passed,time_advance)) & \n\t\t" +
+                        "((($greatereq(time_passed,ta_in)) & \n\t\t" +
                         "(input_rcvd)) => (\n\t\t"+
                         "(internal_transition = $false) &\n\t\t" +
                         "(external_transition = $false) &\n\t\t" +

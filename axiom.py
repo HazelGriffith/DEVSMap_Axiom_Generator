@@ -28,7 +28,7 @@ class Constant:
         elif self.value.endswith("time_advance"):
             if self.value.startswith("next_"):
                 self.value = self.value.replace("next_","")
-            self.value = "time_advance"
+            self.value = "ta_out"
         elif self.value.startswith("constValue"):
             self.value = self.value.replace("constValue","")
             self.value = self.value.replace("_",".")
