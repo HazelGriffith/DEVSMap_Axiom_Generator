@@ -138,7 +138,7 @@ def test_transition(get_tests):
             test_file.write(axiom+"\n")
     
     try:
-        output = subprocess.run(["./vampire", "-t", "1d", "-om", "vampire", "tests/counter_model_copy.p"], capture_output=True, text=True, check=True)
+        output = subprocess.run(["./tests/vampire", "-t", "1d", "-om", "smtcomp", "tests/counter_model_copy.p"], capture_output=True, text=True, check=True)
         output_lines = output.stdout.splitlines()
         termination_reason = output_lines[1]
         assert(termination_reason == "unsat")

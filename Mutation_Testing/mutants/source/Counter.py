@@ -369,7 +369,7 @@ class Counter:
             return False # pragma: no mutate
         
     def __str__(self): # pragma: no mutate
-        return f"count: {self.count}, increment: {self.increment}, countUp: {self.countUp}, sigma: {self.sigma}"
+        return f"count: {self.count}, increment: {self.increment}, countUp: {self.countUp}, sigma: {self.sigma}" # pragma: no mutate
 
 def x_transition__mutmut_orig(counter_model, time_advance, time_passed, x) -> Counter:
     input = False
@@ -1056,47 +1056,5 @@ def transition(*args, **kwargs):
 transition.__signature__ = _mutmut_signature(x_transition__mutmut_orig)
 x_transition__mutmut_orig.__name__ = 'x_transition'
 
-def x_copy_counter__mutmut_orig(counter1) -> Counter: # pragma: no mutate
-    return Counter(counter1.count, counter1.increment, counter1.countUp, counter1.sigma)
-
-def x_copy_counter__mutmut_1(counter1) -> Counter: # pragma: no mutate
-    return Counter(None, counter1.increment, counter1.countUp, counter1.sigma)
-
-def x_copy_counter__mutmut_2(counter1) -> Counter: # pragma: no mutate
-    return Counter(counter1.count, None, counter1.countUp, counter1.sigma)
-
-def x_copy_counter__mutmut_3(counter1) -> Counter: # pragma: no mutate
-    return Counter(counter1.count, counter1.increment, None, counter1.sigma)
-
-def x_copy_counter__mutmut_4(counter1) -> Counter: # pragma: no mutate
-    return Counter(counter1.count, counter1.increment, counter1.countUp, None)
-
-def x_copy_counter__mutmut_5(counter1) -> Counter: # pragma: no mutate
-    return Counter(counter1.increment, counter1.countUp, counter1.sigma)
-
-def x_copy_counter__mutmut_6(counter1) -> Counter: # pragma: no mutate
-    return Counter(counter1.count, counter1.countUp, counter1.sigma)
-
-def x_copy_counter__mutmut_7(counter1) -> Counter: # pragma: no mutate
-    return Counter(counter1.count, counter1.increment, counter1.sigma)
-
-def x_copy_counter__mutmut_8(counter1) -> Counter: # pragma: no mutate
-    return Counter(counter1.count, counter1.increment, counter1.countUp, )
-
-x_copy_counter__mutmut_mutants : ClassVar[MutantDict] = {
-'x_copy_counter__mutmut_1': x_copy_counter__mutmut_1, 
-    'x_copy_counter__mutmut_2': x_copy_counter__mutmut_2, 
-    'x_copy_counter__mutmut_3': x_copy_counter__mutmut_3, 
-    'x_copy_counter__mutmut_4': x_copy_counter__mutmut_4, 
-    'x_copy_counter__mutmut_5': x_copy_counter__mutmut_5, 
-    'x_copy_counter__mutmut_6': x_copy_counter__mutmut_6, 
-    'x_copy_counter__mutmut_7': x_copy_counter__mutmut_7, 
-    'x_copy_counter__mutmut_8': x_copy_counter__mutmut_8
-}
-
-def copy_counter(*args, **kwargs):
-    result = _mutmut_trampoline(x_copy_counter__mutmut_orig, x_copy_counter__mutmut_mutants, args, kwargs)
-    return result 
-
-copy_counter.__signature__ = _mutmut_signature(x_copy_counter__mutmut_orig)
-x_copy_counter__mutmut_orig.__name__ = 'x_copy_counter'
+def copy_counter(counter1) -> Counter: # pragma: no mutate
+    return Counter(counter1.count, counter1.increment, counter1.countUp, counter1.sigma) # pragma: no mutate

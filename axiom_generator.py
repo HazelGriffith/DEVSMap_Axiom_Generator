@@ -11,7 +11,8 @@ class Axiom_Generator:
     prefixConds = ["<", "<=", ">", ">=","--","-","+","*","/"]
     syntaxMap = {"true":"$true", "false":"$false", "==":"=", "<":"$less", "<=":"$lesseq", ">":"$greater", ">=":"$greatereq", "--":"$uminus", "+":"$sum", "-":"$difference", "*":"$product", "/":"$quotient", "&&":"&", "||":"|", "!=":"!="}
     section_names = ["state_var_axioms", "i_port_axioms", "o_port_axioms", "delta_int_axioms", "delta_ext_axioms", "delta_con_axioms", "lambda_axioms", "ta_axioms"]
-
+    transition_function_names = ["delta_int", "delta_ext", "delta_con"]
+    
     def __init__(self, model_file_path: str, model_name: str, init_state_file_path: str):
         #Getting atomic model file
         with open(model_file_path) as jfile:
@@ -136,6 +137,18 @@ class Axiom_Generator:
                         "(confluence_transition = $true) &\n\t\t" +
                         "(output = $true)))).\n\n")
         
+        nothing_changes_assignments = ""
+        for pos, var in enumerate(self.state_var_names):
+           nothing_changes_assignments += f"(next_{var} = {var})"
+           if pos+1 != len(self.state_var_names):
+               nothing_changes_assignments += " &\n\t\t"
+        nothingAxiom = ("tff(nothing_happened_axiom,axiom,\n\t" +
+                            "((($less(time_passed,ta_in)) &\n\t\t" +
+                            "(~input_rcvd)) => (\n\t\t" +
+                            "(ta_out = ta_in) &\n\t\t" +
+                            nothing_changes_assignments +
+                            "))).\n\n")
+        
         infAxiom = ("tff(infinity_is_greater,axiom,\n\t" +
                         "infinity = $sum(time_passed,1.0)).\n\n")
         
@@ -144,6 +157,7 @@ class Axiom_Generator:
         line += iTAxiom
         line += eTAxiom
         line += cTAxiom
+        line += nothingAxiom
         line += infAxiom
         return line
 
@@ -348,7 +362,27 @@ class Axiom_Generator:
             else:
                 cond_list[i] = f"!({cond_list[i]})"
         return cond_list
-
+    
+    '''
+    The time advance must be calculated with the next state's variables, and not the current state's, so this
+    function recursively accesses the uses of state variables, and adds the "next_" string to make it correct
+    args: assignment = Constant | Formula
+    returns: assignment = Constant | Formula
+    '''
+    def process_ta_values(self, assignment):
+        if isinstance(assignment, Constant):
+            if assignment.value in self.state_var_names:
+                assignment.value = f"next_{assignment.value}"
+            return assignment
+        elif isinstance(assignment, Unary_Formula):
+            assignment.operand = self.process_ta_values(assignment.operand)
+            return assignment
+        elif isinstance(assignment, Binary_Formula):
+            assignment.lhs = self.process_ta_values(assignment.lhs)
+            assignment.rhs = self.process_ta_values(assignment.rhs)
+            return assignment
+        else:
+            assert False, "An assignment must be a Constant or a Formula"
 
     '''
     Accepts the axiom number, list of condition statements, and the variable assignments to create a tff axiom
@@ -370,11 +404,24 @@ class Axiom_Generator:
             assert False, "the cond_list length cannot be less than 0"
 
         assignments = []
+        state_vars_missing = self.state_var_names.copy()
         if len(assignments_dict) > 0:
+            
             for pos, key in enumerate(assignments_dict.keys()):
+                if (axiom_type in self.transition_function_names):
+                    if key in state_vars_missing:
+                        state_vars_missing.remove(key)
+                    else:
+                        assert False, "for transition functions, the variable assignment must be for a state variable"
                 assignment_values = self.parse_clauses([assignments_dict[key]])
                 assignment_value = assignment_values[0]
+                if (axiom_type == "ta"):
+                    assignment_value = self.process_ta_values(assignment_value)
+                    
                 assignments.append(Binary_Formula("", Constant(f"next_{key}"), assignment_value, "=="))
+            if (axiom_type in self.transition_function_names):
+                for state_var in state_vars_missing:
+                    assignments.append(Binary_Formula("",Constant(f"next_{state_var}"),Constant(f"{state_var}"), "=="))
         else:
             for pos, var in enumerate(self.state_var_names):
                 assignments.append(Binary_Formula("",Constant(f"next_{var}"),Constant(f"{var}"), "=="))
