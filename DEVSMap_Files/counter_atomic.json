@@ -1,4 +1,5 @@
 {
+    "description":"This counter increases or decreases its value whether a boolean is true or false by the current increment value when an int transition occurs. External transitions change these values",
     "counter": {
         "s": {
             "count": "int",

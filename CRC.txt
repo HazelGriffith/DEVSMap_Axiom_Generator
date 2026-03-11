@@ -1,0 +1,2084 @@
+% Running in auto input_syntax mode. Trying TPTP
+preprocessing started
+[PP] input: 1. ! [X0 : i_port] : (start_mission = X0 | hover_criteria_met = X0 | aircraft_state = X0 | request_reposition = X0 | pilot_handover = X0 | pilot_takeover = X0) [input]
+[PP] input: 2. $true [input]
+[PP] input: 3. ! [X0 : i_port] : $greatereq(num_rcvd(X0),0) [input]
+[PP] input: 4. ! [X1 : o_port] : (set_mission_monitor_status = X1 | update_gcs = X1 | update_boss = X1 | request_aircraft_state = X1 | lp_criteria_met = X1 | stabilize = X1 | fcc_command_velocity = X1 | cancel_hover = X1) [input]
+[PP] input: 5. $true [input]
+[PP] input: 6. (state = 3.0 & ($term{internal_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 4.0) [input]
+[PP] input: 7. (state = 5.0 & ($term{internal_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 6.0) [input]
+[PP] input: 8. (state = 6.0 & ($term{internal_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 7.0) [input]
+[PP] input: 9. (state = 8.0 & ($term{internal_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 9.0) [input]
+[PP] input: 10. (state = 10.0 & ($term{internal_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & 3.0 = next_state) [input]
+[PP] input: 11. (($term{internal_transition} = $term{$true}) & state != 10.0 & state != 8.0 & state != 6.0 & state != 5.0 & state != 3.0) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [input]
+[PP] input: 12. (0 != num_rcvd(pilot_takeover) & ($term{external_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 12.0) [input]
+[PP] input: 13. (0 != num_rcvd(pilot_handover) & ($term{external_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 11.0) [input]
+[PP] input: 14. (0 != num_rcvd(start_mission) & ($term{external_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 2.0) [input]
+[PP] input: 15. (0 != num_rcvd(request_reposition) & state = 2.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [input]
+[PP] input: 16. (0 != num_rcvd(aircraft_state) & state = 4.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 5.0) [input]
+[PP] input: 17. (0 != num_rcvd(request_reposition) & state = 5.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [input]
+[PP] input: 18. (0 != num_rcvd(request_reposition) & state = 6.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [input]
+[PP] input: 19. (0 != num_rcvd(hover_criteria_met) & state = 7.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 8.0) [input]
+[PP] input: 20. (0 != num_rcvd(request_reposition) & state = 7.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [input]
+[PP] input: 21. (0 != num_rcvd(request_reposition) & state = 8.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [input]
+[PP] input: 22. ($term{confluence_transition} = $term{$true}) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [input]
+[PP] input: 23. (state = 3.0 & ($term{output} = $term{$true})) => ($term{val_output_request_aircraft_state} = $term{$true}) [input]
+[PP] input: 24. (state = 5.0 & ($term{output} = $term{$true})) => aircraft_velocity = val_output_fcc_command_velocity [input]
+[PP] input: 25. (state = 6.0 & ($term{output} = $term{$true})) => (($term{val_output_update_gcs} = $term{$true}) & ($term{val_output_update_boss} = $term{$true}) & ($term{val_output_set_mission_monitor_status} = $term{$true}) & ($term{val_output_stabilize} = $term{$true})) [input]
+[PP] input: 26. (state = 8.0 & ($term{output} = $term{$true})) => ($term{val_output_lp_criteria_met} = $term{$true}) [input]
+[PP] input: 27. (state = 10.0 & ($term{output} = $term{$true})) => ($term{val_output_cancel_hover} = $term{$true}) [input]
+[PP] input: 28. next_sigma = ta_out [input]
+[PP] input: 29. ? [X0 : i_port] : num_rcvd(X0) != 0 => ($term{input_rcvd} = $term{$true}) [input]
+[PP] input: 30. ! [X0 : i_port] : num_rcvd(X0) = 0 => ($term{input_rcvd} = $term{$false}) [input]
+[PP] input: 31. (~input_rcvd & $greatereq(time_passed,ta_in)) => (($term{output} = $term{$true}) & ($term{confluence_transition} = $term{$false}) & ($term{external_transition} = $term{$false}) & ($term{internal_transition} = $term{$true})) [input]
+[PP] input: 32. (input_rcvd & $less(time_passed,ta_in)) => (($term{output} = $term{$false}) & ($term{confluence_transition} = $term{$false}) & ($term{external_transition} = $term{$true}) & ($term{internal_transition} = $term{$false})) [input]
+[PP] input: 33. (input_rcvd & $greatereq(time_passed,ta_in)) => (($term{output} = $term{$true}) & ($term{confluence_transition} = $term{$true}) & ($term{external_transition} = $term{$false}) & ($term{internal_transition} = $term{$false})) [input]
+[PP] input: 34. (~input_rcvd & $less(time_passed,ta_in)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state & ta_out = ta_in) [input]
+[PP] input: 35. infinity = $sum(time_passed,1.0) [input]
+[PP] input: 36. state = 7.0 [input]
+[PP] input: 37. infinity = sigma [input]
+[PP] input: 38. infinity = ta_in [input]
+[PP] input: 39. aircraft_velocity = 5.0 [input]
+[PP] input: 40. time_passed = 543.0 [input]
+[PP] input: 42. ~? [X2 : $int] : (num_rcvd(hover_criteria_met) = X2 => next_state = 8.0) [negated conjecture 41]
+adding theory axioms
+% Theory clause: 72. ! [X0 : $int,X1 : $int] : $sum(X0,X1) = $sum(X1,X0) [theory axiom 143]
+% Theory clause: 74. ! [X2 : $int,X0 : $int,X1 : $int] : $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2) [theory axiom 144]
+% Theory clause: 76. ! [X0 : $int] : $sum(X0,0) = X0 [theory axiom 145]
+% Theory clause: 78. ! [X0 : $int,X1 : $int] : $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0)) [theory axiom 147]
+% Theory clause: 80. ! [X0 : $int] : 0 = $sum(X0,$uminus(X0)) [theory axiom 148]
+% Theory clause: 82. ! [X0 : $int] : ~$less(X0,X0) [theory axiom 150]
+% Theory clause: 84. ! [X2 : $int,X0 : $int,X1 : $int] : (~$less(X0,X1) | ~$less(X1,X2) | $less(X0,X2)) [theory axiom 151]
+% Theory clause: 86. ! [X0 : $int,X1 : $int] : ($less(X0,X1) | $less(X1,X0) | X0 = X1) [theory axiom 152]
+% Theory clause: 88. ! [X2 : $int,X0 : $int,X1 : $int] : (~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2))) [theory axiom 153]
+% Theory clause: 90. ! [X0 : $int,X1 : $int] : ($less(X0,X1) | $less(X1,$sum(X0,1))) [theory axiom 155]
+% Theory clause: 92. ! [X0 : $int] : $uminus($uminus(X0)) = X0 [theory axiom 156]
+% Theory clause: 94. ! [X0 : $int,X1 : $int] : (~$less(X0,X1) | ~$less(X1,$sum(X0,1))) [theory axiom 169]
+% Theory clause: 96. ! [X0 : $real,X1 : $real] : $sum(X0,X1) = $sum(X1,X0) [theory axiom 143]
+% Theory clause: 98. ! [X2 : $real,X0 : $real,X1 : $real] : $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2) [theory axiom 144]
+% Theory clause: 100. ! [X0 : $real] : $sum(X0,0.0) = X0 [theory axiom 145]
+% Theory clause: 102. ! [X0 : $real,X1 : $real] : $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0)) [theory axiom 147]
+% Theory clause: 104. ! [X0 : $real] : 0.0 = $sum(X0,$uminus(X0)) [theory axiom 148]
+% Theory clause: 106. ! [X0 : $real] : ~$less(X0,X0) [theory axiom 150]
+% Theory clause: 108. ! [X2 : $real,X0 : $real,X1 : $real] : (~$less(X0,X1) | ~$less(X1,X2) | $less(X0,X2)) [theory axiom 151]
+% Theory clause: 110. ! [X0 : $real,X1 : $real] : ($less(X0,X1) | $less(X1,X0) | X0 = X1) [theory axiom 152]
+% Theory clause: 112. ! [X2 : $real,X0 : $real,X1 : $real] : (~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2))) [theory axiom 153]
+% Theory clause: 114. ! [X0 : $real,X1 : $real] : ($less(X0,X1) | $less(X1,$sum(X0,1.0))) [theory axiom 155]
+% Theory clause: 116. ! [X0 : $real] : $uminus($uminus(X0)) = X0 [theory axiom 156]
+FOOL elimination
+% Theory clause: 118. ($$true != $$false) [fool axiom]
+% Theory clause: 120. ! [X0 : $bool] : (($$true = X0) | ($$false = X0)) [fool axiom]
+[PP] FOOL in:  $term{internal_transition}
+[PP] FOOL out: internal_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{internal_transition} = $term{$true})
+[PP] FOOL out: internal_transition <=> $true
+[PP] 44. (state = 3.0 & ($term{internal_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 4.0) [theory normalization 6]
+[PP] 121. (state = 3.0 & (internal_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 4.0) [fool elimination 44]
+[PP] FOOL in:  $term{internal_transition}
+[PP] FOOL out: internal_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{internal_transition} = $term{$true})
+[PP] FOOL out: internal_transition <=> $true
+[PP] 45. (state = 5.0 & ($term{internal_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 6.0) [theory normalization 7]
+[PP] 122. (state = 5.0 & (internal_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 6.0) [fool elimination 45]
+[PP] FOOL in:  $term{internal_transition}
+[PP] FOOL out: internal_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{internal_transition} = $term{$true})
+[PP] FOOL out: internal_transition <=> $true
+[PP] 46. (state = 6.0 & ($term{internal_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 7.0) [theory normalization 8]
+[PP] 123. (state = 6.0 & (internal_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 7.0) [fool elimination 46]
+[PP] FOOL in:  $term{internal_transition}
+[PP] FOOL out: internal_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{internal_transition} = $term{$true})
+[PP] FOOL out: internal_transition <=> $true
+[PP] 47. (state = 8.0 & ($term{internal_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 9.0) [theory normalization 9]
+[PP] 124. (state = 8.0 & (internal_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 9.0) [fool elimination 47]
+[PP] FOOL in:  $term{internal_transition}
+[PP] FOOL out: internal_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{internal_transition} = $term{$true})
+[PP] FOOL out: internal_transition <=> $true
+[PP] 48. (state = 10.0 & ($term{internal_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & 3.0 = next_state) [theory normalization 10]
+[PP] 125. (state = 10.0 & (internal_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & 3.0 = next_state) [fool elimination 48]
+[PP] FOOL in:  $term{internal_transition}
+[PP] FOOL out: internal_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{internal_transition} = $term{$true})
+[PP] FOOL out: internal_transition <=> $true
+[PP] 49. (($term{internal_transition} = $term{$true}) & state != 10.0 & state != 8.0 & state != 6.0 & state != 5.0 & state != 3.0) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [theory normalization 11]
+[PP] 126. ((internal_transition <=> $true) & state != 10.0 & state != 8.0 & state != 6.0 & state != 5.0 & state != 3.0) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [fool elimination 49]
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{external_transition} = $term{$true})
+[PP] FOOL out: external_transition <=> $true
+[PP] 50. (0 != num_rcvd(pilot_takeover) & ($term{external_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 12.0) [theory normalization 12]
+[PP] 127. (0 != num_rcvd(pilot_takeover) & (external_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 12.0) [fool elimination 50]
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{external_transition} = $term{$true})
+[PP] FOOL out: external_transition <=> $true
+[PP] 51. (0 != num_rcvd(pilot_handover) & ($term{external_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 11.0) [theory normalization 13]
+[PP] 128. (0 != num_rcvd(pilot_handover) & (external_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 11.0) [fool elimination 51]
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{external_transition} = $term{$true})
+[PP] FOOL out: external_transition <=> $true
+[PP] 52. (0 != num_rcvd(start_mission) & ($term{external_transition} = $term{$true})) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 2.0) [theory normalization 14]
+[PP] 129. (0 != num_rcvd(start_mission) & (external_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 2.0) [fool elimination 52]
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{external_transition} = $term{$true})
+[PP] FOOL out: external_transition <=> $true
+[PP] 53. (0 != num_rcvd(request_reposition) & state = 2.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [theory normalization 15]
+[PP] 130. (0 != num_rcvd(request_reposition) & state = 2.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [fool elimination 53]
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{external_transition} = $term{$true})
+[PP] FOOL out: external_transition <=> $true
+[PP] 54. (0 != num_rcvd(aircraft_state) & state = 4.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 5.0) [theory normalization 16]
+[PP] 131. (0 != num_rcvd(aircraft_state) & state = 4.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 5.0) [fool elimination 54]
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{external_transition} = $term{$true})
+[PP] FOOL out: external_transition <=> $true
+[PP] 55. (0 != num_rcvd(request_reposition) & state = 5.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [theory normalization 17]
+[PP] 132. (0 != num_rcvd(request_reposition) & state = 5.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [fool elimination 55]
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{external_transition} = $term{$true})
+[PP] FOOL out: external_transition <=> $true
+[PP] 56. (0 != num_rcvd(request_reposition) & state = 6.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [theory normalization 18]
+[PP] 133. (0 != num_rcvd(request_reposition) & state = 6.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [fool elimination 56]
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{external_transition} = $term{$true})
+[PP] FOOL out: external_transition <=> $true
+[PP] 57. (0 != num_rcvd(hover_criteria_met) & state = 7.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 8.0) [theory normalization 19]
+[PP] 134. (0 != num_rcvd(hover_criteria_met) & state = 7.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 8.0) [fool elimination 57]
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{external_transition} = $term{$true})
+[PP] FOOL out: external_transition <=> $true
+[PP] 58. (0 != num_rcvd(request_reposition) & state = 7.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [theory normalization 20]
+[PP] 135. (0 != num_rcvd(request_reposition) & state = 7.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [fool elimination 58]
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{external_transition} = $term{$true})
+[PP] FOOL out: external_transition <=> $true
+[PP] 59. (0 != num_rcvd(request_reposition) & state = 8.0 & ($term{external_transition} = $term{$true}) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [theory normalization 21]
+[PP] 136. (0 != num_rcvd(request_reposition) & state = 8.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [fool elimination 59]
+[PP] FOOL in:  $term{confluence_transition}
+[PP] FOOL out: confluence_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{confluence_transition} = $term{$true})
+[PP] FOOL out: confluence_transition <=> $true
+[PP] 60. ($term{confluence_transition} = $term{$true}) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [theory normalization 22]
+[PP] 137. (confluence_transition <=> $true) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [fool elimination 60]
+[PP] FOOL in:  $term{output}
+[PP] FOOL out: output
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{output} = $term{$true})
+[PP] FOOL out: output <=> $true
+[PP] FOOL in:  $term{val_output_request_aircraft_state}
+[PP] FOOL out: val_output_request_aircraft_state
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{val_output_request_aircraft_state} = $term{$true})
+[PP] FOOL out: val_output_request_aircraft_state <=> $true
+[PP] 61. (state = 3.0 & ($term{output} = $term{$true})) => ($term{val_output_request_aircraft_state} = $term{$true}) [theory normalization 23]
+[PP] 138. (state = 3.0 & (output <=> $true)) => (val_output_request_aircraft_state <=> $true) [fool elimination 61]
+[PP] FOOL in:  $term{output}
+[PP] FOOL out: output
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{output} = $term{$true})
+[PP] FOOL out: output <=> $true
+[PP] 62. (state = 5.0 & ($term{output} = $term{$true})) => aircraft_velocity = val_output_fcc_command_velocity [theory normalization 24]
+[PP] 139. (state = 5.0 & (output <=> $true)) => aircraft_velocity = val_output_fcc_command_velocity [fool elimination 62]
+[PP] FOOL in:  $term{output}
+[PP] FOOL out: output
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{output} = $term{$true})
+[PP] FOOL out: output <=> $true
+[PP] FOOL in:  $term{val_output_stabilize}
+[PP] FOOL out: val_output_stabilize
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{val_output_stabilize} = $term{$true})
+[PP] FOOL out: val_output_stabilize <=> $true
+[PP] FOOL in:  $term{val_output_set_mission_monitor_status}
+[PP] FOOL out: val_output_set_mission_monitor_status
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{val_output_set_mission_monitor_status} = $term{$true})
+[PP] FOOL out: val_output_set_mission_monitor_status <=> $true
+[PP] FOOL in:  $term{val_output_update_boss}
+[PP] FOOL out: val_output_update_boss
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{val_output_update_boss} = $term{$true})
+[PP] FOOL out: val_output_update_boss <=> $true
+[PP] FOOL in:  $term{val_output_update_gcs}
+[PP] FOOL out: val_output_update_gcs
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{val_output_update_gcs} = $term{$true})
+[PP] FOOL out: val_output_update_gcs <=> $true
+[PP] 63. (state = 6.0 & ($term{output} = $term{$true})) => (($term{val_output_update_gcs} = $term{$true}) & ($term{val_output_update_boss} = $term{$true}) & ($term{val_output_set_mission_monitor_status} = $term{$true}) & ($term{val_output_stabilize} = $term{$true})) [theory normalization 25]
+[PP] 140. (state = 6.0 & (output <=> $true)) => ((val_output_update_gcs <=> $true) & (val_output_update_boss <=> $true) & (val_output_set_mission_monitor_status <=> $true) & (val_output_stabilize <=> $true)) [fool elimination 63]
+[PP] FOOL in:  $term{output}
+[PP] FOOL out: output
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{output} = $term{$true})
+[PP] FOOL out: output <=> $true
+[PP] FOOL in:  $term{val_output_lp_criteria_met}
+[PP] FOOL out: val_output_lp_criteria_met
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{val_output_lp_criteria_met} = $term{$true})
+[PP] FOOL out: val_output_lp_criteria_met <=> $true
+[PP] 64. (state = 8.0 & ($term{output} = $term{$true})) => ($term{val_output_lp_criteria_met} = $term{$true}) [theory normalization 26]
+[PP] 141. (state = 8.0 & (output <=> $true)) => (val_output_lp_criteria_met <=> $true) [fool elimination 64]
+[PP] FOOL in:  $term{output}
+[PP] FOOL out: output
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{output} = $term{$true})
+[PP] FOOL out: output <=> $true
+[PP] FOOL in:  $term{val_output_cancel_hover}
+[PP] FOOL out: val_output_cancel_hover
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{val_output_cancel_hover} = $term{$true})
+[PP] FOOL out: val_output_cancel_hover <=> $true
+[PP] 65. (state = 10.0 & ($term{output} = $term{$true})) => ($term{val_output_cancel_hover} = $term{$true}) [theory normalization 27]
+[PP] 142. (state = 10.0 & (output <=> $true)) => (val_output_cancel_hover <=> $true) [fool elimination 65]
+[PP] FOOL in:  $term{input_rcvd}
+[PP] FOOL out: input_rcvd
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{input_rcvd} = $term{$true})
+[PP] FOOL out: input_rcvd <=> $true
+[PP] 66. ? [X0 : i_port] : num_rcvd(X0) != 0 => ($term{input_rcvd} = $term{$true}) [theory normalization 29]
+[PP] 143. ? [X0 : i_port] : num_rcvd(X0) != 0 => (input_rcvd <=> $true) [fool elimination 66]
+[PP] FOOL in:  $term{input_rcvd}
+[PP] FOOL out: input_rcvd
+[PP] FOOL in:  $term{$false}
+[PP] FOOL out: $false
+[PP] FOOL in:  ($term{input_rcvd} = $term{$false})
+[PP] FOOL out: input_rcvd <=> $false
+[PP] 67. ! [X0 : i_port] : num_rcvd(X0) = 0 => ($term{input_rcvd} = $term{$false}) [theory normalization 30]
+[PP] 144. ! [X0 : i_port] : num_rcvd(X0) = 0 => (input_rcvd <=> $false) [fool elimination 67]
+[PP] FOOL in:  $term{internal_transition}
+[PP] FOOL out: internal_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{internal_transition} = $term{$true})
+[PP] FOOL out: internal_transition <=> $true
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$false}
+[PP] FOOL out: $false
+[PP] FOOL in:  ($term{external_transition} = $term{$false})
+[PP] FOOL out: external_transition <=> $false
+[PP] FOOL in:  $term{confluence_transition}
+[PP] FOOL out: confluence_transition
+[PP] FOOL in:  $term{$false}
+[PP] FOOL out: $false
+[PP] FOOL in:  ($term{confluence_transition} = $term{$false})
+[PP] FOOL out: confluence_transition <=> $false
+[PP] FOOL in:  $term{output}
+[PP] FOOL out: output
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{output} = $term{$true})
+[PP] FOOL out: output <=> $true
+[PP] 68. (~input_rcvd & ~$less(time_passed,ta_in)) => (($term{output} = $term{$true}) & ($term{confluence_transition} = $term{$false}) & ($term{external_transition} = $term{$false}) & ($term{internal_transition} = $term{$true})) [theory normalization 31]
+[PP] 145. (~input_rcvd & ~$less(time_passed,ta_in)) => ((output <=> $true) & (confluence_transition <=> $false) & (external_transition <=> $false) & (internal_transition <=> $true)) [fool elimination 68]
+[PP] FOOL in:  $term{internal_transition}
+[PP] FOOL out: internal_transition
+[PP] FOOL in:  $term{$false}
+[PP] FOOL out: $false
+[PP] FOOL in:  ($term{internal_transition} = $term{$false})
+[PP] FOOL out: internal_transition <=> $false
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{external_transition} = $term{$true})
+[PP] FOOL out: external_transition <=> $true
+[PP] FOOL in:  $term{confluence_transition}
+[PP] FOOL out: confluence_transition
+[PP] FOOL in:  $term{$false}
+[PP] FOOL out: $false
+[PP] FOOL in:  ($term{confluence_transition} = $term{$false})
+[PP] FOOL out: confluence_transition <=> $false
+[PP] FOOL in:  $term{output}
+[PP] FOOL out: output
+[PP] FOOL in:  $term{$false}
+[PP] FOOL out: $false
+[PP] FOOL in:  ($term{output} = $term{$false})
+[PP] FOOL out: output <=> $false
+[PP] 69. (input_rcvd & $less(time_passed,ta_in)) => (($term{output} = $term{$false}) & ($term{confluence_transition} = $term{$false}) & ($term{external_transition} = $term{$true}) & ($term{internal_transition} = $term{$false})) [theory normalization 32]
+[PP] 146. (input_rcvd & $less(time_passed,ta_in)) => ((output <=> $false) & (confluence_transition <=> $false) & (external_transition <=> $true) & (internal_transition <=> $false)) [fool elimination 69]
+[PP] FOOL in:  $term{internal_transition}
+[PP] FOOL out: internal_transition
+[PP] FOOL in:  $term{$false}
+[PP] FOOL out: $false
+[PP] FOOL in:  ($term{internal_transition} = $term{$false})
+[PP] FOOL out: internal_transition <=> $false
+[PP] FOOL in:  $term{external_transition}
+[PP] FOOL out: external_transition
+[PP] FOOL in:  $term{$false}
+[PP] FOOL out: $false
+[PP] FOOL in:  ($term{external_transition} = $term{$false})
+[PP] FOOL out: external_transition <=> $false
+[PP] FOOL in:  $term{confluence_transition}
+[PP] FOOL out: confluence_transition
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{confluence_transition} = $term{$true})
+[PP] FOOL out: confluence_transition <=> $true
+[PP] FOOL in:  $term{output}
+[PP] FOOL out: output
+[PP] FOOL in:  $term{$true}
+[PP] FOOL out: $true
+[PP] FOOL in:  ($term{output} = $term{$true})
+[PP] FOOL out: output <=> $true
+[PP] 70. (input_rcvd & ~$less(time_passed,ta_in)) => (($term{output} = $term{$true}) & ($term{confluence_transition} = $term{$true}) & ($term{external_transition} = $term{$false}) & ($term{internal_transition} = $term{$false})) [theory normalization 33]
+[PP] 147. (input_rcvd & ~$less(time_passed,ta_in)) => ((output <=> $true) & (confluence_transition <=> $true) & (external_transition <=> $false) & (internal_transition <=> $false)) [fool elimination 70]
+distinct group expansion
+  expansion adding hover_criteria_met != start_mission & aircraft_state != start_mission & aircraft_state != hover_criteria_met & request_reposition != start_mission & request_reposition != hover_criteria_met & request_reposition != aircraft_state & pilot_handover != start_mission & pilot_handover != hover_criteria_met & pilot_handover != aircraft_state & pilot_handover != request_reposition & pilot_takeover != start_mission & pilot_takeover != hover_criteria_met & pilot_takeover != aircraft_state & pilot_takeover != request_reposition & pilot_takeover != pilot_handover
+  expansion adding update_gcs != set_mission_monitor_status & update_boss != set_mission_monitor_status & update_boss != update_gcs & request_aircraft_state != set_mission_monitor_status & request_aircraft_state != update_gcs & request_aircraft_state != update_boss & lp_criteria_met != set_mission_monitor_status & lp_criteria_met != update_gcs & lp_criteria_met != update_boss & lp_criteria_met != request_aircraft_state & stabilize != set_mission_monitor_status & stabilize != update_gcs & stabilize != update_boss & stabilize != request_aircraft_state & stabilize != lp_criteria_met & fcc_command_velocity != set_mission_monitor_status & fcc_command_velocity != update_gcs & fcc_command_velocity != update_boss & fcc_command_velocity != request_aircraft_state & fcc_command_velocity != lp_criteria_met & fcc_command_velocity != stabilize & cancel_hover != set_mission_monitor_status & cancel_hover != update_gcs & cancel_hover != update_boss & cancel_hover != request_aircraft_state & cancel_hover != lp_criteria_met & cancel_hover != stabilize & cancel_hover != fcc_command_velocity
+preprocess1 (rectify, simplify false true, flatten)
+[PP] simplify in: 121. (state = 3.0 & (internal_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 4.0) [fool elimination 44]
+[PP] simplify out: 151. (state = 3.0 & internal_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 4.0) [true and false elimination 121]
+[PP] simplify in: 122. (state = 5.0 & (internal_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 6.0) [fool elimination 45]
+[PP] simplify out: 152. (state = 5.0 & internal_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 6.0) [true and false elimination 122]
+[PP] simplify in: 123. (state = 6.0 & (internal_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 7.0) [fool elimination 46]
+[PP] simplify out: 153. (state = 6.0 & internal_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 7.0) [true and false elimination 123]
+[PP] simplify in: 124. (state = 8.0 & (internal_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 9.0) [fool elimination 47]
+[PP] simplify out: 154. (state = 8.0 & internal_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 9.0) [true and false elimination 124]
+[PP] simplify in: 125. (state = 10.0 & (internal_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & 3.0 = next_state) [fool elimination 48]
+[PP] simplify out: 155. (state = 10.0 & internal_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & 3.0 = next_state) [true and false elimination 125]
+[PP] simplify in: 126. ((internal_transition <=> $true) & state != 10.0 & state != 8.0 & state != 6.0 & state != 5.0 & state != 3.0) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [fool elimination 49]
+[PP] simplify out: 156. (internal_transition & state != 10.0 & state != 8.0 & state != 6.0 & state != 5.0 & state != 3.0) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [true and false elimination 126]
+[PP] simplify in: 127. (0 != num_rcvd(pilot_takeover) & (external_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 12.0) [fool elimination 50]
+[PP] simplify out: 157. (0 != num_rcvd(pilot_takeover) & external_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 12.0) [true and false elimination 127]
+[PP] simplify in: 128. (0 != num_rcvd(pilot_handover) & (external_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 11.0) [fool elimination 51]
+[PP] simplify out: 158. (0 != num_rcvd(pilot_handover) & external_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 11.0) [true and false elimination 128]
+[PP] simplify in: 129. (0 != num_rcvd(start_mission) & (external_transition <=> $true)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 2.0) [fool elimination 52]
+[PP] simplify out: 159. (0 != num_rcvd(start_mission) & external_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 2.0) [true and false elimination 129]
+[PP] simplify in: 130. (0 != num_rcvd(request_reposition) & state = 2.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [fool elimination 53]
+[PP] simplify out: 160. (0 != num_rcvd(request_reposition) & state = 2.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [true and false elimination 130]
+[PP] simplify in: 131. (0 != num_rcvd(aircraft_state) & state = 4.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 5.0) [fool elimination 54]
+[PP] simplify out: 161. (0 != num_rcvd(aircraft_state) & state = 4.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 5.0) [true and false elimination 131]
+[PP] simplify in: 132. (0 != num_rcvd(request_reposition) & state = 5.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [fool elimination 55]
+[PP] simplify out: 162. (0 != num_rcvd(request_reposition) & state = 5.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [true and false elimination 132]
+[PP] simplify in: 133. (0 != num_rcvd(request_reposition) & state = 6.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [fool elimination 56]
+[PP] simplify out: 163. (0 != num_rcvd(request_reposition) & state = 6.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [true and false elimination 133]
+[PP] simplify in: 134. (0 != num_rcvd(hover_criteria_met) & state = 7.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 8.0) [fool elimination 57]
+[PP] simplify out: 164. (0 != num_rcvd(hover_criteria_met) & state = 7.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 8.0) [true and false elimination 134]
+[PP] simplify in: 135. (0 != num_rcvd(request_reposition) & state = 7.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [fool elimination 58]
+[PP] simplify out: 165. (0 != num_rcvd(request_reposition) & state = 7.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [true and false elimination 135]
+[PP] simplify in: 136. (0 != num_rcvd(request_reposition) & state = 8.0 & (external_transition <=> $true) & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [fool elimination 59]
+[PP] simplify out: 166. (0 != num_rcvd(request_reposition) & state = 8.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [true and false elimination 136]
+[PP] simplify in: 137. (confluence_transition <=> $true) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [fool elimination 60]
+[PP] simplify out: 167. confluence_transition => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [true and false elimination 137]
+[PP] simplify in: 138. (state = 3.0 & (output <=> $true)) => (val_output_request_aircraft_state <=> $true) [fool elimination 61]
+[PP] simplify out: 168. (state = 3.0 & output) => val_output_request_aircraft_state [true and false elimination 138]
+[PP] simplify in: 139. (state = 5.0 & (output <=> $true)) => aircraft_velocity = val_output_fcc_command_velocity [fool elimination 62]
+[PP] simplify out: 169. (state = 5.0 & output) => aircraft_velocity = val_output_fcc_command_velocity [true and false elimination 139]
+[PP] simplify in: 140. (state = 6.0 & (output <=> $true)) => ((val_output_update_gcs <=> $true) & (val_output_update_boss <=> $true) & (val_output_set_mission_monitor_status <=> $true) & (val_output_stabilize <=> $true)) [fool elimination 63]
+[PP] simplify out: 170. (state = 6.0 & output) => (val_output_update_gcs & val_output_update_boss & val_output_set_mission_monitor_status & val_output_stabilize) [true and false elimination 140]
+[PP] simplify in: 141. (state = 8.0 & (output <=> $true)) => (val_output_lp_criteria_met <=> $true) [fool elimination 64]
+[PP] simplify out: 171. (state = 8.0 & output) => val_output_lp_criteria_met [true and false elimination 141]
+[PP] simplify in: 142. (state = 10.0 & (output <=> $true)) => (val_output_cancel_hover <=> $true) [fool elimination 65]
+[PP] simplify out: 172. (state = 10.0 & output) => val_output_cancel_hover [true and false elimination 142]
+[PP] simplify in: 143. ? [X0 : i_port] : num_rcvd(X0) != 0 => (input_rcvd <=> $true) [fool elimination 66]
+[PP] simplify out: 173. ? [X0 : i_port] : num_rcvd(X0) != 0 => input_rcvd [true and false elimination 143]
+[PP] simplify in: 144. ! [X0 : i_port] : num_rcvd(X0) = 0 => (input_rcvd <=> $false) [fool elimination 67]
+[PP] simplify out: 174. ! [X0 : i_port] : num_rcvd(X0) = 0 => ~input_rcvd [true and false elimination 144]
+[PP] flatten in: 174. ! [X0 : i_port] : num_rcvd(X0) = 0 => ~input_rcvd [true and false elimination 144]
+[PP] flatten out: 175. ! [X0 : i_port] : num_rcvd(X0) = 0 => ~input_rcvd [flattening 174]
+[PP] simplify in: 145. (~input_rcvd & ~$less(time_passed,ta_in)) => ((output <=> $true) & (confluence_transition <=> $false) & (external_transition <=> $false) & (internal_transition <=> $true)) [fool elimination 68]
+[PP] simplify out: 176. (~input_rcvd & ~$less(time_passed,ta_in)) => (output & ~confluence_transition & ~external_transition & internal_transition) [true and false elimination 145]
+[PP] flatten in: 176. (~input_rcvd & ~$less(time_passed,ta_in)) => (output & ~confluence_transition & ~external_transition & internal_transition) [true and false elimination 145]
+[PP] flatten out: 177. (~input_rcvd & ~$less(time_passed,ta_in)) => (output & ~confluence_transition & ~external_transition & internal_transition) [flattening 176]
+[PP] simplify in: 146. (input_rcvd & $less(time_passed,ta_in)) => ((output <=> $false) & (confluence_transition <=> $false) & (external_transition <=> $true) & (internal_transition <=> $false)) [fool elimination 69]
+[PP] simplify out: 178. (input_rcvd & $less(time_passed,ta_in)) => (~output & ~confluence_transition & external_transition & ~internal_transition) [true and false elimination 146]
+[PP] flatten in: 178. (input_rcvd & $less(time_passed,ta_in)) => (~output & ~confluence_transition & external_transition & ~internal_transition) [true and false elimination 146]
+[PP] flatten out: 179. (input_rcvd & $less(time_passed,ta_in)) => (~output & ~confluence_transition & external_transition & ~internal_transition) [flattening 178]
+[PP] simplify in: 147. (input_rcvd & ~$less(time_passed,ta_in)) => ((output <=> $true) & (confluence_transition <=> $true) & (external_transition <=> $false) & (internal_transition <=> $false)) [fool elimination 70]
+[PP] simplify out: 180. (input_rcvd & ~$less(time_passed,ta_in)) => (output & confluence_transition & ~external_transition & ~internal_transition) [true and false elimination 147]
+[PP] flatten in: 180. (input_rcvd & ~$less(time_passed,ta_in)) => (output & confluence_transition & ~external_transition & ~internal_transition) [true and false elimination 147]
+[PP] flatten out: 181. (input_rcvd & ~$less(time_passed,ta_in)) => (output & confluence_transition & ~external_transition & ~internal_transition) [flattening 180]
+unused predicate definition removal
+[PP] pred marked as built-in: =
+[PP] pred marked as built-in: $greatereq
+[PP] pred marked as built-in: $greatereq
+[PP] pred marked as built-in: $less
+[PP] pred marked as built-in: $less
+=: +(110) -(84) 0(0)
+internal_transition: +(1) -(8) 0(0)
+external_transition: +(1) -(12) 0(0)
+confluence_transition: +(1) -(3) 0(0)
+output: +(2) -(6) 0(0)
+input_rcvd: +(3) -(3) 0(0)
+val_output_cancel_hover: +(1) -(0) 0(0)
+val_output_stabilize: +(1) -(0) 0(0)
+val_output_lp_criteria_met: +(1) -(0) 0(0)
+val_output_request_aircraft_state: +(1) -(0) 0(0)
+val_output_update_boss: +(1) -(0) 0(0)
+val_output_update_gcs: +(1) -(0) 0(0)
+val_output_set_mission_monitor_status: +(1) -(0) 0(0)
+$less: +(8) -(6) 0(0)
+$less: +(6) -(7) 0(0)
+[PP] val_output_cancel_hover: +(1) -(0) 0(0) to be replaced by $false
+[PP] val_output_stabilize: +(1) -(0) 0(0) to be replaced by $false
+[PP] val_output_lp_criteria_met: +(1) -(0) 0(0) to be replaced by $false
+[PP] val_output_request_aircraft_state: +(1) -(0) 0(0) to be replaced by $false
+[PP] val_output_update_boss: +(1) -(0) 0(0) to be replaced by $false
+[PP] val_output_update_gcs: +(1) -(0) 0(0) to be replaced by $false
+[PP] val_output_set_mission_monitor_status: +(1) -(0) 0(0) to be replaced by $false
+unit 170. (state = 6.0 & output) => (val_output_update_gcs & val_output_update_boss & val_output_set_mission_monitor_status & val_output_stabilize) [true and false elimination 140] replaced by 183. (state = 6.0 & output) => (val_output_update_gcs & val_output_update_boss & val_output_stabilize) [pure predicate removal 170]
+unit 183. (state = 6.0 & output) => (val_output_update_gcs & val_output_update_boss & val_output_stabilize) [pure predicate removal 170] replaced by 184. (state = 6.0 & output) => (val_output_update_boss & val_output_stabilize) [pure predicate removal 183]
+unit 184. (state = 6.0 & output) => (val_output_update_boss & val_output_stabilize) [pure predicate removal 183] replaced by 185. (state = 6.0 & output) => val_output_stabilize [pure predicate removal 184]
+unit 168. (state = 3.0 & output) => val_output_request_aircraft_state [true and false elimination 138] replaced by 186. $true [pure predicate removal 168]
+unit 171. (state = 8.0 & output) => val_output_lp_criteria_met [true and false elimination 141] replaced by 187. $true [pure predicate removal 171]
+unit 185. (state = 6.0 & output) => val_output_stabilize [pure predicate removal 184] replaced by 188. $true [pure predicate removal 185]
+unit 172. (state = 10.0 & output) => val_output_cancel_hover [true and false elimination 142] replaced by 189. $true [pure predicate removal 172]
+=: +(110) -(80) 0(0)
+internal_transition: +(1) -(8) 0(0)
+external_transition: +(1) -(12) 0(0)
+confluence_transition: +(1) -(3) 0(0)
+output: +(2) -(2) 0(0)
+input_rcvd: +(3) -(3) 0(0)
+$less: +(8) -(6) 0(0)
+$less: +(6) -(7) 0(0)
+preprocess 2 (ennf,flatten)
+[PP] ennf in: 151. (state = 3.0 & internal_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 4.0) [true and false elimination 121]
+[PP] ennf out: 190. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 4.0) | (state != 3.0 | ~internal_transition) [ennf transformation 151]
+[PP] flatten in: 190. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 4.0) | (state != 3.0 | ~internal_transition) [ennf transformation 151]
+[PP] flatten out: 191. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 4.0) | state != 3.0 | ~internal_transition [flattening 190]
+[PP] ennf in: 152. (state = 5.0 & internal_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 6.0) [true and false elimination 122]
+[PP] ennf out: 192. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 6.0) | (state != 5.0 | ~internal_transition) [ennf transformation 152]
+[PP] flatten in: 192. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 6.0) | (state != 5.0 | ~internal_transition) [ennf transformation 152]
+[PP] flatten out: 193. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 6.0) | state != 5.0 | ~internal_transition [flattening 192]
+[PP] ennf in: 153. (state = 6.0 & internal_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 7.0) [true and false elimination 123]
+[PP] ennf out: 194. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 7.0) | (state != 6.0 | ~internal_transition) [ennf transformation 153]
+[PP] flatten in: 194. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 7.0) | (state != 6.0 | ~internal_transition) [ennf transformation 153]
+[PP] flatten out: 195. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 7.0) | state != 6.0 | ~internal_transition [flattening 194]
+[PP] ennf in: 154. (state = 8.0 & internal_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 9.0) [true and false elimination 124]
+[PP] ennf out: 196. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 9.0) | (state != 8.0 | ~internal_transition) [ennf transformation 154]
+[PP] flatten in: 196. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 9.0) | (state != 8.0 | ~internal_transition) [ennf transformation 154]
+[PP] flatten out: 197. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 9.0) | state != 8.0 | ~internal_transition [flattening 196]
+[PP] ennf in: 155. (state = 10.0 & internal_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & 3.0 = next_state) [true and false elimination 125]
+[PP] ennf out: 198. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & 3.0 = next_state) | (state != 10.0 | ~internal_transition) [ennf transformation 155]
+[PP] flatten in: 198. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & 3.0 = next_state) | (state != 10.0 | ~internal_transition) [ennf transformation 155]
+[PP] flatten out: 199. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & 3.0 = next_state) | state != 10.0 | ~internal_transition [flattening 198]
+[PP] ennf in: 156. (internal_transition & state != 10.0 & state != 8.0 & state != 6.0 & state != 5.0 & state != 3.0) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [true and false elimination 126]
+[PP] ennf out: 200. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) | (~internal_transition | state = 10.0 | state = 8.0 | state = 6.0 | state = 5.0 | state = 3.0) [ennf transformation 156]
+[PP] flatten in: 200. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) | (~internal_transition | state = 10.0 | state = 8.0 | state = 6.0 | state = 5.0 | state = 3.0) [ennf transformation 156]
+[PP] flatten out: 201. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) | ~internal_transition | state = 10.0 | state = 8.0 | state = 6.0 | state = 5.0 | state = 3.0 [flattening 200]
+[PP] ennf in: 157. (0 != num_rcvd(pilot_takeover) & external_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 12.0) [true and false elimination 127]
+[PP] ennf out: 202. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 12.0) | (0 = num_rcvd(pilot_takeover) | ~external_transition) [ennf transformation 157]
+[PP] flatten in: 202. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 12.0) | (0 = num_rcvd(pilot_takeover) | ~external_transition) [ennf transformation 157]
+[PP] flatten out: 203. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 12.0) | 0 = num_rcvd(pilot_takeover) | ~external_transition [flattening 202]
+[PP] ennf in: 158. (0 != num_rcvd(pilot_handover) & external_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 11.0) [true and false elimination 128]
+[PP] ennf out: 204. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 11.0) | (0 = num_rcvd(pilot_handover) | ~external_transition) [ennf transformation 158]
+[PP] flatten in: 204. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 11.0) | (0 = num_rcvd(pilot_handover) | ~external_transition) [ennf transformation 158]
+[PP] flatten out: 205. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 11.0) | 0 = num_rcvd(pilot_handover) | ~external_transition [flattening 204]
+[PP] ennf in: 159. (0 != num_rcvd(start_mission) & external_transition) => (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 2.0) [true and false elimination 129]
+[PP] ennf out: 206. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 2.0) | (0 = num_rcvd(start_mission) | ~external_transition) [ennf transformation 159]
+[PP] flatten in: 206. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 2.0) | (0 = num_rcvd(start_mission) | ~external_transition) [ennf transformation 159]
+[PP] flatten out: 207. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 2.0) | 0 = num_rcvd(start_mission) | ~external_transition [flattening 206]
+[PP] ennf in: 160. (0 != num_rcvd(request_reposition) & state = 2.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [true and false elimination 130]
+[PP] ennf out: 208. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | (0 = num_rcvd(request_reposition) | state != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 160]
+[PP] flatten in: 208. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | (0 = num_rcvd(request_reposition) | state != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 160]
+[PP] flatten out: 209. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | 0 = num_rcvd(request_reposition) | state != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 208]
+[PP] ennf in: 161. (0 != num_rcvd(aircraft_state) & state = 4.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 5.0) [true and false elimination 131]
+[PP] ennf out: 210. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 5.0) | (0 = num_rcvd(aircraft_state) | state != 4.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 161]
+[PP] flatten in: 210. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 5.0) | (0 = num_rcvd(aircraft_state) | state != 4.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 161]
+[PP] flatten out: 211. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 5.0) | 0 = num_rcvd(aircraft_state) | state != 4.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 210]
+[PP] ennf in: 162. (0 != num_rcvd(request_reposition) & state = 5.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [true and false elimination 132]
+[PP] ennf out: 212. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | (0 = num_rcvd(request_reposition) | state != 5.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 162]
+[PP] flatten in: 212. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | (0 = num_rcvd(request_reposition) | state != 5.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 162]
+[PP] flatten out: 213. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | 0 = num_rcvd(request_reposition) | state != 5.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 212]
+[PP] ennf in: 163. (0 != num_rcvd(request_reposition) & state = 6.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) [true and false elimination 133]
+[PP] ennf out: 214. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | (0 = num_rcvd(request_reposition) | state != 6.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 163]
+[PP] flatten in: 214. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | (0 = num_rcvd(request_reposition) | state != 6.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 163]
+[PP] flatten out: 215. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | 0 = num_rcvd(request_reposition) | state != 6.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 214]
+[PP] ennf in: 164. (0 != num_rcvd(hover_criteria_met) & state = 7.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 8.0) [true and false elimination 134]
+[PP] ennf out: 216. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 8.0) | (0 = num_rcvd(hover_criteria_met) | state != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 164]
+[PP] flatten in: 216. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 8.0) | (0 = num_rcvd(hover_criteria_met) | state != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 164]
+[PP] flatten out: 217. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 8.0) | 0 = num_rcvd(hover_criteria_met) | state != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 216]
+[PP] ennf in: 165. (0 != num_rcvd(request_reposition) & state = 7.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [true and false elimination 135]
+[PP] ennf out: 218. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) | (0 = num_rcvd(request_reposition) | state != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 165]
+[PP] flatten in: 218. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) | (0 = num_rcvd(request_reposition) | state != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 165]
+[PP] flatten out: 219. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) | 0 = num_rcvd(request_reposition) | state != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 218]
+[PP] ennf in: 166. (0 != num_rcvd(request_reposition) & state = 8.0 & external_transition & 0 = num_rcvd(start_mission) & 0 = num_rcvd(pilot_handover) & 0 = num_rcvd(pilot_takeover)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) [true and false elimination 136]
+[PP] ennf out: 220. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) | (0 = num_rcvd(request_reposition) | state != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 166]
+[PP] flatten in: 220. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) | (0 = num_rcvd(request_reposition) | state != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover)) [ennf transformation 166]
+[PP] flatten out: 221. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) | 0 = num_rcvd(request_reposition) | state != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 220]
+[PP] ennf in: 167. confluence_transition => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) [true and false elimination 137]
+[PP] ennf out: 222. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) | ~confluence_transition [ennf transformation 167]
+[PP] ennf in: 169. (state = 5.0 & output) => aircraft_velocity = val_output_fcc_command_velocity [true and false elimination 139]
+[PP] ennf out: 223. aircraft_velocity = val_output_fcc_command_velocity | (state != 5.0 | ~output) [ennf transformation 169]
+[PP] flatten in: 223. aircraft_velocity = val_output_fcc_command_velocity | (state != 5.0 | ~output) [ennf transformation 169]
+[PP] flatten out: 224. aircraft_velocity = val_output_fcc_command_velocity | state != 5.0 | ~output [flattening 223]
+[PP] ennf in: 173. ? [X0 : i_port] : num_rcvd(X0) != 0 => input_rcvd [true and false elimination 143]
+[PP] ennf out: 225. input_rcvd | ! [X0 : i_port] : num_rcvd(X0) = 0 [ennf transformation 173]
+[PP] ennf in: 175. ! [X0 : i_port] : num_rcvd(X0) = 0 => ~input_rcvd [flattening 174]
+[PP] ennf out: 226. ~input_rcvd | ? [X0 : i_port] : num_rcvd(X0) != 0 [ennf transformation 175]
+[PP] ennf in: 177. (~input_rcvd & ~$less(time_passed,ta_in)) => (output & ~confluence_transition & ~external_transition & internal_transition) [flattening 176]
+[PP] ennf out: 227. (output & ~confluence_transition & ~external_transition & internal_transition) | (input_rcvd | $less(time_passed,ta_in)) [ennf transformation 177]
+[PP] flatten in: 227. (output & ~confluence_transition & ~external_transition & internal_transition) | (input_rcvd | $less(time_passed,ta_in)) [ennf transformation 177]
+[PP] flatten out: 228. (output & ~confluence_transition & ~external_transition & internal_transition) | input_rcvd | $less(time_passed,ta_in) [flattening 227]
+[PP] ennf in: 179. (input_rcvd & $less(time_passed,ta_in)) => (~output & ~confluence_transition & external_transition & ~internal_transition) [flattening 178]
+[PP] ennf out: 229. (~output & ~confluence_transition & external_transition & ~internal_transition) | (~input_rcvd | ~$less(time_passed,ta_in)) [ennf transformation 179]
+[PP] flatten in: 229. (~output & ~confluence_transition & external_transition & ~internal_transition) | (~input_rcvd | ~$less(time_passed,ta_in)) [ennf transformation 179]
+[PP] flatten out: 230. (~output & ~confluence_transition & external_transition & ~internal_transition) | ~input_rcvd | ~$less(time_passed,ta_in) [flattening 229]
+[PP] ennf in: 181. (input_rcvd & ~$less(time_passed,ta_in)) => (output & confluence_transition & ~external_transition & ~internal_transition) [flattening 180]
+[PP] ennf out: 231. (output & confluence_transition & ~external_transition & ~internal_transition) | (~input_rcvd | $less(time_passed,ta_in)) [ennf transformation 181]
+[PP] flatten in: 231. (output & confluence_transition & ~external_transition & ~internal_transition) | (~input_rcvd | $less(time_passed,ta_in)) [ennf transformation 181]
+[PP] flatten out: 232. (output & confluence_transition & ~external_transition & ~internal_transition) | ~input_rcvd | $less(time_passed,ta_in) [flattening 231]
+[PP] ennf in: 34. (~input_rcvd & $less(time_passed,ta_in)) => (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state & ta_out = ta_in) [input]
+[PP] ennf out: 233. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state & ta_out = ta_in) | (input_rcvd | ~$less(time_passed,ta_in)) [ennf transformation 34]
+[PP] flatten in: 233. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state & ta_out = ta_in) | (input_rcvd | ~$less(time_passed,ta_in)) [ennf transformation 34]
+[PP] flatten out: 234. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state & ta_out = ta_in) | input_rcvd | ~$less(time_passed,ta_in) [flattening 233]
+[PP] ennf in: 182. ~? [X0 : $int] : (num_rcvd(hover_criteria_met) = X0 => next_state = 8.0) [rectify 42]
+[PP] ennf out: 235. ! [X0 : $int] : (next_state != 8.0 & num_rcvd(hover_criteria_met) = X0) [ennf transformation 182]
+naming
+[PP] naming args: 149. update_gcs != set_mission_monitor_status & update_boss != set_mission_monitor_status & update_boss != update_gcs & request_aircraft_state != set_mission_monitor_status & request_aircraft_state != update_gcs & request_aircraft_state != update_boss & lp_criteria_met != set_mission_monitor_status & lp_criteria_met != update_gcs & lp_criteria_met != update_boss & lp_criteria_met != request_aircraft_state & stabilize != set_mission_monitor_status & stabilize != update_gcs & stabilize != update_boss & stabilize != request_aircraft_state & stabilize != lp_criteria_met & fcc_command_velocity != set_mission_monitor_status & fcc_command_velocity != update_gcs & fcc_command_velocity != update_boss & fcc_command_velocity != request_aircraft_state & fcc_command_velocity != lp_criteria_met & fcc_command_velocity != stabilize & cancel_hover != set_mission_monitor_status & cancel_hover != update_gcs & cancel_hover != update_boss & cancel_hover != request_aircraft_state & cancel_hover != lp_criteria_met & cancel_hover != stabilize & cancel_hover != fcc_command_velocity [distinctness axiom]
+[PP] naming args: 148. hover_criteria_met != start_mission & aircraft_state != start_mission & aircraft_state != hover_criteria_met & request_reposition != start_mission & request_reposition != hover_criteria_met & request_reposition != aircraft_state & pilot_handover != start_mission & pilot_handover != hover_criteria_met & pilot_handover != aircraft_state & pilot_handover != request_reposition & pilot_takeover != start_mission & pilot_takeover != hover_criteria_met & pilot_takeover != aircraft_state & pilot_takeover != request_reposition & pilot_takeover != pilot_handover [distinctness axiom]
+[PP] naming args: 1. ! [X0 : i_port] : (start_mission = X0 | hover_criteria_met = X0 | aircraft_state = X0 | request_reposition = X0 | pilot_handover = X0 | pilot_takeover = X0) [input]
+[PP] naming args: 2. $true [input]
+[PP] naming args: 43. ! [X0 : i_port] : ~$less(num_rcvd(X0),0) [theory normalization 3]
+[PP] naming args: 150. ! [X0 : o_port] : (set_mission_monitor_status = X0 | update_gcs = X0 | update_boss = X0 | request_aircraft_state = X0 | lp_criteria_met = X0 | stabilize = X0 | fcc_command_velocity = X0 | cancel_hover = X0) [rectify 4]
+[PP] naming args: 5. $true [input]
+[PP] naming args: 191. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 4.0) | state != 3.0 | ~internal_transition [flattening 190]
+[PP] naming args: 193. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 6.0) | state != 5.0 | ~internal_transition [flattening 192]
+[PP] naming args: 195. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 7.0) | state != 6.0 | ~internal_transition [flattening 194]
+[PP] naming args: 197. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 9.0) | state != 8.0 | ~internal_transition [flattening 196]
+[PP] naming args: 199. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & 3.0 = next_state) | state != 10.0 | ~internal_transition [flattening 198]
+[PP] naming args: 201. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) | ~internal_transition | state = 10.0 | state = 8.0 | state = 6.0 | state = 5.0 | state = 3.0 [flattening 200]
+[PP] naming args: 203. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 12.0) | 0 = num_rcvd(pilot_takeover) | ~external_transition [flattening 202]
+[PP] naming args: 205. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 11.0) | 0 = num_rcvd(pilot_handover) | ~external_transition [flattening 204]
+[PP] naming args: 207. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 2.0) | 0 = num_rcvd(start_mission) | ~external_transition [flattening 206]
+[PP] naming args: 209. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | 0 = num_rcvd(request_reposition) | state != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 208]
+[PP] naming args: 211. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 5.0) | 0 = num_rcvd(aircraft_state) | state != 4.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 210]
+[PP] naming args: 213. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | 0 = num_rcvd(request_reposition) | state != 5.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 212]
+[PP] naming args: 215. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | 0 = num_rcvd(request_reposition) | state != 6.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 214]
+[PP] naming args: 217. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 8.0) | 0 = num_rcvd(hover_criteria_met) | state != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 216]
+[PP] naming args: 219. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) | 0 = num_rcvd(request_reposition) | state != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 218]
+[PP] naming args: 221. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) | 0 = num_rcvd(request_reposition) | state != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 220]
+[PP] naming args: 222. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) | ~confluence_transition [ennf transformation 167]
+[PP] naming args: 224. aircraft_velocity = val_output_fcc_command_velocity | state != 5.0 | ~output [flattening 223]
+[PP] naming args: 28. next_sigma = ta_out [input]
+[PP] naming args: 225. input_rcvd | ! [X0 : i_port] : num_rcvd(X0) = 0 [ennf transformation 173]
+[PP] naming args: 226. ~input_rcvd | ? [X0 : i_port] : num_rcvd(X0) != 0 [ennf transformation 175]
+[PP] naming args: 228. (output & ~confluence_transition & ~external_transition & internal_transition) | input_rcvd | $less(time_passed,ta_in) [flattening 227]
+[PP] naming args: 230. (~output & ~confluence_transition & external_transition & ~internal_transition) | ~input_rcvd | ~$less(time_passed,ta_in) [flattening 229]
+[PP] naming args: 232. (output & confluence_transition & ~external_transition & ~internal_transition) | ~input_rcvd | $less(time_passed,ta_in) [flattening 231]
+[PP] naming args: 234. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state & ta_out = ta_in) | input_rcvd | ~$less(time_passed,ta_in) [flattening 233]
+[PP] naming args: 35. infinity = $sum(time_passed,1.0) [input]
+[PP] naming args: 36. state = 7.0 [input]
+[PP] naming args: 37. infinity = sigma [input]
+[PP] naming args: 38. infinity = ta_in [input]
+[PP] naming args: 39. aircraft_velocity = 5.0 [input]
+[PP] naming args: 40. time_passed = 543.0 [input]
+[PP] naming args: 235. ! [X0 : $int] : (next_state != 8.0 & num_rcvd(hover_criteria_met) = X0) [ennf transformation 182]
+preprocess3 (nnf, flatten, skolemize)
+Skolemising: sK0 for X0 in ? [X0 : i_port] : num_rcvd(X0) != 0 in formula 226. ~input_rcvd | ? [X0 : i_port] : num_rcvd(X0) != 0 [ennf transformation 175]
+clausify
+[PP] clausify: 149. update_gcs != set_mission_monitor_status & update_boss != set_mission_monitor_status & update_boss != update_gcs & request_aircraft_state != set_mission_monitor_status & request_aircraft_state != update_gcs & request_aircraft_state != update_boss & lp_criteria_met != set_mission_monitor_status & lp_criteria_met != update_gcs & lp_criteria_met != update_boss & lp_criteria_met != request_aircraft_state & stabilize != set_mission_monitor_status & stabilize != update_gcs & stabilize != update_boss & stabilize != request_aircraft_state & stabilize != lp_criteria_met & fcc_command_velocity != set_mission_monitor_status & fcc_command_velocity != update_gcs & fcc_command_velocity != update_boss & fcc_command_velocity != request_aircraft_state & fcc_command_velocity != lp_criteria_met & fcc_command_velocity != stabilize & cancel_hover != set_mission_monitor_status & cancel_hover != update_gcs & cancel_hover != update_boss & cancel_hover != request_aircraft_state & cancel_hover != lp_criteria_met & cancel_hover != stabilize & cancel_hover != fcc_command_velocity [distinctness axiom]
+[PP] clausify: 148. hover_criteria_met != start_mission & aircraft_state != start_mission & aircraft_state != hover_criteria_met & request_reposition != start_mission & request_reposition != hover_criteria_met & request_reposition != aircraft_state & pilot_handover != start_mission & pilot_handover != hover_criteria_met & pilot_handover != aircraft_state & pilot_handover != request_reposition & pilot_takeover != start_mission & pilot_takeover != hover_criteria_met & pilot_takeover != aircraft_state & pilot_takeover != request_reposition & pilot_takeover != pilot_handover [distinctness axiom]
+[PP] clausify: 119. ($$true = X0) | ($$false = X0) [fool axiom]
+[PP] clausify: 117. ($$true != $$false) [fool axiom]
+[PP] clausify: 115. $uminus($uminus(X0)) = X0 [theory axiom 156]
+[PP] clausify: 113. $less(X0,X1) | $less(X1,$sum(X0,1.0)) [theory axiom 155]
+[PP] clausify: 111. ~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2)) [theory axiom 153]
+[PP] clausify: 109. $less(X0,X1) | $less(X1,X0) | X0 = X1 [theory axiom 152]
+[PP] clausify: 107. ~$less(X0,X1) | ~$less(X1,X2) | $less(X0,X2) [theory axiom 151]
+[PP] clausify: 105. ~$less(X0,X0) [theory axiom 150]
+[PP] clausify: 103. 0.0 = $sum(X0,$uminus(X0)) [theory axiom 148]
+[PP] clausify: 101. $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0)) [theory axiom 147]
+[PP] clausify: 99. $sum(X0,0.0) = X0 [theory axiom 145]
+[PP] clausify: 97. $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2) [theory axiom 144]
+[PP] clausify: 95. $sum(X0,X1) = $sum(X1,X0) [theory axiom 143]
+[PP] clausify: 93. ~$less(X0,X1) | ~$less(X1,$sum(X0,1)) [theory axiom 169]
+[PP] clausify: 91. $uminus($uminus(X0)) = X0 [theory axiom 156]
+[PP] clausify: 89. $less(X0,X1) | $less(X1,$sum(X0,1)) [theory axiom 155]
+[PP] clausify: 87. ~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2)) [theory axiom 153]
+[PP] clausify: 85. $less(X0,X1) | $less(X1,X0) | X0 = X1 [theory axiom 152]
+[PP] clausify: 83. ~$less(X0,X1) | ~$less(X1,X2) | $less(X0,X2) [theory axiom 151]
+[PP] clausify: 81. ~$less(X0,X0) [theory axiom 150]
+[PP] clausify: 79. 0 = $sum(X0,$uminus(X0)) [theory axiom 148]
+[PP] clausify: 77. $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0)) [theory axiom 147]
+[PP] clausify: 75. $sum(X0,0) = X0 [theory axiom 145]
+[PP] clausify: 73. $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2) [theory axiom 144]
+[PP] clausify: 71. $sum(X0,X1) = $sum(X1,X0) [theory axiom 143]
+[PP] clausify: 1. ! [X0 : i_port] : (start_mission = X0 | hover_criteria_met = X0 | aircraft_state = X0 | request_reposition = X0 | pilot_handover = X0 | pilot_takeover = X0) [input]
+[PP] clausify: 2. $true [input]
+[PP] clausify: 43. ! [X0 : i_port] : ~$less(num_rcvd(X0),0) [theory normalization 3]
+[PP] clausify: 150. ! [X0 : o_port] : (set_mission_monitor_status = X0 | update_gcs = X0 | update_boss = X0 | request_aircraft_state = X0 | lp_criteria_met = X0 | stabilize = X0 | fcc_command_velocity = X0 | cancel_hover = X0) [rectify 4]
+[PP] clausify: 5. $true [input]
+[PP] clausify: 191. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 4.0) | state != 3.0 | ~internal_transition [flattening 190]
+[PP] clausify: 193. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 6.0) | state != 5.0 | ~internal_transition [flattening 192]
+[PP] clausify: 195. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 7.0) | state != 6.0 | ~internal_transition [flattening 194]
+[PP] clausify: 197. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 9.0) | state != 8.0 | ~internal_transition [flattening 196]
+[PP] clausify: 199. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & 3.0 = next_state) | state != 10.0 | ~internal_transition [flattening 198]
+[PP] clausify: 201. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) | ~internal_transition | state = 10.0 | state = 8.0 | state = 6.0 | state = 5.0 | state = 3.0 [flattening 200]
+[PP] clausify: 203. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 12.0) | 0 = num_rcvd(pilot_takeover) | ~external_transition [flattening 202]
+[PP] clausify: 205. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 11.0) | 0 = num_rcvd(pilot_handover) | ~external_transition [flattening 204]
+[PP] clausify: 207. (next_aircraft_velocity = aircraft_velocity & next_sigma = infinity & next_state = 2.0) | 0 = num_rcvd(start_mission) | ~external_transition [flattening 206]
+[PP] clausify: 209. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | 0 = num_rcvd(request_reposition) | state != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 208]
+[PP] clausify: 211. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 5.0) | 0 = num_rcvd(aircraft_state) | state != 4.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 210]
+[PP] clausify: 213. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | 0 = num_rcvd(request_reposition) | state != 5.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 212]
+[PP] clausify: 215. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & 3.0 = next_state) | 0 = num_rcvd(request_reposition) | state != 6.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 214]
+[PP] clausify: 217. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 8.0) | 0 = num_rcvd(hover_criteria_met) | state != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 216]
+[PP] clausify: 219. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) | 0 = num_rcvd(request_reposition) | state != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 218]
+[PP] clausify: 221. (next_aircraft_velocity = aircraft_velocity & next_sigma = 0.0 & next_state = 10.0) | 0 = num_rcvd(request_reposition) | state != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [flattening 220]
+[PP] clausify: 222. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state) | ~confluence_transition [ennf transformation 167]
+[PP] clausify: 224. aircraft_velocity = val_output_fcc_command_velocity | state != 5.0 | ~output [flattening 223]
+[PP] clausify: 28. next_sigma = ta_out [input]
+[PP] clausify: 225. input_rcvd | ! [X0 : i_port] : num_rcvd(X0) = 0 [ennf transformation 173]
+[PP] clausify: 237. ~input_rcvd | 0 != num_rcvd(sK0) [skolemisation 226,236]
+[PP] clausify: 228. (output & ~confluence_transition & ~external_transition & internal_transition) | input_rcvd | $less(time_passed,ta_in) [flattening 227]
+[PP] clausify: 230. (~output & ~confluence_transition & external_transition & ~internal_transition) | ~input_rcvd | ~$less(time_passed,ta_in) [flattening 229]
+[PP] clausify: 232. (output & confluence_transition & ~external_transition & ~internal_transition) | ~input_rcvd | $less(time_passed,ta_in) [flattening 231]
+[PP] clausify: 234. (next_aircraft_velocity = aircraft_velocity & next_sigma = sigma & state = next_state & ta_out = ta_in) | input_rcvd | ~$less(time_passed,ta_in) [flattening 233]
+[PP] clausify: 35. infinity = $sum(time_passed,1.0) [input]
+[PP] clausify: 36. state = 7.0 [input]
+[PP] clausify: 37. infinity = sigma [input]
+[PP] clausify: 38. infinity = ta_in [input]
+[PP] clausify: 39. aircraft_velocity = 5.0 [input]
+[PP] clausify: 40. time_passed = 543.0 [input]
+[PP] clausify: 235. ! [X0 : $int] : (next_state != 8.0 & num_rcvd(hover_criteria_met) = X0) [ennf transformation 182]
+function definition elimination
+[PP] applying function definitions to literal time_passed = 543.0
+[PP] fn def discovered: 360. time_passed = 543.0 [cnf transformation 40]
+  unfolded: 543.0
+[PP] applying function definitions to literal infinity = sigma
+[PP] fn def discovered: 357. infinity = sigma [cnf transformation 37]
+  unfolded: sigma
+[PP] applying function definitions to literal state = 7.0
+[PP] fn def discovered: 356. state = 7.0 [cnf transformation 36]
+  unfolded: 7.0
+[PP] applying function definitions to literal next_sigma = ta_out
+[PP] fn def discovered: 336. next_sigma = ta_out [cnf transformation 28]
+  unfolded: ta_out
+[PP] applying function definitions to literal aircraft_velocity = 5.0
+[PP] fn def discovered: 359. aircraft_velocity = 5.0 [cnf transformation 39]
+  unfolded: 5.0
+[PP] applying function definitions to literal update_gcs != set_mission_monitor_status
+[PP] applying function definitions to literal update_boss != set_mission_monitor_status
+[PP] applying function definitions to literal update_boss != update_gcs
+[PP] applying function definitions to literal request_aircraft_state != set_mission_monitor_status
+[PP] applying function definitions to literal request_aircraft_state != update_gcs
+[PP] applying function definitions to literal request_aircraft_state != update_boss
+[PP] applying function definitions to literal lp_criteria_met != set_mission_monitor_status
+[PP] applying function definitions to literal lp_criteria_met != update_gcs
+[PP] applying function definitions to literal lp_criteria_met != update_boss
+[PP] applying function definitions to literal lp_criteria_met != request_aircraft_state
+[PP] applying function definitions to literal stabilize != set_mission_monitor_status
+[PP] applying function definitions to literal stabilize != update_gcs
+[PP] applying function definitions to literal stabilize != update_boss
+[PP] applying function definitions to literal stabilize != request_aircraft_state
+[PP] applying function definitions to literal stabilize != lp_criteria_met
+[PP] applying function definitions to literal fcc_command_velocity != set_mission_monitor_status
+[PP] applying function definitions to literal fcc_command_velocity != update_gcs
+[PP] applying function definitions to literal fcc_command_velocity != update_boss
+[PP] applying function definitions to literal fcc_command_velocity != request_aircraft_state
+[PP] applying function definitions to literal fcc_command_velocity != lp_criteria_met
+[PP] applying function definitions to literal fcc_command_velocity != stabilize
+[PP] applying function definitions to literal cancel_hover != set_mission_monitor_status
+[PP] applying function definitions to literal cancel_hover != update_gcs
+[PP] applying function definitions to literal cancel_hover != update_boss
+[PP] applying function definitions to literal cancel_hover != request_aircraft_state
+[PP] applying function definitions to literal cancel_hover != lp_criteria_met
+[PP] applying function definitions to literal cancel_hover != stabilize
+[PP] applying function definitions to literal cancel_hover != fcc_command_velocity
+[PP] applying function definitions to literal hover_criteria_met != start_mission
+[PP] applying function definitions to literal aircraft_state != start_mission
+[PP] applying function definitions to literal aircraft_state != hover_criteria_met
+[PP] applying function definitions to literal request_reposition != start_mission
+[PP] applying function definitions to literal request_reposition != hover_criteria_met
+[PP] applying function definitions to literal request_reposition != aircraft_state
+[PP] applying function definitions to literal pilot_handover != start_mission
+[PP] applying function definitions to literal pilot_handover != hover_criteria_met
+[PP] applying function definitions to literal pilot_handover != aircraft_state
+[PP] applying function definitions to literal pilot_handover != request_reposition
+[PP] applying function definitions to literal pilot_takeover != start_mission
+[PP] applying function definitions to literal pilot_takeover != hover_criteria_met
+[PP] applying function definitions to literal pilot_takeover != aircraft_state
+[PP] applying function definitions to literal pilot_takeover != request_reposition
+[PP] applying function definitions to literal pilot_takeover != pilot_handover
+[PP] applying function definitions to literal ($$true = X0)
+[PP] applying function definitions to literal ($$false = X0)
+[PP] applying function definitions to literal ($$true != $$false)
+[PP] applying function definitions to literal $uminus($uminus(X0)) = X0
+[PP] applying function definitions to literal $less(X0,X1)
+[PP] applying function definitions to literal $less(X1,$sum(X0,1.0))
+[PP] applying function definitions to literal ~$less(X0,X1)
+[PP] applying function definitions to literal $less($sum(X0,X2),$sum(X1,X2))
+[PP] applying function definitions to literal $less(X0,X1)
+[PP] applying function definitions to literal $less(X1,X0)
+[PP] applying function definitions to literal X0 = X1
+[PP] applying function definitions to literal ~$less(X0,X1)
+[PP] applying function definitions to literal ~$less(X1,X2)
+[PP] applying function definitions to literal $less(X0,X2)
+[PP] applying function definitions to literal ~$less(X0,X0)
+[PP] applying function definitions to literal 0.0 = $sum(X0,$uminus(X0))
+[PP] applying function definitions to literal $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0))
+[PP] applying function definitions to literal $sum(X0,0.0) = X0
+[PP] applying function definitions to literal $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2)
+[PP] applying function definitions to literal $sum(X0,X1) = $sum(X1,X0)
+[PP] applying function definitions to literal ~$less(X0,X1)
+[PP] applying function definitions to literal ~$less(X1,$sum(X0,1))
+[PP] applying function definitions to literal $uminus($uminus(X0)) = X0
+[PP] applying function definitions to literal $less(X0,X1)
+[PP] applying function definitions to literal $less(X1,$sum(X0,1))
+[PP] applying function definitions to literal ~$less(X0,X1)
+[PP] applying function definitions to literal $less($sum(X0,X2),$sum(X1,X2))
+[PP] applying function definitions to literal $less(X0,X1)
+[PP] applying function definitions to literal $less(X1,X0)
+[PP] applying function definitions to literal X0 = X1
+[PP] applying function definitions to literal ~$less(X0,X1)
+[PP] applying function definitions to literal ~$less(X1,X2)
+[PP] applying function definitions to literal $less(X0,X2)
+[PP] applying function definitions to literal ~$less(X0,X0)
+[PP] applying function definitions to literal 0 = $sum(X0,$uminus(X0))
+[PP] applying function definitions to literal $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0))
+[PP] applying function definitions to literal $sum(X0,0) = X0
+[PP] applying function definitions to literal $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2)
+[PP] applying function definitions to literal $sum(X0,X1) = $sum(X1,X0)
+[PP] applying function definitions to literal start_mission = X0
+[PP] applying function definitions to literal hover_criteria_met = X0
+[PP] applying function definitions to literal aircraft_state = X0
+[PP] applying function definitions to literal request_reposition = X0
+[PP] applying function definitions to literal pilot_handover = X0
+[PP] applying function definitions to literal pilot_takeover = X0
+[PP] applying function definitions to literal ~$less(num_rcvd(X0),0)
+[PP] applying function definitions to literal set_mission_monitor_status = X0
+[PP] applying function definitions to literal update_gcs = X0
+[PP] applying function definitions to literal update_boss = X0
+[PP] applying function definitions to literal request_aircraft_state = X0
+[PP] applying function definitions to literal lp_criteria_met = X0
+[PP] applying function definitions to literal stabilize = X0
+[PP] applying function definitions to literal fcc_command_velocity = X0
+[PP] applying function definitions to literal cancel_hover = X0
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal state != 3.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_sigma = infinity
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] definition of infinity
+  expanded to sigma
+[PP] applying function definitions to literal state != 3.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_state = 4.0
+[PP] applying function definitions to literal state != 3.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal state != 5.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_sigma = 0.0
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] applying function definitions to literal state != 5.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_state = 6.0
+[PP] applying function definitions to literal state != 5.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal state != 6.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_sigma = infinity
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] definition of infinity
+  expanded to sigma
+[PP] applying function definitions to literal state != 6.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_state = 7.0
+[PP] applying function definitions to literal state != 6.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal state != 8.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_sigma = infinity
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] definition of infinity
+  expanded to sigma
+[PP] applying function definitions to literal state != 8.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_state = 9.0
+[PP] applying function definitions to literal state != 8.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal state != 10.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_sigma = infinity
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] definition of infinity
+  expanded to sigma
+[PP] applying function definitions to literal state != 10.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal 3.0 = next_state
+[PP] applying function definitions to literal state != 10.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal state = 10.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 8.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 6.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 5.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 3.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal next_sigma = sigma
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal state = 10.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 8.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 6.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 5.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 3.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = next_state
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal state = 10.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 8.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 6.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 5.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal state = 3.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal 0 = num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal next_sigma = infinity
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] definition of infinity
+  expanded to sigma
+[PP] applying function definitions to literal 0 = num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal next_state = 12.0
+[PP] applying function definitions to literal 0 = num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal 0 = num_rcvd(pilot_handover)
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal next_sigma = infinity
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] definition of infinity
+  expanded to sigma
+[PP] applying function definitions to literal 0 = num_rcvd(pilot_handover)
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal next_state = 11.0
+[PP] applying function definitions to literal 0 = num_rcvd(pilot_handover)
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal 0 = num_rcvd(start_mission)
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal next_sigma = infinity
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] definition of infinity
+  expanded to sigma
+[PP] applying function definitions to literal 0 = num_rcvd(start_mission)
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal next_state = 2.0
+[PP] applying function definitions to literal 0 = num_rcvd(start_mission)
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 2.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_sigma = 0.0
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 2.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal 3.0 = next_state
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 2.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal 0 = num_rcvd(aircraft_state)
+[PP] applying function definitions to literal state != 4.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_sigma = 0.0
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] applying function definitions to literal 0 = num_rcvd(aircraft_state)
+[PP] applying function definitions to literal state != 4.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_state = 5.0
+[PP] applying function definitions to literal 0 = num_rcvd(aircraft_state)
+[PP] applying function definitions to literal state != 4.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 5.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_sigma = 0.0
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 5.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal 3.0 = next_state
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 5.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 6.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_sigma = 0.0
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 6.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal 3.0 = next_state
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 6.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal 0 = num_rcvd(hover_criteria_met)
+[PP] applying function definitions to literal state != 7.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_sigma = 0.0
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] applying function definitions to literal 0 = num_rcvd(hover_criteria_met)
+[PP] applying function definitions to literal state != 7.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_state = 8.0
+[PP] applying function definitions to literal 0 = num_rcvd(hover_criteria_met)
+[PP] applying function definitions to literal state != 7.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 7.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_sigma = 0.0
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 7.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_state = 10.0
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 7.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 8.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_sigma = 0.0
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 8.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_state = 10.0
+[PP] applying function definitions to literal 0 = num_rcvd(request_reposition)
+[PP] applying function definitions to literal state != 8.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal 0 != num_rcvd(start_mission)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_handover)
+[PP] applying function definitions to literal 0 != num_rcvd(pilot_takeover)
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal ~confluence_transition
+[PP] applying function definitions to literal next_sigma = sigma
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] applying function definitions to literal ~confluence_transition
+[PP] applying function definitions to literal state = next_state
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~confluence_transition
+[PP] applying function definitions to literal aircraft_velocity = val_output_fcc_command_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal state != 5.0
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal ~output
+[PP] applying function definitions to literal input_rcvd
+[PP] applying function definitions to literal num_rcvd(X0) = 0
+[PP] applying function definitions to literal ~input_rcvd
+[PP] applying function definitions to literal 0 != num_rcvd(sK0)
+[PP] applying function definitions to literal output
+[PP] applying function definitions to literal input_rcvd
+[PP] applying function definitions to literal $less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal ~confluence_transition
+[PP] applying function definitions to literal input_rcvd
+[PP] applying function definitions to literal $less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal input_rcvd
+[PP] applying function definitions to literal $less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal internal_transition
+[PP] applying function definitions to literal input_rcvd
+[PP] applying function definitions to literal $less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal ~output
+[PP] applying function definitions to literal ~input_rcvd
+[PP] applying function definitions to literal ~$less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal ~confluence_transition
+[PP] applying function definitions to literal ~input_rcvd
+[PP] applying function definitions to literal ~$less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal external_transition
+[PP] applying function definitions to literal ~input_rcvd
+[PP] applying function definitions to literal ~$less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal ~input_rcvd
+[PP] applying function definitions to literal ~$less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal output
+[PP] applying function definitions to literal ~input_rcvd
+[PP] applying function definitions to literal $less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal confluence_transition
+[PP] applying function definitions to literal ~input_rcvd
+[PP] applying function definitions to literal $less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal ~external_transition
+[PP] applying function definitions to literal ~input_rcvd
+[PP] applying function definitions to literal $less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal ~internal_transition
+[PP] applying function definitions to literal ~input_rcvd
+[PP] applying function definitions to literal $less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal next_aircraft_velocity = aircraft_velocity
+[PP] definition of aircraft_velocity
+  expanded to 5.0
+[PP] applying function definitions to literal input_rcvd
+[PP] applying function definitions to literal ~$less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal next_sigma = sigma
+[PP] definition of next_sigma
+  expanded to ta_out
+[PP] applying function definitions to literal input_rcvd
+[PP] applying function definitions to literal ~$less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal state = next_state
+[PP] definition of state
+  expanded to 7.0
+[PP] applying function definitions to literal input_rcvd
+[PP] applying function definitions to literal ~$less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal ta_out = ta_in
+[PP] applying function definitions to literal input_rcvd
+[PP] applying function definitions to literal ~$less(time_passed,ta_in)
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal infinity = $sum(time_passed,1.0)
+[PP] definition of infinity
+  expanded to sigma
+[PP] definition of time_passed
+  expanded to 543.0
+[PP] applying function definitions to literal infinity = ta_in
+[PP] definition of infinity
+  expanded to sigma
+[PP] applying function definitions to literal next_state != 8.0
+[PP] applying function definitions to literal num_rcvd(hover_criteria_met) = X0
+[PP] final: 265. update_gcs != set_mission_monitor_status [cnf transformation 149]
+[PP] final: 264. update_boss != set_mission_monitor_status [cnf transformation 149]
+[PP] final: 263. update_boss != update_gcs [cnf transformation 149]
+[PP] final: 262. request_aircraft_state != set_mission_monitor_status [cnf transformation 149]
+[PP] final: 261. request_aircraft_state != update_gcs [cnf transformation 149]
+[PP] final: 260. request_aircraft_state != update_boss [cnf transformation 149]
+[PP] final: 259. lp_criteria_met != set_mission_monitor_status [cnf transformation 149]
+[PP] final: 258. lp_criteria_met != update_gcs [cnf transformation 149]
+[PP] final: 257. lp_criteria_met != update_boss [cnf transformation 149]
+[PP] final: 256. lp_criteria_met != request_aircraft_state [cnf transformation 149]
+[PP] final: 255. stabilize != set_mission_monitor_status [cnf transformation 149]
+[PP] final: 254. stabilize != update_gcs [cnf transformation 149]
+[PP] final: 253. stabilize != update_boss [cnf transformation 149]
+[PP] final: 252. stabilize != request_aircraft_state [cnf transformation 149]
+[PP] final: 251. stabilize != lp_criteria_met [cnf transformation 149]
+[PP] final: 250. fcc_command_velocity != set_mission_monitor_status [cnf transformation 149]
+[PP] final: 249. fcc_command_velocity != update_gcs [cnf transformation 149]
+[PP] final: 248. fcc_command_velocity != update_boss [cnf transformation 149]
+[PP] final: 247. fcc_command_velocity != request_aircraft_state [cnf transformation 149]
+[PP] final: 246. fcc_command_velocity != lp_criteria_met [cnf transformation 149]
+[PP] final: 245. fcc_command_velocity != stabilize [cnf transformation 149]
+[PP] final: 244. cancel_hover != set_mission_monitor_status [cnf transformation 149]
+[PP] final: 243. cancel_hover != update_gcs [cnf transformation 149]
+[PP] final: 242. cancel_hover != update_boss [cnf transformation 149]
+[PP] final: 241. cancel_hover != request_aircraft_state [cnf transformation 149]
+[PP] final: 240. cancel_hover != lp_criteria_met [cnf transformation 149]
+[PP] final: 239. cancel_hover != stabilize [cnf transformation 149]
+[PP] final: 238. cancel_hover != fcc_command_velocity [cnf transformation 149]
+[PP] final: 280. hover_criteria_met != start_mission [cnf transformation 148]
+[PP] final: 279. aircraft_state != start_mission [cnf transformation 148]
+[PP] final: 278. aircraft_state != hover_criteria_met [cnf transformation 148]
+[PP] final: 277. request_reposition != start_mission [cnf transformation 148]
+[PP] final: 276. request_reposition != hover_criteria_met [cnf transformation 148]
+[PP] final: 275. request_reposition != aircraft_state [cnf transformation 148]
+[PP] final: 274. pilot_handover != start_mission [cnf transformation 148]
+[PP] final: 273. pilot_handover != hover_criteria_met [cnf transformation 148]
+[PP] final: 272. pilot_handover != aircraft_state [cnf transformation 148]
+[PP] final: 271. pilot_handover != request_reposition [cnf transformation 148]
+[PP] final: 270. pilot_takeover != start_mission [cnf transformation 148]
+[PP] final: 269. pilot_takeover != hover_criteria_met [cnf transformation 148]
+[PP] final: 268. pilot_takeover != aircraft_state [cnf transformation 148]
+[PP] final: 267. pilot_takeover != request_reposition [cnf transformation 148]
+[PP] final: 266. pilot_takeover != pilot_handover [cnf transformation 148]
+[PP] final: 119. ($$true = X0) | ($$false = X0) [fool axiom]
+[PP] final: 117. ($$true != $$false) [fool axiom]
+[PP] final: 115. $uminus($uminus(X0)) = X0 [theory axiom 156]
+[PP] final: 113. $less(X0,X1) | $less(X1,$sum(X0,1.0)) [theory axiom 155]
+[PP] final: 111. ~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2)) [theory axiom 153]
+[PP] final: 109. $less(X0,X1) | $less(X1,X0) | X0 = X1 [theory axiom 152]
+[PP] final: 107. ~$less(X0,X1) | ~$less(X1,X2) | $less(X0,X2) [theory axiom 151]
+[PP] final: 105. ~$less(X0,X0) [theory axiom 150]
+[PP] final: 103. 0.0 = $sum(X0,$uminus(X0)) [theory axiom 148]
+[PP] final: 101. $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0)) [theory axiom 147]
+[PP] final: 99. $sum(X0,0.0) = X0 [theory axiom 145]
+[PP] final: 97. $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2) [theory axiom 144]
+[PP] final: 95. $sum(X0,X1) = $sum(X1,X0) [theory axiom 143]
+[PP] final: 93. ~$less(X0,X1) | ~$less(X1,$sum(X0,1)) [theory axiom 169]
+[PP] final: 91. $uminus($uminus(X0)) = X0 [theory axiom 156]
+[PP] final: 89. $less(X0,X1) | $less(X1,$sum(X0,1)) [theory axiom 155]
+[PP] final: 87. ~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2)) [theory axiom 153]
+[PP] final: 85. $less(X0,X1) | $less(X1,X0) | X0 = X1 [theory axiom 152]
+[PP] final: 83. ~$less(X0,X1) | ~$less(X1,X2) | $less(X0,X2) [theory axiom 151]
+[PP] final: 81. ~$less(X0,X0) [theory axiom 150]
+[PP] final: 79. 0 = $sum(X0,$uminus(X0)) [theory axiom 148]
+[PP] final: 77. $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0)) [theory axiom 147]
+[PP] final: 75. $sum(X0,0) = X0 [theory axiom 145]
+[PP] final: 73. $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2) [theory axiom 144]
+[PP] final: 71. $sum(X0,X1) = $sum(X1,X0) [theory axiom 143]
+[PP] final: 281. start_mission = X0 | hover_criteria_met = X0 | aircraft_state = X0 | request_reposition = X0 | pilot_handover = X0 | pilot_takeover = X0 [cnf transformation 1]
+[PP] final: 282. ~$less(num_rcvd(X0),0) [cnf transformation 43]
+[PP] final: 283. set_mission_monitor_status = X0 | update_gcs = X0 | update_boss = X0 | request_aircraft_state = X0 | lp_criteria_met = X0 | stabilize = X0 | fcc_command_velocity = X0 | cancel_hover = X0 [cnf transformation 150]
+[PP] final: 363. next_aircraft_velocity = 5.0 | 3.0 != 7.0 | ~internal_transition [definition unfolding 286,359,356]
+[PP] final: 364. sigma = ta_out | 3.0 != 7.0 | ~internal_transition [definition unfolding 285,336,357,356]
+[PP] final: 365. next_state = 4.0 | 3.0 != 7.0 | ~internal_transition [definition unfolding 284,356]
+[PP] final: 366. next_aircraft_velocity = 5.0 | 5.0 != 7.0 | ~internal_transition [definition unfolding 289,359,356]
+[PP] final: 367. 0.0 = ta_out | 5.0 != 7.0 | ~internal_transition [definition unfolding 288,336,356]
+[PP] final: 368. next_state = 6.0 | 5.0 != 7.0 | ~internal_transition [definition unfolding 287,356]
+[PP] final: 369. next_aircraft_velocity = 5.0 | 6.0 != 7.0 | ~internal_transition [definition unfolding 292,359,356]
+[PP] final: 370. sigma = ta_out | 6.0 != 7.0 | ~internal_transition [definition unfolding 291,336,357,356]
+[PP] final: 371. next_state = 7.0 | 6.0 != 7.0 | ~internal_transition [definition unfolding 290,356]
+[PP] final: 372. next_aircraft_velocity = 5.0 | 7.0 != 8.0 | ~internal_transition [definition unfolding 295,359,356]
+[PP] final: 373. sigma = ta_out | 7.0 != 8.0 | ~internal_transition [definition unfolding 294,336,357,356]
+[PP] final: 374. next_state = 9.0 | 7.0 != 8.0 | ~internal_transition [definition unfolding 293,356]
+[PP] final: 375. next_aircraft_velocity = 5.0 | 7.0 != 10.0 | ~internal_transition [definition unfolding 298,359,356]
+[PP] final: 376. sigma = ta_out | 7.0 != 10.0 | ~internal_transition [definition unfolding 297,336,357,356]
+[PP] final: 377. 3.0 = next_state | 7.0 != 10.0 | ~internal_transition [definition unfolding 296,356]
+[PP] final: 378. next_aircraft_velocity = 5.0 | ~internal_transition | 7.0 = 10.0 | 7.0 = 8.0 | 6.0 = 7.0 | 5.0 = 7.0 | 3.0 = 7.0 [definition unfolding 301,359,356,356,356,356,356]
+[PP] final: 379. sigma = ta_out | ~internal_transition | 7.0 = 10.0 | 7.0 = 8.0 | 6.0 = 7.0 | 5.0 = 7.0 | 3.0 = 7.0 [definition unfolding 300,336,356,356,356,356,356]
+[PP] final: 380. next_state = 7.0 | ~internal_transition | 7.0 = 10.0 | 7.0 = 8.0 | 6.0 = 7.0 | 5.0 = 7.0 | 3.0 = 7.0 [definition unfolding 299,356,356,356,356,356,356]
+[PP] final: 381. next_aircraft_velocity = 5.0 | 0 = num_rcvd(pilot_takeover) | ~external_transition [definition unfolding 304,359]
+[PP] final: 382. sigma = ta_out | 0 = num_rcvd(pilot_takeover) | ~external_transition [definition unfolding 303,336,357]
+[PP] final: 302. next_state = 12.0 | 0 = num_rcvd(pilot_takeover) | ~external_transition [cnf transformation 203]
+[PP] final: 383. next_aircraft_velocity = 5.0 | 0 = num_rcvd(pilot_handover) | ~external_transition [definition unfolding 307,359]
+[PP] final: 384. sigma = ta_out | 0 = num_rcvd(pilot_handover) | ~external_transition [definition unfolding 306,336,357]
+[PP] final: 305. next_state = 11.0 | 0 = num_rcvd(pilot_handover) | ~external_transition [cnf transformation 205]
+[PP] final: 385. next_aircraft_velocity = 5.0 | 0 = num_rcvd(start_mission) | ~external_transition [definition unfolding 310,359]
+[PP] final: 386. sigma = ta_out | 0 = num_rcvd(start_mission) | ~external_transition [definition unfolding 309,336,357]
+[PP] final: 308. next_state = 2.0 | 0 = num_rcvd(start_mission) | ~external_transition [cnf transformation 207]
+[PP] final: 387. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 7.0 != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 313,359,356]
+[PP] final: 388. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 7.0 != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 312,336,356]
+[PP] final: 389. 3.0 = next_state | 0 = num_rcvd(request_reposition) | 7.0 != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 311,356]
+[PP] final: 390. next_aircraft_velocity = 5.0 | 0 = num_rcvd(aircraft_state) | 4.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 316,359,356]
+[PP] final: 391. 0.0 = ta_out | 0 = num_rcvd(aircraft_state) | 4.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 315,336,356]
+[PP] final: 392. next_state = 5.0 | 0 = num_rcvd(aircraft_state) | 4.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 314,356]
+[PP] final: 393. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 5.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 319,359,356]
+[PP] final: 394. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 5.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 318,336,356]
+[PP] final: 395. 3.0 = next_state | 0 = num_rcvd(request_reposition) | 5.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 317,356]
+[PP] final: 396. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 6.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 322,359,356]
+[PP] final: 397. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 6.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 321,336,356]
+[PP] final: 398. 3.0 = next_state | 0 = num_rcvd(request_reposition) | 6.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 320,356]
+[PP] final: 399. next_aircraft_velocity = 5.0 | 0 = num_rcvd(hover_criteria_met) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 325,359,356]
+[PP] final: 400. 0.0 = ta_out | 0 = num_rcvd(hover_criteria_met) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 324,336,356]
+[PP] final: 401. next_state = 8.0 | 0 = num_rcvd(hover_criteria_met) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 323,356]
+[PP] final: 402. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 328,359,356]
+[PP] final: 403. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 327,336,356]
+[PP] final: 404. next_state = 10.0 | 0 = num_rcvd(request_reposition) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 326,356]
+[PP] final: 405. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 7.0 != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 331,359,356]
+[PP] final: 406. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 7.0 != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 330,336,356]
+[PP] final: 407. next_state = 10.0 | 0 = num_rcvd(request_reposition) | 7.0 != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 329,356]
+[PP] final: 408. next_aircraft_velocity = 5.0 | ~confluence_transition [definition unfolding 334,359]
+[PP] final: 409. sigma = ta_out | ~confluence_transition [definition unfolding 333,336]
+[PP] final: 410. next_state = 7.0 | ~confluence_transition [definition unfolding 332,356]
+[PP] final: 411. 5.0 = val_output_fcc_command_velocity | 5.0 != 7.0 | ~output [definition unfolding 335,359,356]
+[PP] final: 337. input_rcvd | num_rcvd(X0) = 0 [cnf transformation 225]
+[PP] final: 338. ~input_rcvd | 0 != num_rcvd(sK0) [cnf transformation 237]
+[PP] final: 412. output | input_rcvd | $less(543.0,ta_in) [definition unfolding 342,360]
+[PP] final: 413. ~confluence_transition | input_rcvd | $less(543.0,ta_in) [definition unfolding 341,360]
+[PP] final: 414. ~external_transition | input_rcvd | $less(543.0,ta_in) [definition unfolding 340,360]
+[PP] final: 415. internal_transition | input_rcvd | $less(543.0,ta_in) [definition unfolding 339,360]
+[PP] final: 416. ~output | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 346,360]
+[PP] final: 417. ~confluence_transition | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 345,360]
+[PP] final: 418. external_transition | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 344,360]
+[PP] final: 419. ~internal_transition | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 343,360]
+[PP] final: 420. output | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 350,360]
+[PP] final: 421. confluence_transition | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 349,360]
+[PP] final: 422. ~external_transition | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 348,360]
+[PP] final: 423. ~internal_transition | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 347,360]
+[PP] final: 424. next_aircraft_velocity = 5.0 | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 354,359,360]
+[PP] final: 425. sigma = ta_out | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 353,336,360]
+[PP] final: 426. next_state = 7.0 | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 352,356,360]
+[PP] final: 427. ta_out = ta_in | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 351,360]
+[PP] final: 428. sigma = $sum(543.0,1.0) [definition unfolding 355,357,360]
+[PP] final: 429. sigma = ta_in [definition unfolding 358,357]
+[PP] final: 362. next_state != 8.0 [cnf transformation 235]
+[PP] final: 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+preprocessing finished
+[PP] onPreprocessingEnd(), Proving Helper
+% type constructor precedences, smallest symbols first (line format: `<name> <arity>`) 
+% ===== begin of type constructor precedences ===== 
+% $i 0
+% $o 0
+% $int 0
+% $real 0
+% $rat 0
+% i_port 0
+% o_port 0
+% ===== end of type constructor precedences ===== 
+%
+% function precedences, smallest symbols first (line format: `<name> <arity>`) 
+% ===== begin of function precedences ===== 
+% $$false 0
+% $$true 0
+% 0 0
+% 3.0 0
+% 4.0 0
+% 5.0 0
+% 6.0 0
+% 0.0 0
+% 7.0 0
+% 8.0 0
+% 9.0 0
+% 10.0 0
+% 12.0 0
+% 11.0 0
+% 2.0 0
+% 1.0 0
+% 543.0 0
+% 1 0
+% $sum 2
+% $sum 2
+% ta_in 0
+% ta_out 0
+% time_passed 0
+% infinity 0
+% state 0
+% next_state 0
+% sigma 0
+% next_sigma 0
+% aircraft_velocity 0
+% next_aircraft_velocity 0
+% pilot_takeover 0
+% pilot_handover 0
+% request_reposition 0
+% aircraft_state 0
+% val_rcvd_aircraft_state 0
+% hover_criteria_met 0
+% start_mission 0
+% cancel_hover 0
+% fcc_command_velocity 0
+% val_output_fcc_command_velocity 0
+% stabilize 0
+% lp_criteria_met 0
+% request_aircraft_state 0
+% update_boss 0
+% update_gcs 0
+% set_mission_monitor_status 0
+% sK0 0
+% num_rcvd 1
+% num_output 1
+% $uminus 1
+% $uminus 1
+% ===== end of function precedences ===== 
+%
+% predicate precedences, smallest symbols first (line format: `<name> <arity>`) 
+% ===== begin of predicate precedences ===== 
+% internal_transition 0
+% external_transition 0
+% confluence_transition 0
+% output 0
+% input_rcvd 0
+% val_rcvd_pilot_takeover 0
+% val_rcvd_pilot_handover 0
+% val_rcvd_request_reposition 0
+% val_rcvd_hover_criteria_met 0
+% val_rcvd_start_mission 0
+% val_output_cancel_hover 0
+% val_output_stabilize 0
+% val_output_lp_criteria_met 0
+% val_output_request_aircraft_state 0
+% val_output_update_boss 0
+% val_output_update_gcs 0
+% val_output_set_mission_monitor_status 0
+% = 2
+% $greatereq 2
+% $greatereq 2
+% $less 2
+% $less 2
+% ===== end of predicate precedences ===== 
+%
+% Predicate levels (line format: `<name> <arity> <level>`)
+% ===== begin of predicate levels ===== 
+% = 2 0
+% internal_transition 0 1
+% external_transition 0 1
+% confluence_transition 0 1
+% output 0 1
+% input_rcvd 0 1
+% val_rcvd_pilot_takeover 0 1
+% val_rcvd_pilot_handover 0 1
+% val_rcvd_request_reposition 0 1
+% val_rcvd_hover_criteria_met 0 1
+% val_rcvd_start_mission 0 1
+% $greatereq 2 1
+% val_output_cancel_hover 0 1
+% val_output_stabilize 0 1
+% val_output_lp_criteria_met 0 1
+% val_output_request_aircraft_state 0 1
+% val_output_update_boss 0 1
+% val_output_update_gcs 0 1
+% val_output_set_mission_monitor_status 0 1
+% $greatereq 2 1
+% $less 2 1
+% $less 2 1
+% ===== end of predicate levels ===== 
+%
+% Weights of function (line format: `<name> <arity> <weight>`)
+% ===== begin of function weights ===== 
+% lp_criteria_met 0 1
+% 2.0 0 1
+% 7.0 0 1
+% val_output_fcc_command_velocity 0 1
+% num_rcvd 1 1
+% 5.0 0 1
+% 0.0 0 1
+% 0 0 1
+% state 0 1
+% next_state 0 1
+% request_reposition 0 1
+% next_aircraft_velocity 0 1
+% infinity 0 1
+% sK0 0 1
+% 4.0 0 1
+% hover_criteria_met 0 1
+% aircraft_state 0 1
+% 1.0 0 1
+% 9.0 0 1
+% $sum 2 1
+% num_output 1 1
+% request_aircraft_state 0 1
+% time_passed 0 1
+% update_gcs 0 1
+% sigma 0 1
+% fcc_command_velocity 0 1
+% pilot_handover 0 1
+% val_rcvd_aircraft_state 0 1
+% $sum 2 1
+% set_mission_monitor_status 0 1
+% ta_out 0 1
+% 543.0 0 1
+% aircraft_velocity 0 1
+% stabilize 0 1
+% 1 0 1
+% $$false 0 1
+% start_mission 0 1
+% $$true 0 1
+% 12.0 0 1
+% 3.0 0 1
+% 8.0 0 1
+% pilot_takeover 0 1
+% cancel_hover 0 1
+% ta_in 0 1
+% 6.0 0 1
+% $uminus 1 1
+% next_sigma 0 1
+% $uminus 1 1
+% 10.0 0 1
+% 11.0 0 1
+% update_boss 0 1
+% $introduced 1
+% $var 1
+% $real 1
+% $rat 1
+% $int 1
+% ===== end of function weights ===== 
+[SA] new: 265. update_gcs != set_mission_monitor_status [cnf transformation 149]
+[SA] new: 264. update_boss != set_mission_monitor_status [cnf transformation 149]
+[SA] new: 263. update_boss != update_gcs [cnf transformation 149]
+[SA] new: 262. request_aircraft_state != set_mission_monitor_status [cnf transformation 149]
+[SA] new: 261. request_aircraft_state != update_gcs [cnf transformation 149]
+[SA] new: 260. request_aircraft_state != update_boss [cnf transformation 149]
+[SA] new: 259. lp_criteria_met != set_mission_monitor_status [cnf transformation 149]
+[SA] new: 258. lp_criteria_met != update_gcs [cnf transformation 149]
+[SA] new: 257. lp_criteria_met != update_boss [cnf transformation 149]
+[SA] new: 256. lp_criteria_met != request_aircraft_state [cnf transformation 149]
+[SA] new: 255. stabilize != set_mission_monitor_status [cnf transformation 149]
+[SA] new: 254. stabilize != update_gcs [cnf transformation 149]
+[SA] new: 253. stabilize != update_boss [cnf transformation 149]
+[SA] new: 252. stabilize != request_aircraft_state [cnf transformation 149]
+[SA] new: 251. stabilize != lp_criteria_met [cnf transformation 149]
+[SA] new: 250. fcc_command_velocity != set_mission_monitor_status [cnf transformation 149]
+[SA] new: 249. fcc_command_velocity != update_gcs [cnf transformation 149]
+[SA] new: 248. fcc_command_velocity != update_boss [cnf transformation 149]
+[SA] new: 247. fcc_command_velocity != request_aircraft_state [cnf transformation 149]
+[SA] new: 246. fcc_command_velocity != lp_criteria_met [cnf transformation 149]
+[SA] new: 245. fcc_command_velocity != stabilize [cnf transformation 149]
+[SA] new: 244. cancel_hover != set_mission_monitor_status [cnf transformation 149]
+[SA] new: 243. cancel_hover != update_gcs [cnf transformation 149]
+[SA] new: 242. cancel_hover != update_boss [cnf transformation 149]
+[SA] new: 241. cancel_hover != request_aircraft_state [cnf transformation 149]
+[SA] new: 240. cancel_hover != lp_criteria_met [cnf transformation 149]
+[SA] new: 239. cancel_hover != stabilize [cnf transformation 149]
+[SA] new: 238. cancel_hover != fcc_command_velocity [cnf transformation 149]
+[SA] new: 280. hover_criteria_met != start_mission [cnf transformation 148]
+[SA] new: 279. aircraft_state != start_mission [cnf transformation 148]
+[SA] new: 278. aircraft_state != hover_criteria_met [cnf transformation 148]
+[SA] new: 277. request_reposition != start_mission [cnf transformation 148]
+[SA] new: 276. request_reposition != hover_criteria_met [cnf transformation 148]
+[SA] new: 275. request_reposition != aircraft_state [cnf transformation 148]
+[SA] new: 274. pilot_handover != start_mission [cnf transformation 148]
+[SA] new: 273. pilot_handover != hover_criteria_met [cnf transformation 148]
+[SA] new: 272. pilot_handover != aircraft_state [cnf transformation 148]
+[SA] new: 271. pilot_handover != request_reposition [cnf transformation 148]
+[SA] new: 270. pilot_takeover != start_mission [cnf transformation 148]
+[SA] new: 269. pilot_takeover != hover_criteria_met [cnf transformation 148]
+[SA] new: 268. pilot_takeover != aircraft_state [cnf transformation 148]
+[SA] new: 267. pilot_takeover != request_reposition [cnf transformation 148]
+[SA] new: 266. pilot_takeover != pilot_handover [cnf transformation 148]
+[SA] new: 119. ($$true = X0) | ($$false = X0) [fool axiom]
+[SA] new: 117. ($$true != $$false) [fool axiom]
+[SA] new: 115. $uminus($uminus(X0)) = X0 [theory axiom 156]
+[SA] new: 113. $less(X0,X1) | $less(X1,$sum(X0,1.0)) [theory axiom 155]
+[SA] new: 111. ~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2)) [theory axiom 153]
+[SA] new: 109. $less(X0,X1) | $less(X1,X0) | X0 = X1 [theory axiom 152]
+[SA] new: 107. ~$less(X0,X1) | ~$less(X1,X2) | $less(X0,X2) [theory axiom 151]
+[SA] new: 105. ~$less(X0,X0) [theory axiom 150]
+[SA] new: 103. 0.0 = $sum(X0,$uminus(X0)) [theory axiom 148]
+[SA] new: 101. $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0)) [theory axiom 147]
+[SA] new: 99. $sum(X0,0.0) = X0 [theory axiom 145]
+[SA] new: 97. $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2) [theory axiom 144]
+[SA] new: 95. $sum(X0,X1) = $sum(X1,X0) [theory axiom 143]
+[SA] new: 93. ~$less(X0,X1) | ~$less(X1,$sum(X0,1)) [theory axiom 169]
+[SA] new: 91. $uminus($uminus(X0)) = X0 [theory axiom 156]
+[SA] new: 89. $less(X0,X1) | $less(X1,$sum(X0,1)) [theory axiom 155]
+[SA] new: 87. ~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2)) [theory axiom 153]
+[SA] new: 85. $less(X0,X1) | $less(X1,X0) | X0 = X1 [theory axiom 152]
+[SA] new: 83. ~$less(X0,X1) | ~$less(X1,X2) | $less(X0,X2) [theory axiom 151]
+[SA] new: 81. ~$less(X0,X0) [theory axiom 150]
+[SA] new: 79. 0 = $sum(X0,$uminus(X0)) [theory axiom 148]
+[SA] new: 77. $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0)) [theory axiom 147]
+[SA] new: 75. $sum(X0,0) = X0 [theory axiom 145]
+[SA] new: 73. $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2) [theory axiom 144]
+[SA] new: 71. $sum(X0,X1) = $sum(X1,X0) [theory axiom 143]
+[SA] new: 281. start_mission = X0 | hover_criteria_met = X0 | aircraft_state = X0 | request_reposition = X0 | pilot_handover = X0 | pilot_takeover = X0 [cnf transformation 1]
+[SA] new: 282. ~$less(num_rcvd(X0),0) [cnf transformation 43]
+[SA] new: 283. set_mission_monitor_status = X0 | update_gcs = X0 | update_boss = X0 | request_aircraft_state = X0 | lp_criteria_met = X0 | stabilize = X0 | fcc_command_velocity = X0 | cancel_hover = X0 [cnf transformation 150]
+[SA] new: 363. next_aircraft_velocity = 5.0 | 3.0 != 7.0 | ~internal_transition [definition unfolding 286,359,356]
+[SA] new: 364. sigma = ta_out | 3.0 != 7.0 | ~internal_transition [definition unfolding 285,336,357,356]
+[SA] new: 365. next_state = 4.0 | 3.0 != 7.0 | ~internal_transition [definition unfolding 284,356]
+[SA] new: 366. next_aircraft_velocity = 5.0 | 5.0 != 7.0 | ~internal_transition [definition unfolding 289,359,356]
+[SA] new: 367. 0.0 = ta_out | 5.0 != 7.0 | ~internal_transition [definition unfolding 288,336,356]
+[SA] new: 368. next_state = 6.0 | 5.0 != 7.0 | ~internal_transition [definition unfolding 287,356]
+[SA] new: 369. next_aircraft_velocity = 5.0 | 6.0 != 7.0 | ~internal_transition [definition unfolding 292,359,356]
+[SA] new: 370. sigma = ta_out | 6.0 != 7.0 | ~internal_transition [definition unfolding 291,336,357,356]
+[SA] new: 371. next_state = 7.0 | 6.0 != 7.0 | ~internal_transition [definition unfolding 290,356]
+[SA] new: 372. next_aircraft_velocity = 5.0 | 7.0 != 8.0 | ~internal_transition [definition unfolding 295,359,356]
+[SA] new: 373. sigma = ta_out | 7.0 != 8.0 | ~internal_transition [definition unfolding 294,336,357,356]
+[SA] new: 374. next_state = 9.0 | 7.0 != 8.0 | ~internal_transition [definition unfolding 293,356]
+[SA] new: 375. next_aircraft_velocity = 5.0 | 7.0 != 10.0 | ~internal_transition [definition unfolding 298,359,356]
+[SA] new: 376. sigma = ta_out | 7.0 != 10.0 | ~internal_transition [definition unfolding 297,336,357,356]
+[SA] new: 377. 3.0 = next_state | 7.0 != 10.0 | ~internal_transition [definition unfolding 296,356]
+[SA] new: 378. next_aircraft_velocity = 5.0 | ~internal_transition | 7.0 = 10.0 | 7.0 = 8.0 | 6.0 = 7.0 | 5.0 = 7.0 | 3.0 = 7.0 [definition unfolding 301,359,356,356,356,356,356]
+[SA] new: 379. sigma = ta_out | ~internal_transition | 7.0 = 10.0 | 7.0 = 8.0 | 6.0 = 7.0 | 5.0 = 7.0 | 3.0 = 7.0 [definition unfolding 300,336,356,356,356,356,356]
+[SA] new: 380. next_state = 7.0 | ~internal_transition | 7.0 = 10.0 | 7.0 = 8.0 | 6.0 = 7.0 | 5.0 = 7.0 | 3.0 = 7.0 [definition unfolding 299,356,356,356,356,356,356]
+[SA] new: 381. next_aircraft_velocity = 5.0 | 0 = num_rcvd(pilot_takeover) | ~external_transition [definition unfolding 304,359]
+[SA] new: 382. sigma = ta_out | 0 = num_rcvd(pilot_takeover) | ~external_transition [definition unfolding 303,336,357]
+[SA] new: 302. next_state = 12.0 | 0 = num_rcvd(pilot_takeover) | ~external_transition [cnf transformation 203]
+[SA] new: 383. next_aircraft_velocity = 5.0 | 0 = num_rcvd(pilot_handover) | ~external_transition [definition unfolding 307,359]
+[SA] new: 384. sigma = ta_out | 0 = num_rcvd(pilot_handover) | ~external_transition [definition unfolding 306,336,357]
+[SA] new: 305. next_state = 11.0 | 0 = num_rcvd(pilot_handover) | ~external_transition [cnf transformation 205]
+[SA] new: 385. next_aircraft_velocity = 5.0 | 0 = num_rcvd(start_mission) | ~external_transition [definition unfolding 310,359]
+[SA] new: 386. sigma = ta_out | 0 = num_rcvd(start_mission) | ~external_transition [definition unfolding 309,336,357]
+[SA] new: 308. next_state = 2.0 | 0 = num_rcvd(start_mission) | ~external_transition [cnf transformation 207]
+[SA] new: 387. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 7.0 != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 313,359,356]
+[SA] new: 388. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 7.0 != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 312,336,356]
+[SA] new: 389. 3.0 = next_state | 0 = num_rcvd(request_reposition) | 7.0 != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 311,356]
+[SA] new: 390. next_aircraft_velocity = 5.0 | 0 = num_rcvd(aircraft_state) | 4.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 316,359,356]
+[SA] new: 391. 0.0 = ta_out | 0 = num_rcvd(aircraft_state) | 4.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 315,336,356]
+[SA] new: 392. next_state = 5.0 | 0 = num_rcvd(aircraft_state) | 4.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 314,356]
+[SA] new: 393. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 5.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 319,359,356]
+[SA] new: 394. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 5.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 318,336,356]
+[SA] new: 395. 3.0 = next_state | 0 = num_rcvd(request_reposition) | 5.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 317,356]
+[SA] new: 396. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 6.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 322,359,356]
+[SA] new: 397. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 6.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 321,336,356]
+[SA] new: 398. 3.0 = next_state | 0 = num_rcvd(request_reposition) | 6.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 320,356]
+[SA] new: 399. next_aircraft_velocity = 5.0 | 0 = num_rcvd(hover_criteria_met) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 325,359,356]
+[SA] new: 400. 0.0 = ta_out | 0 = num_rcvd(hover_criteria_met) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 324,336,356]
+[SA] new: 401. next_state = 8.0 | 0 = num_rcvd(hover_criteria_met) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 323,356]
+[SA] new: 402. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 328,359,356]
+[SA] new: 403. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 327,336,356]
+[SA] new: 404. next_state = 10.0 | 0 = num_rcvd(request_reposition) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 326,356]
+[SA] new: 405. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 7.0 != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 331,359,356]
+[SA] new: 406. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 7.0 != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 330,336,356]
+[SA] new: 407. next_state = 10.0 | 0 = num_rcvd(request_reposition) | 7.0 != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 329,356]
+[SA] new: 408. next_aircraft_velocity = 5.0 | ~confluence_transition [definition unfolding 334,359]
+[SA] new: 409. sigma = ta_out | ~confluence_transition [definition unfolding 333,336]
+[SA] new: 410. next_state = 7.0 | ~confluence_transition [definition unfolding 332,356]
+[SA] new: 411. 5.0 = val_output_fcc_command_velocity | 5.0 != 7.0 | ~output [definition unfolding 335,359,356]
+[SA] new: 337. input_rcvd | num_rcvd(X0) = 0 [cnf transformation 225]
+[SA] new: 338. ~input_rcvd | 0 != num_rcvd(sK0) [cnf transformation 237]
+[SA] new: 412. output | input_rcvd | $less(543.0,ta_in) [definition unfolding 342,360]
+[SA] new: 413. ~confluence_transition | input_rcvd | $less(543.0,ta_in) [definition unfolding 341,360]
+[SA] new: 414. ~external_transition | input_rcvd | $less(543.0,ta_in) [definition unfolding 340,360]
+[SA] new: 415. internal_transition | input_rcvd | $less(543.0,ta_in) [definition unfolding 339,360]
+[SA] new: 416. ~output | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 346,360]
+[SA] new: 417. ~confluence_transition | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 345,360]
+[SA] new: 418. external_transition | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 344,360]
+[SA] new: 419. ~internal_transition | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 343,360]
+[SA] new: 420. output | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 350,360]
+[SA] new: 421. confluence_transition | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 349,360]
+[SA] new: 422. ~external_transition | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 348,360]
+[SA] new: 423. ~internal_transition | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 347,360]
+[SA] new: 424. next_aircraft_velocity = 5.0 | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 354,359,360]
+[SA] new: 425. sigma = ta_out | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 353,336,360]
+[SA] new: 426. next_state = 7.0 | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 352,356,360]
+[SA] new: 427. ta_out = ta_in | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 351,360]
+[SA] new: 428. sigma = $sum(543.0,1.0) [definition unfolding 355,357,360]
+[SA] new: 429. sigma = ta_in [definition unfolding 358,357]
+[SA] new: 362. next_state != 8.0 [cnf transformation 235]
+[SA] new: 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 430. sigma = 544.0 [evaluation 428]
+[SA] forward reduce: 428. sigma = $sum(543.0,1.0) [definition unfolding 355,357,360]
+      replaced by 430. sigma = 544.0 [evaluation 428]
+[SA] forward reduce: 411. 5.0 = val_output_fcc_command_velocity | 5.0 != 7.0 | ~output [definition unfolding 335,359,356]
+[SA] forward reduce: 407. next_state = 10.0 | 0 = num_rcvd(request_reposition) | 7.0 != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 329,356]
+[SA] forward reduce: 406. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 7.0 != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 330,336,356]
+[SA] forward reduce: 405. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 7.0 != 8.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 331,359,356]
+[SA] new: 431. next_state = 10.0 | 0 = num_rcvd(request_reposition) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 404]
+[SA] forward reduce: 404. next_state = 10.0 | 0 = num_rcvd(request_reposition) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 326,356]
+      replaced by 431. next_state = 10.0 | 0 = num_rcvd(request_reposition) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 404]
+[SA] new: 432. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 403]
+[SA] forward reduce: 403. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 327,336,356]
+      replaced by 432. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 403]
+[SA] new: 433. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 402]
+[SA] forward reduce: 402. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 328,359,356]
+      replaced by 433. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 402]
+[SA] new: 434. next_state = 8.0 | 0 = num_rcvd(hover_criteria_met) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 401]
+[SA] forward reduce: 401. next_state = 8.0 | 0 = num_rcvd(hover_criteria_met) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 323,356]
+      replaced by 434. next_state = 8.0 | 0 = num_rcvd(hover_criteria_met) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 401]
+[SA] new: 435. 0.0 = ta_out | 0 = num_rcvd(hover_criteria_met) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 400]
+[SA] forward reduce: 400. 0.0 = ta_out | 0 = num_rcvd(hover_criteria_met) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 324,336,356]
+      replaced by 435. 0.0 = ta_out | 0 = num_rcvd(hover_criteria_met) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 400]
+[SA] new: 436. next_aircraft_velocity = 5.0 | 0 = num_rcvd(hover_criteria_met) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 399]
+[SA] forward reduce: 399. next_aircraft_velocity = 5.0 | 0 = num_rcvd(hover_criteria_met) | 7.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 325,359,356]
+      replaced by 436. next_aircraft_velocity = 5.0 | 0 = num_rcvd(hover_criteria_met) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 399]
+[SA] forward reduce: 398. 3.0 = next_state | 0 = num_rcvd(request_reposition) | 6.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 320,356]
+[SA] forward reduce: 397. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 6.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 321,336,356]
+[SA] forward reduce: 396. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 6.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 322,359,356]
+[SA] forward reduce: 395. 3.0 = next_state | 0 = num_rcvd(request_reposition) | 5.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 317,356]
+[SA] forward reduce: 394. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 5.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 318,336,356]
+[SA] forward reduce: 393. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 5.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 319,359,356]
+[SA] forward reduce: 392. next_state = 5.0 | 0 = num_rcvd(aircraft_state) | 4.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 314,356]
+[SA] forward reduce: 391. 0.0 = ta_out | 0 = num_rcvd(aircraft_state) | 4.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 315,336,356]
+[SA] forward reduce: 390. next_aircraft_velocity = 5.0 | 0 = num_rcvd(aircraft_state) | 4.0 != 7.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 316,359,356]
+[SA] forward reduce: 389. 3.0 = next_state | 0 = num_rcvd(request_reposition) | 7.0 != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 311,356]
+[SA] forward reduce: 388. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | 7.0 != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 312,336,356]
+[SA] forward reduce: 387. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | 7.0 != 2.0 | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [definition unfolding 313,359,356]
+[SA] new: 437. next_state = 7.0 | ~internal_transition [evaluation 380]
+[SA] forward reduce: 380. next_state = 7.0 | ~internal_transition | 7.0 = 10.0 | 7.0 = 8.0 | 6.0 = 7.0 | 5.0 = 7.0 | 3.0 = 7.0 [definition unfolding 299,356,356,356,356,356,356]
+      replaced by 437. next_state = 7.0 | ~internal_transition [evaluation 380]
+[SA] new: 438. sigma = ta_out | ~internal_transition [evaluation 379]
+[SA] forward reduce: 379. sigma = ta_out | ~internal_transition | 7.0 = 10.0 | 7.0 = 8.0 | 6.0 = 7.0 | 5.0 = 7.0 | 3.0 = 7.0 [definition unfolding 300,336,356,356,356,356,356]
+      replaced by 438. sigma = ta_out | ~internal_transition [evaluation 379]
+[SA] new: 439. next_aircraft_velocity = 5.0 | ~internal_transition [evaluation 378]
+[SA] forward reduce: 378. next_aircraft_velocity = 5.0 | ~internal_transition | 7.0 = 10.0 | 7.0 = 8.0 | 6.0 = 7.0 | 5.0 = 7.0 | 3.0 = 7.0 [definition unfolding 301,359,356,356,356,356,356]
+      replaced by 439. next_aircraft_velocity = 5.0 | ~internal_transition [evaluation 378]
+[SA] forward reduce: 377. 3.0 = next_state | 7.0 != 10.0 | ~internal_transition [definition unfolding 296,356]
+[SA] forward reduce: 376. sigma = ta_out | 7.0 != 10.0 | ~internal_transition [definition unfolding 297,336,357,356]
+[SA] forward reduce: 375. next_aircraft_velocity = 5.0 | 7.0 != 10.0 | ~internal_transition [definition unfolding 298,359,356]
+[SA] forward reduce: 374. next_state = 9.0 | 7.0 != 8.0 | ~internal_transition [definition unfolding 293,356]
+[SA] forward reduce: 373. sigma = ta_out | 7.0 != 8.0 | ~internal_transition [definition unfolding 294,336,357,356]
+[SA] forward reduce: 372. next_aircraft_velocity = 5.0 | 7.0 != 8.0 | ~internal_transition [definition unfolding 295,359,356]
+[SA] forward reduce: 371. next_state = 7.0 | 6.0 != 7.0 | ~internal_transition [definition unfolding 290,356]
+[SA] forward reduce: 370. sigma = ta_out | 6.0 != 7.0 | ~internal_transition [definition unfolding 291,336,357,356]
+[SA] forward reduce: 369. next_aircraft_velocity = 5.0 | 6.0 != 7.0 | ~internal_transition [definition unfolding 292,359,356]
+[SA] forward reduce: 368. next_state = 6.0 | 5.0 != 7.0 | ~internal_transition [definition unfolding 287,356]
+[SA] forward reduce: 367. 0.0 = ta_out | 5.0 != 7.0 | ~internal_transition [definition unfolding 288,336,356]
+[SA] forward reduce: 366. next_aircraft_velocity = 5.0 | 5.0 != 7.0 | ~internal_transition [definition unfolding 289,359,356]
+[SA] forward reduce: 365. next_state = 4.0 | 3.0 != 7.0 | ~internal_transition [definition unfolding 284,356]
+[SA] forward reduce: 364. sigma = ta_out | 3.0 != 7.0 | ~internal_transition [definition unfolding 285,336,357,356]
+[SA] forward reduce: 363. next_aircraft_velocity = 5.0 | 3.0 != 7.0 | ~internal_transition [definition unfolding 286,359,356]
+[SA] passive: 265. update_gcs != set_mission_monitor_status [cnf transformation 149]
+[SA] passive: 264. update_boss != set_mission_monitor_status [cnf transformation 149]
+[SA] passive: 263. update_boss != update_gcs [cnf transformation 149]
+[SA] passive: 262. request_aircraft_state != set_mission_monitor_status [cnf transformation 149]
+[SA] passive: 261. request_aircraft_state != update_gcs [cnf transformation 149]
+[SA] passive: 260. request_aircraft_state != update_boss [cnf transformation 149]
+[SA] passive: 259. lp_criteria_met != set_mission_monitor_status [cnf transformation 149]
+[SA] passive: 258. lp_criteria_met != update_gcs [cnf transformation 149]
+[SA] passive: 257. lp_criteria_met != update_boss [cnf transformation 149]
+[SA] passive: 256. lp_criteria_met != request_aircraft_state [cnf transformation 149]
+[SA] passive: 255. stabilize != set_mission_monitor_status [cnf transformation 149]
+[SA] passive: 254. stabilize != update_gcs [cnf transformation 149]
+[SA] passive: 253. stabilize != update_boss [cnf transformation 149]
+[SA] passive: 252. stabilize != request_aircraft_state [cnf transformation 149]
+[SA] passive: 251. stabilize != lp_criteria_met [cnf transformation 149]
+[SA] passive: 250. fcc_command_velocity != set_mission_monitor_status [cnf transformation 149]
+[SA] passive: 249. fcc_command_velocity != update_gcs [cnf transformation 149]
+[SA] passive: 248. fcc_command_velocity != update_boss [cnf transformation 149]
+[SA] passive: 247. fcc_command_velocity != request_aircraft_state [cnf transformation 149]
+[SA] passive: 246. fcc_command_velocity != lp_criteria_met [cnf transformation 149]
+[SA] passive: 245. fcc_command_velocity != stabilize [cnf transformation 149]
+[SA] passive: 244. cancel_hover != set_mission_monitor_status [cnf transformation 149]
+[SA] passive: 243. cancel_hover != update_gcs [cnf transformation 149]
+[SA] passive: 242. cancel_hover != update_boss [cnf transformation 149]
+[SA] passive: 241. cancel_hover != request_aircraft_state [cnf transformation 149]
+[SA] passive: 240. cancel_hover != lp_criteria_met [cnf transformation 149]
+[SA] passive: 239. cancel_hover != stabilize [cnf transformation 149]
+[SA] passive: 238. cancel_hover != fcc_command_velocity [cnf transformation 149]
+[SA] passive: 280. hover_criteria_met != start_mission [cnf transformation 148]
+[SA] passive: 279. aircraft_state != start_mission [cnf transformation 148]
+[SA] passive: 278. aircraft_state != hover_criteria_met [cnf transformation 148]
+[SA] passive: 277. request_reposition != start_mission [cnf transformation 148]
+[SA] passive: 276. request_reposition != hover_criteria_met [cnf transformation 148]
+[SA] passive: 275. request_reposition != aircraft_state [cnf transformation 148]
+[SA] passive: 274. pilot_handover != start_mission [cnf transformation 148]
+[SA] passive: 273. pilot_handover != hover_criteria_met [cnf transformation 148]
+[SA] passive: 272. pilot_handover != aircraft_state [cnf transformation 148]
+[SA] passive: 271. pilot_handover != request_reposition [cnf transformation 148]
+[SA] passive: 270. pilot_takeover != start_mission [cnf transformation 148]
+[SA] passive: 269. pilot_takeover != hover_criteria_met [cnf transformation 148]
+[SA] passive: 268. pilot_takeover != aircraft_state [cnf transformation 148]
+[SA] passive: 267. pilot_takeover != request_reposition [cnf transformation 148]
+[SA] passive: 266. pilot_takeover != pilot_handover [cnf transformation 148]
+[SA] passive: 119. ($$true = X0) | ($$false = X0) [fool axiom]
+[SA] passive: 117. ($$true != $$false) [fool axiom]
+[SA] passive: 115. $uminus($uminus(X0)) = X0 [theory axiom 156]
+[SA] passive: 113. $less(X0,X1) | $less(X1,$sum(X0,1.0)) [theory axiom 155]
+[SA] passive: 111. ~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2)) [theory axiom 153]
+[SA] passive: 109. $less(X0,X1) | $less(X1,X0) | X0 = X1 [theory axiom 152]
+[SA] passive: 107. ~$less(X0,X1) | ~$less(X1,X2) | $less(X0,X2) [theory axiom 151]
+[SA] passive: 105. ~$less(X0,X0) [theory axiom 150]
+[SA] passive: 103. 0.0 = $sum(X0,$uminus(X0)) [theory axiom 148]
+[SA] passive: 101. $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0)) [theory axiom 147]
+[SA] passive: 99. $sum(X0,0.0) = X0 [theory axiom 145]
+[SA] passive: 97. $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2) [theory axiom 144]
+[SA] passive: 95. $sum(X0,X1) = $sum(X1,X0) [theory axiom 143]
+[SA] passive: 93. ~$less(X0,X1) | ~$less(X1,$sum(X0,1)) [theory axiom 169]
+[SA] passive: 91. $uminus($uminus(X0)) = X0 [theory axiom 156]
+[SA] passive: 89. $less(X0,X1) | $less(X1,$sum(X0,1)) [theory axiom 155]
+[SA] passive: 87. ~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2)) [theory axiom 153]
+[SA] passive: 85. $less(X0,X1) | $less(X1,X0) | X0 = X1 [theory axiom 152]
+[SA] passive: 83. ~$less(X0,X1) | ~$less(X1,X2) | $less(X0,X2) [theory axiom 151]
+[SA] passive: 81. ~$less(X0,X0) [theory axiom 150]
+[SA] passive: 79. 0 = $sum(X0,$uminus(X0)) [theory axiom 148]
+[SA] passive: 77. $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0)) [theory axiom 147]
+[SA] passive: 75. $sum(X0,0) = X0 [theory axiom 145]
+[SA] passive: 73. $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2) [theory axiom 144]
+[SA] passive: 71. $sum(X0,X1) = $sum(X1,X0) [theory axiom 143]
+[SA] passive: 281. start_mission = X0 | hover_criteria_met = X0 | aircraft_state = X0 | request_reposition = X0 | pilot_handover = X0 | pilot_takeover = X0 [cnf transformation 1]
+[SA] passive: 282. ~$less(num_rcvd(X0),0) [cnf transformation 43]
+[SA] passive: 283. set_mission_monitor_status = X0 | update_gcs = X0 | update_boss = X0 | request_aircraft_state = X0 | lp_criteria_met = X0 | stabilize = X0 | fcc_command_velocity = X0 | cancel_hover = X0 [cnf transformation 150]
+[AVATAR] split a clause: 439. next_aircraft_velocity = 5.0 | ~internal_transition [evaluation 378]
+[AVATAR] split a clause: 438. sigma = ta_out | ~internal_transition [evaluation 379]
+[AVATAR] split a clause: 437. next_state = 7.0 | ~internal_transition [evaluation 380]
+[AVATAR] split a clause: 381. next_aircraft_velocity = 5.0 | 0 = num_rcvd(pilot_takeover) | ~external_transition [definition unfolding 304,359]
+[AVATAR] split a clause: 382. sigma = ta_out | 0 = num_rcvd(pilot_takeover) | ~external_transition [definition unfolding 303,336,357]
+[AVATAR] split a clause: 302. next_state = 12.0 | 0 = num_rcvd(pilot_takeover) | ~external_transition [cnf transformation 203]
+[AVATAR] split a clause: 383. next_aircraft_velocity = 5.0 | 0 = num_rcvd(pilot_handover) | ~external_transition [definition unfolding 307,359]
+[AVATAR] split a clause: 384. sigma = ta_out | 0 = num_rcvd(pilot_handover) | ~external_transition [definition unfolding 306,336,357]
+[AVATAR] split a clause: 305. next_state = 11.0 | 0 = num_rcvd(pilot_handover) | ~external_transition [cnf transformation 205]
+[AVATAR] split a clause: 385. next_aircraft_velocity = 5.0 | 0 = num_rcvd(start_mission) | ~external_transition [definition unfolding 310,359]
+[AVATAR] split a clause: 386. sigma = ta_out | 0 = num_rcvd(start_mission) | ~external_transition [definition unfolding 309,336,357]
+[AVATAR] split a clause: 308. next_state = 2.0 | 0 = num_rcvd(start_mission) | ~external_transition [cnf transformation 207]
+[AVATAR] split a clause: 436. next_aircraft_velocity = 5.0 | 0 = num_rcvd(hover_criteria_met) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 399]
+[AVATAR] split a clause: 435. 0.0 = ta_out | 0 = num_rcvd(hover_criteria_met) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 400]
+[AVATAR] split a clause: 434. next_state = 8.0 | 0 = num_rcvd(hover_criteria_met) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 401]
+[AVATAR] split a clause: 433. next_aircraft_velocity = 5.0 | 0 = num_rcvd(request_reposition) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 402]
+[AVATAR] split a clause: 432. 0.0 = ta_out | 0 = num_rcvd(request_reposition) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 403]
+[AVATAR] split a clause: 431. next_state = 10.0 | 0 = num_rcvd(request_reposition) | ~external_transition | 0 != num_rcvd(start_mission) | 0 != num_rcvd(pilot_handover) | 0 != num_rcvd(pilot_takeover) [trivial inequality removal 404]
+[AVATAR] split a clause: 408. next_aircraft_velocity = 5.0 | ~confluence_transition [definition unfolding 334,359]
+[AVATAR] split a clause: 409. sigma = ta_out | ~confluence_transition [definition unfolding 333,336]
+[AVATAR] split a clause: 410. next_state = 7.0 | ~confluence_transition [definition unfolding 332,356]
+[AVATAR] split a clause: 337. input_rcvd | num_rcvd(X0) = 0 [cnf transformation 225]
+[AVATAR] split a clause: 338. ~input_rcvd | 0 != num_rcvd(sK0) [cnf transformation 237]
+[AVATAR] split a clause: 412. output | input_rcvd | $less(543.0,ta_in) [definition unfolding 342,360]
+[AVATAR] split a clause: 413. ~confluence_transition | input_rcvd | $less(543.0,ta_in) [definition unfolding 341,360]
+[AVATAR] split a clause: 414. ~external_transition | input_rcvd | $less(543.0,ta_in) [definition unfolding 340,360]
+[AVATAR] split a clause: 415. internal_transition | input_rcvd | $less(543.0,ta_in) [definition unfolding 339,360]
+[AVATAR] split a clause: 416. ~output | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 346,360]
+[AVATAR] split a clause: 417. ~confluence_transition | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 345,360]
+[AVATAR] split a clause: 418. external_transition | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 344,360]
+[AVATAR] split a clause: 419. ~internal_transition | ~input_rcvd | ~$less(543.0,ta_in) [definition unfolding 343,360]
+[AVATAR] split a clause: 420. output | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 350,360]
+[AVATAR] split a clause: 421. confluence_transition | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 349,360]
+[AVATAR] split a clause: 422. ~external_transition | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 348,360]
+[AVATAR] split a clause: 423. ~internal_transition | ~input_rcvd | $less(543.0,ta_in) [definition unfolding 347,360]
+[AVATAR] split a clause: 424. next_aircraft_velocity = 5.0 | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 354,359,360]
+[AVATAR] split a clause: 425. sigma = ta_out | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 353,336,360]
+[AVATAR] split a clause: 426. next_state = 7.0 | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 352,356,360]
+[AVATAR] split a clause: 427. ta_out = ta_in | input_rcvd | ~$less(543.0,ta_in) [definition unfolding 351,360]
+[SA] passive: 430. sigma = 544.0 [evaluation 428]
+[SA] new: 570. ta_in = 544.0 [forward demodulation 429,430]
+[SA] forward reduce: 429. sigma = ta_in [definition unfolding 358,357]
+      replaced by 570. ta_in = 544.0 [forward demodulation 429,430]
+     using 430. sigma = 544.0 [evaluation 428]
+[SA] passive: 570. ta_in = 544.0 [forward demodulation 429,430]
+[AVATAR] registering a non-splittable: 362. next_state != 8.0 [cnf transformation 235]
+[SA] new: 572. num_rcvd(hover_criteria_met) = $sum(X1,X0) [backward demodulation 71,361]
+[SA] backward reduce: 71. $sum(X0,X1) = $sum(X1,X0) [theory axiom 143]
+      replaced by 572. num_rcvd(hover_criteria_met) = $sum(X1,X0) [backward demodulation 71,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 573. $sum(X0,$sum(X1,X2)) = $sum(num_rcvd(hover_criteria_met),X2) [backward demodulation 73,361]
+[SA] backward reduce: 73. $sum(X0,$sum(X1,X2)) = $sum($sum(X0,X1),X2) [theory axiom 144]
+      replaced by 573. $sum(X0,$sum(X1,X2)) = $sum(num_rcvd(hover_criteria_met),X2) [backward demodulation 73,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 574. $sum($uminus(X1),$uminus(X0)) = $uminus(num_rcvd(hover_criteria_met)) [backward demodulation 77,361]
+[SA] backward reduce: 77. $uminus($sum(X0,X1)) = $sum($uminus(X1),$uminus(X0)) [theory axiom 147]
+      replaced by 574. $sum($uminus(X1),$uminus(X0)) = $uminus(num_rcvd(hover_criteria_met)) [backward demodulation 77,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 575. $less($sum(X0,X2),num_rcvd(hover_criteria_met)) | ~$less(X0,X1) [backward demodulation 87,361]
+[SA] backward reduce: 87. ~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2)) [theory axiom 153]
+      replaced by 575. $less($sum(X0,X2),num_rcvd(hover_criteria_met)) | ~$less(X0,X1) [backward demodulation 87,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 576. $less(X1,num_rcvd(hover_criteria_met)) | $less(X0,X1) [backward demodulation 89,361]
+[SA] backward reduce: 89. $less(X0,X1) | $less(X1,$sum(X0,1)) [theory axiom 155]
+      replaced by 576. $less(X1,num_rcvd(hover_criteria_met)) | $less(X0,X1) [backward demodulation 89,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 577. ~$less(X1,num_rcvd(hover_criteria_met)) | ~$less(X0,X1) [backward demodulation 93,361]
+[SA] backward reduce: 93. ~$less(X0,X1) | ~$less(X1,$sum(X0,1)) [theory axiom 169]
+      replaced by 577. ~$less(X1,num_rcvd(hover_criteria_met)) | ~$less(X0,X1) [backward demodulation 93,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 578. 0 = $sum(X0,num_rcvd(hover_criteria_met)) [backward demodulation 79,361]
+[SA] backward reduce: 79. 0 = $sum(X0,$uminus(X0)) [theory axiom 148]
+      replaced by 578. 0 = $sum(X0,num_rcvd(hover_criteria_met)) [backward demodulation 79,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 579. $uminus(num_rcvd(hover_criteria_met)) = X0 [backward demodulation 91,361]
+[SA] backward reduce: 91. $uminus($uminus(X0)) = X0 [theory axiom 156]
+      replaced by 579. $uminus(num_rcvd(hover_criteria_met)) = X0 [backward demodulation 91,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] passive: 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] forward reduce: 572. num_rcvd(hover_criteria_met) = $sum(X1,X0) [backward demodulation 71,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 580. num_rcvd(hover_criteria_met) = $sum(X0,$sum(X1,X2)) [forward demodulation 573,361]
+[SA] forward reduce: 573. $sum(X0,$sum(X1,X2)) = $sum(num_rcvd(hover_criteria_met),X2) [backward demodulation 73,361]
+      replaced by 580. num_rcvd(hover_criteria_met) = $sum(X0,$sum(X1,X2)) [forward demodulation 573,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] forward reduce: 580. num_rcvd(hover_criteria_met) = $sum(X0,$sum(X1,X2)) [forward demodulation 573,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 581. num_rcvd(hover_criteria_met) = $sum($uminus(X1),$uminus(X0)) [forward demodulation 574,361]
+[SA] forward reduce: 574. $sum($uminus(X1),$uminus(X0)) = $uminus(num_rcvd(hover_criteria_met)) [backward demodulation 77,361]
+      replaced by 581. num_rcvd(hover_criteria_met) = $sum($uminus(X1),$uminus(X0)) [forward demodulation 574,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] forward reduce: 581. num_rcvd(hover_criteria_met) = $sum($uminus(X1),$uminus(X0)) [forward demodulation 574,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 582. $less(num_rcvd(hover_criteria_met),num_rcvd(hover_criteria_met)) | ~$less(X0,X1) [forward demodulation 575,361]
+[SA] forward reduce: 575. $less($sum(X0,X2),num_rcvd(hover_criteria_met)) | ~$less(X0,X1) [backward demodulation 87,361]
+      replaced by 582. $less(num_rcvd(hover_criteria_met),num_rcvd(hover_criteria_met)) | ~$less(X0,X1) [forward demodulation 575,361]
+     using 361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+[SA] new: 583. ~$less(X0,X1) [subsumption resolution 582,81]
+[SA] forward reduce: 582. $less(num_rcvd(hover_criteria_met),num_rcvd(hover_criteria_met)) | ~$less(X0,X1) [forward demodulation 575,361]
+      replaced by 583. ~$less(X0,X1) [subsumption resolution 582,81]
+     using 81. ~$less(X0,X0) [theory axiom 150]
+[SA] passive: 583. ~$less(X0,X1) [subsumption resolution 582,81]
+[SA] new: 584. $less(X0,X1) [subsumption resolution 576,583]
+[SA] forward reduce: 576. $less(X1,num_rcvd(hover_criteria_met)) | $less(X0,X1) [backward demodulation 89,361]
+      replaced by 584. $less(X0,X1) [subsumption resolution 576,583]
+     using 583. ~$less(X0,X1) [subsumption resolution 582,81]
+[SA] new: 585. $false [subsumption resolution 584,583]
+[SA] new propositional: 585. $false [subsumption resolution 584,583]
+[SA] forward reduce: 584. $less(X0,X1) [subsumption resolution 576,583]
+      replaced by 585. $false [subsumption resolution 584,583]
+     using 583. ~$less(X0,X1) [subsumption resolution 582,81]
+% Refutation found. Thanks to Tanya!
+% SZS status Theorem for command_reposition_model
+% SZS output start Proof for command_reposition_model
+41. ? [X2 : $int] : (num_rcvd(hover_criteria_met) = X2 => next_state = 8.0) [input]
+42. ~? [X2 : $int] : (num_rcvd(hover_criteria_met) = X2 => next_state = 8.0) [negated conjecture 41]
+81. ~$less(X0,X0) [theory axiom 150]
+87. ~$less(X0,X1) | $less($sum(X0,X2),$sum(X1,X2)) [theory axiom 153]
+89. $less(X0,X1) | $less(X1,$sum(X0,1)) [theory axiom 155]
+182. ~? [X0 : $int] : (num_rcvd(hover_criteria_met) = X0 => next_state = 8.0) [rectify 42]
+235. ! [X0 : $int] : (next_state != 8.0 & num_rcvd(hover_criteria_met) = X0) [ennf transformation 182]
+361. num_rcvd(hover_criteria_met) = X0 [cnf transformation 235]
+575. $less($sum(X0,X2),num_rcvd(hover_criteria_met)) | ~$less(X0,X1) [backward demodulation 87,361]
+576. $less(X1,num_rcvd(hover_criteria_met)) | $less(X0,X1) [backward demodulation 89,361]
+582. $less(num_rcvd(hover_criteria_met),num_rcvd(hover_criteria_met)) | ~$less(X0,X1) [forward demodulation 575,361]
+583. ~$less(X0,X1) [subsumption resolution 582,81]
+584. $less(X0,X1) [subsumption resolution 576,583]
+585. $false [subsumption resolution 584,583]
+% SZS output end Proof for command_reposition_model
+% ------------------------------
+% Version: Vampire 4.9 (commit 5ad494e78 on 2024-06-14 14:05:27 +0100)
+% Linked with Z3 4.12.3.0 79bbbf76d0c123481c8ca05cd3a98939270074d3 z3-4.8.4-7980-g79bbbf76d
+% Termination reason: Refutation
+
+% Memory used [KB]: 621
+% Time elapsed: 0.008 s
+% ------------------------------
+% ------------------------------

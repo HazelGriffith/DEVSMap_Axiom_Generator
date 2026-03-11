@@ -6,6 +6,8 @@ tff(countUp_value,axiom,countUp = $true).
 
 tff(sigma_value,axiom,sigma = 5.0).
 
+tff(ta_in_value,axiom,ta_in = 5.0).
+
 tff(time_passed_value,axiom,time_passed = 5.0).
 
 tff(nothing_received,axiom,

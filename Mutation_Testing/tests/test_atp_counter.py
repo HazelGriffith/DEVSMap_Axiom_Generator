@@ -1,5 +1,5 @@
 import source.Counter as C
-import subprocess, shutil
+import subprocess, shutil, time, os, pytest
 
 def load_tests(filename:str):
     tests = {}
@@ -73,6 +73,17 @@ def pytest_generate_tests(metafunc):
         test_ids = list(tests.keys())
         test_values = list(tests.values())
         metafunc.parametrize("get_tests", test_values, ids=test_ids)
+        
+@pytest.fixture(autouse=True)
+def copy_problem_file():
+    if os.path.exists("tests/counter_model_copy.p"):
+        os.remove("tests/counter_model_copy.p")
+    shutil.copy2("tests/counter_model.p","tests/counter_model_copy.p")
+    
+    yield
+    
+    if os.path.exists("tests/counter_model_copy.p"):
+        os.remove("tests/counter_model_copy.p")
 
 def test_transition(get_tests):
 
@@ -128,8 +139,8 @@ def test_transition(get_tests):
                                                     f"(next_sigma = {actual_counter.sigma})&"+
                                                     output_cond+
                                                     f"(ta_out = {actual_ta})).\n")
-        
-    shutil.copy2("tests/counter_model.p","tests/counter_model_copy.p")
+    
+    
 
 
     with open("tests/counter_model_copy.p", "a") as test_file:
@@ -137,14 +148,10 @@ def test_transition(get_tests):
         for axiom in axioms:
             test_file.write(axiom+"\n")
     
-    try:
-        output = subprocess.run(["./tests/vampire", "-t", "1d", "-om", "smtcomp", "tests/counter_model_copy.p"], capture_output=True, text=True, check=True)
-        output_lines = output.stdout.splitlines()
-        termination_reason = output_lines[1]
-        assert(termination_reason == "unsat")
-    except subprocess.CalledProcessError as e:
-        print(e.returncode)
-        print(e.stderr)
-        print(e.stdout)
-        assert(False)
-    
+    filename = str(time.time())
+    output = subprocess.run(["./tests/vampire", "-t", "1d", "-p", "off", "-om", "smtcomp", "tests/counter_model_copy.p"], capture_output=True, text=True)
+    output_lines = output.stdout.splitlines()
+    termination_reason = output_lines[1]
+    if termination_reason != "unsat":
+        shutil.copy2("tests/counter_model_copy.p",f"tests/notUnsat_{filename}.p")
+    assert(termination_reason == "unsat")
